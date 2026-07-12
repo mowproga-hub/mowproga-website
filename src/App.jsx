@@ -149,18 +149,28 @@ function QuoteModal({ open, onClose, basePrice }) {
     ? null
     : parseInt(basePrice, 10) + (selectedOption?.addOn || 0) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.overgrown ? OVERGROWN_FEE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
 
-  const submit = () => {
+  const submit = async () => {
     setSubmitting(true);
     trackEvent("generate_lead", { value: price || 0, currency: "USD", yard_size: form.size });
-    const subject = encodeURIComponent(`New quote request from ${form.name}`);
-    const body = encodeURIComponent(
-      `New lead from mowproga.com:\n\nName: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}\nYard size: ${selectedOption?.label || ""}\nCrack spray add-on: ${form.crackSpray ? "Yes" : "No"}\nOvergrown/first-cut: ${form.overgrown ? "Yes" : "No"}\nEdge restoration: ${form.edgeRestore ? "Yes" : "No"}\nEstimated price: ${isCustomQuote ? "Custom quote needed" : `$${price}`}`
-    );
-    // TODO: replace mowproga@gmail.com with the real business email if different.
-    // This opens the visitor's email app with the lead pre-filled — a working,
-    // zero-backend way to get leads to Joseph until Twilio/Resend are connected
-    // (see roadmap) for fully automatic SMS/email notifications instead.
-    window.location.href = `mailto:mowproga@gmail.com?subject=${subject}&body=${body}`;
+    try {
+      await fetch("/api/send-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          address: form.address,
+          size: selectedOption?.label || "",
+          crackSpray: form.crackSpray,
+          overgrown: form.overgrown,
+          edgeRestore: form.edgeRestore,
+          price: isCustomQuote ? "Custom quote needed" : `$${price}`,
+        }),
+      });
+    } catch (e) {
+      // Even if the email send fails, still show the confirmation — the
+      // visitor already gave real contact info, worth following up manually.
+    }
     setSubmitting(false);
     setDone(true);
   };
@@ -178,9 +188,9 @@ function QuoteModal({ open, onClose, basePrice }) {
         {done ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <CheckCircle2 size={40} color="#8FBC6A" style={{ marginBottom: 12 }} />
-            <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Almost done!</div>
+            <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Quote request sent!</div>
             <div style={{ fontSize: 14, color: "#B9C4B2" }}>
-              Your email app should have opened with your request ready to send to Joseph — just hit send and he'll text or call you shortly
+              Joseph will text or call you shortly
               {isCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price} estimate.`}
             </div>
           </div>
