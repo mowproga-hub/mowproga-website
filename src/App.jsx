@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Pencil, Save, Upload, X, Plus, Trash2, Play, MessageCircle, Send } from "lucide-react";
+import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send } from "lucide-react";
 
 // Replace with your real Measurement ID from analytics.google.com (looks like "G-XXXXXXXXXX").
 const GA_MEASUREMENT_ID = "G-RG2D6LV1ZL";
@@ -84,40 +84,6 @@ function ImageSlot({ label, src, onUpload, editing, badgeColor, badgeText }) {
             style={{ position: "absolute", bottom: 12, right: 12, background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 12px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}
           >
             <Upload size={13} /> Upload photo
-          </button>
-        </>
-      )}
-    </div>
-  );
-}
-
-function VideoSlot({ src, onUpload, editing }) {
-  const fileRef = useRef(null);
-  const handleFile = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => onUpload(reader.result);
-    reader.readAsDataURL(file);
-  };
-  return (
-    <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #24331F", background: "#152016", position: "relative" }}>
-      {src ? (
-        <video src={src} controls style={{ width: "100%", display: "block", maxHeight: 400 }} />
-      ) : (
-        <div style={{ height: 200, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5C6B57", fontSize: 13, gap: 8 }}>
-          <Play size={28} />
-          No intro video yet
-        </div>
-      )}
-      {editing && (
-        <>
-          <input ref={fileRef} type="file" accept="video/*" onChange={handleFile} style={{ display: "none" }} />
-          <button
-            onClick={() => fileRef.current?.click()}
-            style={{ position: "absolute", bottom: 12, right: 12, background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 12px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}
-          >
-            <Upload size={13} /> Upload video
           </button>
         </>
       )}
@@ -704,7 +670,7 @@ export default function MowProLanding() {
         </div>
         <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 30 }}>per visit</div>
         <div style={{ display: "inline-flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 34 }}>
-          {["Mowing, edging & weed eating", "Debris blown off walkways & driveway", "No contracts — cancel anytime", "$40+ first-cut fee if overgrown, $25+ if an edge needs restoring"].map((f) => (
+          {["Mowing, edging & weed eating", "Debris blown off walkways & driveway", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
             <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14.5, color: "#D8DED2" }}>
               <CheckCircle2 size={17} color="#8FBC6A" /> {f}
             </div>
