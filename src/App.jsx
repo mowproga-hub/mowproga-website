@@ -137,20 +137,6 @@ function QuoteModal({ open, onClose, basePrice }) {
   const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const [mapAddress, setMapAddress] = useState("");
-  const [mapError, setMapError] = useState(false);
-
-  // Debounce the satellite preview so it only fetches after the visitor
-  // pauses typing, not on every keystroke.
-  useEffect(() => {
-    if (form.address.trim().length < 8) {
-      setMapAddress("");
-      return;
-    }
-    setMapError(false);
-    const timer = setTimeout(() => setMapAddress(form.address.trim()), 800);
-    return () => clearTimeout(timer);
-  }, [form.address]);
 
   if (!open) return null;
 
@@ -192,7 +178,7 @@ function QuoteModal({ open, onClose, basePrice }) {
 
   const close = () => {
     onClose();
-    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false }); setMapAddress(""); setMapError(false); }, 300);
+    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false }); }, 300);
   };
 
   return (
@@ -221,21 +207,6 @@ function QuoteModal({ open, onClose, basePrice }) {
                 <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 18 }}>Enter your address and yard size for an estimated price.</div>
                 <label style={miniLabel}>Property address</label>
                 <input style={miniInput} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, City, GA" />
-
-                {mapAddress && !mapError && (
-                  <div style={{ marginTop: 10, borderRadius: 10, overflow: "hidden", border: "1px solid #2A3A28" }}>
-                    <img
-                      src={`/api/staticmap?address=${encodeURIComponent(mapAddress)}`}
-                      alt="Satellite view of your property"
-                      style={{ width: "100%", display: "block" }}
-                      onError={() => setMapError(true)}
-                    />
-                    <div style={{ fontSize: 11, color: "#7C8A78", padding: "6px 10px", background: "#0F1A10" }}>
-                      A rough satellite view — use it to help pick the closest yard size below.
-                    </div>
-                  </div>
-                )}
-
                 <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>
                 {SIZE_OPTIONS.map((opt) => (
                   <div
