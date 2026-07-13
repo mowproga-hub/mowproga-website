@@ -181,8 +181,8 @@ function QuoteModal({ open, onClose, basePrice }) {
   };
 
   return (
-    <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 18, padding: 26, width: "100%", maxWidth: 420, color: "#F5F3EE", position: "relative" }}>
+    <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 18, padding: 26, width: "100%", maxWidth: 420, color: "#F5F3EE", position: "relative", maxHeight: "calc(100vh - 32px)", overflowY: "auto", WebkitOverflowScrolling: "touch", margin: "auto" }}>
         <button onClick={close} style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={20} /></button>
 
         {done ? (
@@ -373,11 +373,58 @@ Once you have their name, phone, and address (and ideally what service they want
 
 function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hi! I'm here to help with any questions about Mow Pro's services or pricing. What can I help you with?" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Proactive nudge: shows once per session, triggered by whichever
+  // comes first — 15s on page, or scrolling past 50% of the page.
+  // Never forces the chat panel open, just a small dismissible bubble.
+  useEffect(() => {
+    if (sessionStorage.getItem("mp_chat_nudge_shown")) return;
+
+    const triggerNudge = () => {
+      if (sessionStorage.getItem("mp_chat_nudge_shown")) return;
+      sessionStorage.setItem("mp_chat_nudge_shown", "1");
+      setShowNudge(true);
+      trackEvent("chat_nudge_shown", {});
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+
+    const onScroll = () => {
+      const scrolled = window.scrollY + window.innerHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      if (pageHeight > 0 && scrolled / pageHeight >= 0.5) triggerNudge();
+    };
+
+    const timer = setTimeout(triggerNudge, 15000);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const openFromNudge = () => {
+    setShowNudge(false);
+    setOpen(true);
+    trackEvent("chat_nudge_clicked", {});
+  };
+
+  const dismissNudge = (e) => {
+    e.stopPropagation();
+    setShowNudge(false);
+    trackEvent("chat_nudge_dismissed", {});
+  };
+
+  useEffect(() => {
+    if (open) setShowNudge(false);
+  }, [open]);
 
   const send = async () => {
     if (!input.trim() || loading) return;
@@ -408,7 +455,7 @@ function ChatWidget() {
   return (
     <>
       {open && (
-        <div style={{
+        <div className="mp-chat-window" style={{
           position: "fixed", bottom: 88, right: 20, width: "min(340px, calc(100vw - 40px))", height: 440,
           background: "#152016", border: "1px solid #24331F", borderRadius: 16, boxShadow: "0 12px 32px rgba(0,0,0,0.35)",
           zIndex: 200, display: "flex", flexDirection: "column", overflow: "hidden",
@@ -448,7 +495,32 @@ function ChatWidget() {
         </div>
       )}
 
+      {showNudge && !open && (
+        <div
+          className="mp-chat-nudge"
+          onClick={openFromNudge}
+          style={{
+            position: "fixed", bottom: 88, right: 20, zIndex: 190,
+            maxWidth: 240, background: "#152016", border: "1px solid #24331F",
+            borderRadius: 14, padding: "12px 14px", boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
+            cursor: "pointer", display: "flex", alignItems: "flex-start", gap: 8,
+          }}
+        >
+          <div style={{ fontSize: 13, color: "#F5F3EE", lineHeight: 1.4 }}>
+            👋 Want a free instant quote? Just ask.
+          </div>
+          <button
+            onClick={dismissNudge}
+            aria-label="Dismiss"
+            style={{ background: "none", border: "none", color: "#7C8A78", cursor: "pointer", flexShrink: 0, padding: 0, lineHeight: 0 }}
+          >
+            <X size={15} />
+          </button>
+        </div>
+      )}
+
       <button
+        className="mp-chat-bubble"
         onClick={() => setOpen(!open)}
         style={{
           position: "fixed", bottom: 20, right: 20, width: 56, height: 56, borderRadius: "50%",
@@ -484,10 +556,19 @@ export default function MowProLanding() {
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE" }}>
       {/* NAV */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 18 }}>
-          <Sprout size={22} color="#8FBC6A" /> Mow Pro Lawn Care
+        <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18 }}>
+          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
+          Mow Pro Lawn Care
         </div>
-        <EditableText editing={editing} value={content.phone} onChange={(v) => update("phone", v)} style={{ fontSize: 13, color: "#F5F3EE", maxWidth: 140 }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
+            <Phone size={14} color="#8FBC6A" />
+            <EditableText editing={editing} value={content.phone} onChange={(v) => update("phone", v)} style={{ fontSize: 13, color: "#F5F3EE", maxWidth: 140 }} />
+          </a>
+          <button onClick={() => { trackEvent("quote_opened", { location: "nav" }); setShowQuote(true); }} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
+            Get Quote
+          </button>
+        </div>
       </div>
 
       {/* HERO */}
@@ -625,9 +706,48 @@ export default function MowProLanding() {
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
       <ChatWidget />
 
-      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#5C6B57" }}>
-        Mow Pro Lawn Care LLC · Douglasville, GA
+      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#5C6B57", paddingBottom: 90 }}>
+        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
       </div>
+
+      {/* STICKY MOBILE ACTION BAR */}
+      <div
+        className="mp-sticky-bar"
+        style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 150,
+          display: "none", gap: 8, padding: "10px 14px",
+          background: "#0F1A10", borderTop: "1px solid #24331F",
+          boxShadow: "0 -4px 16px rgba(0,0,0,0.35)",
+        }}
+      >
+        <a
+          href={`tel:${content.phone}`}
+          style={{
+            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38",
+            borderRadius: 10, padding: "13px", fontSize: 14.5, fontWeight: 800, textDecoration: "none",
+          }}
+        >
+          <Phone size={16} /> Call
+        </a>
+        <button
+          onClick={() => { trackEvent("quote_opened", { location: "sticky_bar" }); setShowQuote(true); }}
+          style={{
+            flex: 2, background: "#8FBC6A", color: "#0F1A10", border: "none",
+            borderRadius: 10, padding: "13px", fontSize: 14.5, fontWeight: 800, cursor: "pointer",
+          }}
+        >
+          Get My Free Instant Quote
+        </button>
+      </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .mp-sticky-bar { display: flex !important; }
+          .mp-chat-bubble { bottom: 84px !important; }
+          .mp-chat-window { bottom: 152px !important; }
+          .mp-chat-nudge { bottom: 152px !important; }
+        }
+      `}</style>
     </div>
   );
 }
