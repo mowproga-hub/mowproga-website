@@ -181,7 +181,7 @@ function QuoteModal({ open, onClose, basePrice }) {
   };
 
   return (
-    <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}>
+    <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}>
       <div onClick={(e) => e.stopPropagation()} style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 18, padding: 26, width: "100%", maxWidth: 420, color: "#F5F3EE", position: "relative", maxHeight: "calc(100vh - 32px)", overflowY: "auto", WebkitOverflowScrolling: "touch", margin: "auto" }}>
         <button onClick={close} style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={20} /></button>
 
