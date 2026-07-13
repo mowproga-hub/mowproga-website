@@ -134,7 +134,7 @@ const SIZE_OPTIONS = [
 
 function QuoteModal({ open, onClose, basePrice }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrown: false, edgeRestore: false });
+  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -145,9 +145,10 @@ function QuoteModal({ open, onClose, basePrice }) {
   const EDGE_RESTORE_PRICE = 25;
   const selectedOption = SIZE_OPTIONS.find((s) => s.key === form.size);
   const isCustomQuote = selectedOption?.addOn === null;
-  const price = isCustomQuote
+  const needsCustomQuote = isCustomQuote || form.overgrownLevel === "severe";
+  const price = needsCustomQuote
     ? null
-    : parseInt(basePrice, 10) + (selectedOption?.addOn || 0) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.overgrown ? OVERGROWN_FEE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
+    : parseInt(basePrice, 10) + (selectedOption?.addOn || 0) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.overgrownLevel === "mild" ? OVERGROWN_FEE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
 
   const submit = async () => {
     setSubmitting(true);
@@ -162,9 +163,9 @@ function QuoteModal({ open, onClose, basePrice }) {
           address: form.address,
           size: selectedOption?.label || "",
           crackSpray: form.crackSpray,
-          overgrown: form.overgrown,
+          overgrown: form.overgrownLevel,
           edgeRestore: form.edgeRestore,
-          price: isCustomQuote ? "Custom quote needed" : `$${price}`,
+          price: needsCustomQuote ? "Custom quote needed" : `$${price}`,
         }),
       });
     } catch (e) {
@@ -177,7 +178,7 @@ function QuoteModal({ open, onClose, basePrice }) {
 
   const close = () => {
     onClose();
-    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "" }); }, 300);
+    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false }); }, 300);
   };
 
   return (
@@ -191,7 +192,7 @@ function QuoteModal({ open, onClose, basePrice }) {
             <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Quote request sent!</div>
             <div style={{ fontSize: 14, color: "#B9C4B2" }}>
               Joseph will text or call you shortly
-              {isCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price} estimate.`}
+              {needsCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price} estimate.`}
             </div>
           </div>
         ) : (
@@ -255,29 +256,56 @@ function QuoteModal({ open, onClose, basePrice }) {
                 )}
 
                 {!isCustomQuote && (
-                  <div
-                    onClick={() => setForm({ ...form, overgrown: !form.overgrown })}
-                    style={{
-                      border: `1.5px solid ${form.overgrown ? "#8FBC6A" : "#2A3A28"}`,
-                      background: form.overgrown ? "#1C2B1B" : "transparent",
-                      borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
-                      display: "flex", justifyContent: "space-between", alignItems: "center",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{
-                        width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrown ? "#8FBC6A" : "#5C6B57"}`,
-                        background: form.overgrown ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-                      }}>
-                        {form.overgrown && <CheckCircle2 size={14} color="#0F1A10" />}
+                  <>
+                    <label style={{ ...miniLabel, marginTop: 14 }}>Yard condition (if overgrown)</label>
+                    <div
+                      onClick={() => setForm({ ...form, overgrownLevel: form.overgrownLevel === "mild" ? "none" : "mild" })}
+                      style={{
+                        border: `1.5px solid ${form.overgrownLevel === "mild" ? "#8FBC6A" : "#2A3A28"}`,
+                        background: form.overgrownLevel === "mild" ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrownLevel === "mild" ? "#8FBC6A" : "#5C6B57"}`,
+                          background: form.overgrownLevel === "mild" ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {form.overgrownLevel === "mild" && <CheckCircle2 size={14} color="#0F1A10" />}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>A few weeks overgrown</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>First-cut fee for a couple extra passes</div>
+                        </div>
                       </div>
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: 13.5 }}>Yard hasn't been maintained recently</div>
-                        <div style={{ fontSize: 11.5, color: "#7C8A78" }}>First-cut fee — final price depends on how overgrown</div>
-                      </div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${OVERGROWN_FEE}</div>
                     </div>
-                    <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${OVERGROWN_FEE}+</div>
-                  </div>
+
+                    <div
+                      onClick={() => setForm({ ...form, overgrownLevel: form.overgrownLevel === "severe" ? "none" : "severe" })}
+                      style={{
+                        border: `1.5px solid ${form.overgrownLevel === "severe" ? "#8FBC6A" : "#2A3A28"}`,
+                        background: form.overgrownLevel === "severe" ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrownLevel === "severe" ? "#8FBC6A" : "#5C6B57"}`,
+                          background: form.overgrownLevel === "severe" ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {form.overgrownLevel === "severe" && <CheckCircle2 size={14} color="#0F1A10" />}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>Very overgrown</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Over a foot tall or hasn't been cut in months</div>
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                    </div>
+                  </>
                 )}
 
                 {!isCustomQuote && (
@@ -322,7 +350,7 @@ function QuoteModal({ open, onClose, basePrice }) {
                 <input style={miniInput} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(404) 000-0000" />
 
                 <div style={{ background: "#0F1A10", borderRadius: 12, padding: 16, marginTop: 16, textAlign: "center" }}>
-                  {isCustomQuote ? (
+                  {needsCustomQuote ? (
                     <>
                       <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>Property size</div>
                       <div style={{ fontSize: 17, fontWeight: 800, color: "#8FBC6A", lineHeight: 1.4 }}>Custom Quote Needed</div>
@@ -331,8 +359,8 @@ function QuoteModal({ open, onClose, basePrice }) {
                   ) : (
                     <>
                       <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>Estimated price</div>
-                      <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{(form.overgrown || form.edgeRestore) && "+"}</div>
-                      {(form.overgrown || form.edgeRestore) && (
+                      <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{(form.overgrownLevel === "mild" || form.edgeRestore) && "+"}</div>
+                      {(form.overgrownLevel === "mild" || form.edgeRestore) && (
                         <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once Joseph sees the property</div>
                       )}
                     </>
@@ -558,7 +586,7 @@ export default function MowProLanding() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18 }}>
           <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
-          Mow Pro Lawn Care
+          Mow Pro GA
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
