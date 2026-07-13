@@ -300,7 +300,7 @@ function QuoteModal({ open, onClose, basePrice }) {
                         </div>
                         <div>
                           <div style={{ fontWeight: 700, fontSize: 13.5 }}>Very overgrown</div>
-                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Over a foot tall or hasn't been cut in months</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Grass over 12 inches tall</div>
                         </div>
                       </div>
                       <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
