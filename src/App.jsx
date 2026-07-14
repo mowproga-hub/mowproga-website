@@ -353,7 +353,7 @@ const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Law
 
 SERVICES & PRICING:
 - Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $50, Medium yard (5,000-10,000 sq ft) $60, Large yard (10,000-20,000 sq ft) $80, Extra large/acreage (over 20,000 sq ft): custom quote after Joseph assesses it in person
-- First-cut/overgrown fee: $40+ one-time, added if the yard hasn't been maintained recently (exact amount depends on how overgrown)
+- First-cut/overgrown fee: +$40 if it's been a few weeks since it was last cut. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
 - No contracts, cancel anytime
@@ -363,7 +363,25 @@ GIVING QUOTE ESTIMATES: If someone gives you their address and wants a quote, yo
 
 TONE: Warm, direct, no corporate jargon. Keep answers short (2-4 sentences). If asked something you don't know (e.g. availability for a specific date, whether Joseph does a service not listed above), say Joseph will confirm that personally, and ask for their contact info so he can follow up.
 
-Once you have their name, phone, and address (and ideally what service they want), let them know Joseph will reach out shortly to confirm.`;
+Once you have their name AND at least a phone number or address, use the submit_lead tool right away to actually send their information to Joseph — don't just say you will, actually call the tool. You can keep chatting naturally after that if they have more questions.`;
+
+const CHAT_TOOLS = [
+  {
+    name: "submit_lead",
+    description: "Send a visitor's contact info and quote details to Joseph so he can follow up. Call this as soon as you have a name plus a phone number or address — don't wait until the end of the conversation.",
+    input_schema: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "Visitor's name" },
+        phone: { type: "string", description: "Phone number, if given" },
+        address: { type: "string", description: "Property address, if given" },
+        service: { type: "string", description: "What they're asking about, e.g. 'biweekly mowing, medium yard, overgrown'" },
+        estimated_price: { type: "string", description: "The estimate you gave them, if any, e.g. '$80+' or 'custom quote needed'" },
+      },
+      required: ["name"],
+    },
+  },
+];
 
 function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -373,6 +391,26 @@ function ChatWidget() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [leadSent, setLeadSent] = useState(false);
+
+  const submitLead = async (details) => {
+    try {
+      await fetch("/api/send-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: details.name || "",
+          phone: details.phone || "(not given — chat lead)",
+          address: details.address || "(not given — chat lead)",
+          size: details.service || "See chat conversation",
+          price: details.estimated_price || "Not estimated",
+          crackSpray: false, overgrown: "none", edgeRestore: false,
+        }),
+      });
+      setLeadSent(true);
+      trackEvent("chat_lead_sent", {});
+    } catch (e) {}
+  };
 
   // Proactive nudge: shows once per session, triggered by whichever
   // comes first — 15s on page, or scrolling past 50% of the page.
@@ -423,22 +461,44 @@ function ChatWidget() {
   const send = async () => {
     if (!input.trim() || loading) return;
     const userMsg = { role: "user", content: input.trim() };
-    const nextMessages = [...messages, userMsg];
-    setMessages(nextMessages);
+    let conversation = [...messages, userMsg];
+    setMessages(conversation);
     setInput("");
     setLoading(true);
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          system: BUSINESS_CONTEXT,
-          messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
-        }),
-      });
-      const data = await res.json();
-      const text = data?.content?.map((c) => c.text || "").join("\n") || "Sorry, could you try asking that again?";
-      setMessages((prev) => [...prev, { role: "assistant", content: text }]);
+      let keepGoing = true;
+      let safetyCounter = 0;
+      while (keepGoing && safetyCounter < 6) {
+        safetyCounter++;
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            system: BUSINESS_CONTEXT,
+            tools: CHAT_TOOLS,
+            messages: conversation.map((m) => ({ role: m.role, content: m.content })),
+          }),
+        });
+        const data = await res.json();
+        const toolUses = (data?.content || []).filter((c) => c.type === "tool_use");
+        const textParts = (data?.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n");
+
+        if (textParts) {
+          setMessages((prev) => [...prev, { role: "assistant", content: textParts }]);
+        }
+
+        if (toolUses.length > 0 && data.stop_reason === "tool_use") {
+          conversation = [...conversation, { role: "assistant", content: data.content }];
+          const toolResults = [];
+          for (const tu of toolUses) {
+            if (tu.name === "submit_lead" && !leadSent) await submitLead(tu.input);
+            toolResults.push({ type: "tool_result", tool_use_id: tu.id, content: "Lead sent to Joseph." });
+          }
+          conversation = [...conversation, { role: "user", content: toolResults }];
+        } else {
+          keepGoing = false;
+        }
+      }
       trackEvent("chat_widget_message", {});
     } catch (err) {
       setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong — feel free to text or call Joseph directly at (404) 669-6945." }]);
@@ -656,6 +716,35 @@ export default function MowProLanding() {
                 <Plus size={15} /> Add review
               </button>
             )}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 30 }}>
+            <a
+              href="https://g.page/r/Ce4jwGMDfTNvEAE/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("leave_review_clicked", {})}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 12,
+                background: "#FFFFFF", color: "#3C4043", border: "1px solid #DADCE0",
+                borderRadius: 10, padding: "14px 26px", fontSize: 15, fontWeight: 600,
+                textDecoration: "none", boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+                fontFamily: "'Google Sans', Roboto, Arial, sans-serif",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 48 48">
+                <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-4z"/>
+                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 16.3 3 9.7 7.3 6.3 14.7z"/>
+                <path fill="#4CAF50" d="M24 45c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.3 36.5 26.8 37 24 37c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.6 40.5 16.3 45 24 45z"/>
+                <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.3 5.3C40.9 36.6 44 30.9 44 24c0-1.4-.1-2.7-.4-3.5z"/>
+              </svg>
+              <span>
+                <div style={{ fontWeight: 700 }}>Leave Us a Review</div>
+                <div style={{ fontSize: 11.5, color: "#5F6368", display: "flex", alignItems: "center", gap: 3 }}>
+                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={11} fill="#FBBC04" color="#FBBC04" />)}
+                  <span style={{ marginLeft: 3 }}>on Google</span>
+                </div>
+              </span>
+            </a>
           </div>
         </div>
       </div>
