@@ -59,6 +59,65 @@ function EditableText({ value, onChange, editing, style, as = "span", multiline 
   );
 }
 
+function BeforeAfterSlider({ before, after }) {
+  const [pct, setPct] = useState(50);
+  const wrapRef = useRef(null);
+  const draggingRef = useRef(false);
+
+  const setFromClientX = (clientX) => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    let p = ((clientX - rect.left) / rect.width) * 100;
+    p = Math.max(0, Math.min(100, p));
+    setPct(p);
+  };
+
+  useEffect(() => {
+    const onMove = (e) => { if (draggingRef.current) setFromClientX(e.clientX); };
+    const onUp = () => { draggingRef.current = false; };
+    const onTouchMove = (e) => { if (draggingRef.current) setFromClientX(e.touches[0].clientX); };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchend", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onUp);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={wrapRef}
+      onMouseDown={(e) => { draggingRef.current = true; setFromClientX(e.clientX); }}
+      onTouchStart={(e) => { draggingRef.current = true; setFromClientX(e.touches[0].clientX); }}
+      style={{
+        position: "relative", width: "100%", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
+        userSelect: "none", touchAction: "pan-y", cursor: "ew-resize",
+        boxShadow: "0 12px 30px -14px rgba(0,0,0,0.5)",
+      }}
+    >
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${after})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div style={{ position: "absolute", top: 12, right: 12, background: "#8FBC6A", color: "#0F1A10", fontWeight: 800, fontSize: 12, padding: "4px 10px", borderRadius: 6, letterSpacing: "0.04em" }}>AFTER</div>
+      </div>
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - pct}% 0 0)`, backgroundImage: `url(${before})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div style={{ position: "absolute", top: 12, left: 12, background: "#0F1A10CC", color: "#F5F3EE", fontWeight: 800, fontSize: 12, padding: "4px 10px", borderRadius: 6, letterSpacing: "0.04em" }}>BEFORE</div>
+      </div>
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: `${pct}%`, width: 3, background: "#fff", transform: "translateX(-50%)", boxShadow: "0 0 0 1px rgba(0,0,0,0.15)" }}>
+        <div style={{
+          position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+          width: 40, height: 40, borderRadius: "50%", background: "#fff",
+          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: "#0F1A10",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
+        }}>↔</div>
+      </div>
+    </div>
+  );
+}
+
 function ImageSlot({ label, src, onUpload, editing, badgeColor, badgeText }) {
   const fileRef = useRef(null);
   const handleFile = (e) => {
@@ -860,9 +919,9 @@ export default function MowProLanding() {
         <h2 style={{ textAlign: "center", fontSize: 28, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
         <p style={{ textAlign: "center", color: "#B9C4B2", margin: "0 0 30px" }}>Real yards, real results — Douglasville, GA</p>
         {content.beforeAfterPairs.map((pair, i) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: i < content.beforeAfterPairs.length - 1 ? 30 : 0 }}>
-            <ImageSlot label="Before photo" src={pair.before} onUpload={(v) => { const next = [...content.beforeAfterPairs]; next[i] = { ...next[i], before: v }; update("beforeAfterPairs", next); }} editing={editing} badgeColor="#0F1A10CC" badgeText="BEFORE" />
-            <ImageSlot label="After photo" src={pair.after} onUpload={(v) => { const next = [...content.beforeAfterPairs]; next[i] = { ...next[i], after: v }; update("beforeAfterPairs", next); }} editing={editing} badgeColor="#8FBC6A" badgeText="AFTER" />
+          <div key={i} style={{ marginBottom: i < content.beforeAfterPairs.length - 1 ? 30 : 0, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+            <BeforeAfterSlider before={pair.before} after={pair.after} />
+            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
           </div>
         ))}
         {editing && (
