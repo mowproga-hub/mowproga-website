@@ -61,6 +61,7 @@ function EditableText({ value, onChange, editing, style, as = "span", multiline 
 
 function BeforeAfterSlider({ before, after }) {
   const [pct, setPct] = useState(50);
+  const [interacted, setInteracted] = useState(false);
   const wrapRef = useRef(null);
   const draggingRef = useRef(false);
 
@@ -89,17 +90,29 @@ function BeforeAfterSlider({ before, after }) {
     };
   }, []);
 
+  const startDrag = (clientX) => {
+    setInteracted(true);
+    draggingRef.current = true;
+    setFromClientX(clientX);
+  };
+
   return (
     <div
       ref={wrapRef}
-      onMouseDown={(e) => { draggingRef.current = true; setFromClientX(e.clientX); }}
-      onTouchStart={(e) => { draggingRef.current = true; setFromClientX(e.touches[0].clientX); }}
+      onMouseDown={(e) => startDrag(e.clientX)}
+      onTouchStart={(e) => startDrag(e.touches[0].clientX)}
       style={{
         position: "relative", width: "100%", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
         userSelect: "none", touchAction: "pan-y", cursor: "ew-resize",
         boxShadow: "0 12px 30px -14px rgba(0,0,0,0.5)",
       }}
     >
+      <style>{`
+        @keyframes mpSwipeHint {
+          0%, 100% { transform: translateX(-14px); }
+          50% { transform: translateX(14px); }
+        }
+      `}</style>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${after})`, backgroundSize: "cover", backgroundPosition: "center" }}>
         <div style={{ position: "absolute", top: 12, right: 12, background: "#8FBC6A", color: "#0F1A10", fontWeight: 800, fontSize: 12, padding: "4px 10px", borderRadius: 6, letterSpacing: "0.04em" }}>AFTER</div>
       </div>
@@ -114,6 +127,17 @@ function BeforeAfterSlider({ before, after }) {
           boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
         }}>↔</div>
       </div>
+      {!interacted && (
+        <div style={{
+          position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)",
+          background: "rgba(15,26,16,0.85)", color: "#fff", padding: "8px 16px", borderRadius: 999,
+          fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 8,
+          pointerEvents: "none", whiteSpace: "nowrap",
+        }}>
+          <span style={{ display: "inline-block", animation: "mpSwipeHint 1.4s ease-in-out infinite" }}>↔</span>
+          Swipe to compare
+        </div>
+      )}
     </div>
   );
 }
@@ -164,7 +188,6 @@ const SIZE_OPTIONS = [
 // since actual cost depends heavily on tree coverage and volume.
 const LEAF_PRICES = { small: 75, medium: 125, large: 200, xl: null };
 const HEAVY_TREE_FEE = 75;
-const BAG_HAUL_FEE = 40;
 
 function QuoteModal({ open, onClose, basePrice }) {
   const [step, setStep] = useState(1);
@@ -175,17 +198,17 @@ function QuoteModal({ open, onClose, basePrice }) {
   if (!open) return null;
 
   const CRACK_SPRAY_PRICE = 15;
-  const OVERGROWN_FEE = 40;
   const EDGE_RESTORE_PRICE = 25;
   const isLeaf = form.serviceType === "leaf";
   const selectedOption = SIZE_OPTIONS.find((s) => s.key === form.size);
   const isCustomQuote = isLeaf ? LEAF_PRICES[form.size] === null : selectedOption?.addOn === null;
   const needsCustomQuote = isCustomQuote || (!isLeaf && form.overgrownLevel === "severe") || (isLeaf && form.heavyTrees);
+  const normalCutPrice = parseInt(basePrice, 10) + (selectedOption?.addOn || 0);
   const price = needsCustomQuote
     ? null
     : isLeaf
-    ? LEAF_PRICES[form.size] + (form.bagHaul ? BAG_HAUL_FEE : 0)
-    : parseInt(basePrice, 10) + (selectedOption?.addOn || 0) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.overgrownLevel === "mild" ? OVERGROWN_FEE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
+    ? LEAF_PRICES[form.size]
+    : (form.overgrownLevel === "mild" ? normalCutPrice * 2 : normalCutPrice) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
 
   const submit = async () => {
     setSubmitting(true);
@@ -340,7 +363,7 @@ function QuoteModal({ open, onClose, basePrice }) {
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>First-cut fee for a couple extra passes</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${OVERGROWN_FEE}</div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>2× cut price</div>
                     </div>
 
                     <div
@@ -442,7 +465,7 @@ function QuoteModal({ open, onClose, basePrice }) {
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Leaves bagged and removed from property (default is mulched into the lawn)</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${BAG_HAUL_FEE}</div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>$5–8/bag</div>
                     </div>
                   </>
                 )}
@@ -500,9 +523,10 @@ const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Law
 
 SERVICES & PRICING:
 - Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $50, Medium yard (5,000-10,000 sq ft) $60, Large yard (10,000-20,000 sq ft) $80, Extra large/acreage (over 20,000 sq ft): custom quote after Joseph assesses it in person
-- First-cut/overgrown fee: +$40 if it's been a few weeks since it was last cut. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
+- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $60 cut becomes $120 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $45/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
+- Leaf removal (separate service from mowing): Small yard $75+, Medium yard $125+, Large yard $200+, Extra large: custom quote. Default is mulching leaves into the lawn at no extra charge; bagging and hauling them away instead is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
 - No contracts, cancel anytime
 - Service area: Douglasville and surrounding Douglas County, GA
 
