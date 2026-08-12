@@ -29,21 +29,25 @@ const DEFAULT_CONTENT = {
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "60",
-  ratingLine: "11 five-star reviews on Google",
+  ratingLine: "20 five-star reviews on Google",
   reviews: [
-    { name: "Lisa Banks", stars: 5, screenshot: "/images/lisa-banks.png" },
-    { name: "Dolly Johnson (Marlene)", stars: 5, screenshot: "/images/dolly-johnson.png" },
-    { name: "Ninti Chance", stars: 5, screenshot: "/images/ninti-chance.png" },
-    { name: "Toni Vasser", stars: 5, screenshot: "/images/toni-vasser.png" },
-    { name: "Jtillthebeast (Jimmy)", stars: 5, screenshot: "/images/jimmy-t.png" },
-    { name: "Tamekia Davis", stars: 5, screenshot: "/images/tamekia-davis.png" },
+    { name: "Lisa Banks", stars: 5, screenshot: "/images/lisa-banks.webp", w: 800, h: 518 },
+    { name: "Dolly Johnson (Marlene)", stars: 5, screenshot: "/images/dolly-johnson.webp", w: 800, h: 407 },
+    { name: "Ninti Chance", stars: 5, screenshot: "/images/ninti-chance.webp", w: 800, h: 837 },
+    { name: "Toni Vasser", stars: 5, screenshot: "/images/toni-vasser.webp", w: 800, h: 570 },
+    { name: "Jtillthebeast (Jimmy)", stars: 5, screenshot: "/images/jimmy-t.webp", w: 800, h: 303 },
+    { name: "Tamekia Davis", stars: 5, screenshot: "/images/tamekia-davis.webp", w: 800, h: 444 },
+    { name: "Courtney", stars: 5, screenshot: "/images/courtney.webp", w: 800, h: 481 },
+    { name: "Joyce Hampton", stars: 5, screenshot: "/images/joyce-hampton.webp", w: 800, h: 696 },
+    { name: "Jack Daughdrill", stars: 5, screenshot: "/images/jack-daughdrill.webp", w: 800, h: 425 },
+    { name: "Elizabeth Chaney", stars: 5, screenshot: "/images/elizabeth-chaney.webp", w: 800, h: 355 },
   ],
   beforeAfterPairs: [
     { before: "/images/before-lawn.jpg", after: "/images/after-lawn.jpg" },
     { before: "/images/before-2.jpg", after: "/images/after-2.jpg" },
   ],
   introVideo: "",
-  equipmentPhoto: "/images/equipment.png",
+  equipmentPhoto: "/images/equipment.webp",
 };
 
 function EditableText({ value, onChange, editing, style, as = "span", multiline = false }) {
@@ -248,7 +252,7 @@ function QuoteModal({ open, onClose, basePrice }) {
   return (
     <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}>
       <div onClick={(e) => e.stopPropagation()} style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 18, padding: 26, width: "100%", maxWidth: 420, color: "#F5F3EE", position: "relative", maxHeight: "calc(100vh - 32px)", overflowY: "auto", WebkitOverflowScrolling: "touch", margin: "auto" }}>
-        <button onClick={close} style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={20} /></button>
+        <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={20} /></button>
 
         {done ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
@@ -694,7 +698,7 @@ function ChatWidget() {
             <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#F5F3EE", fontWeight: 700, fontSize: 13.5 }}>
               <MessageCircle size={16} color="#8FBC6A" /> Mow Pro Assistant
             </div>
-            <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={18} /></button>
+            <button onClick={() => setOpen(false)} aria-label="Close chat" style={{ background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={18} /></button>
           </div>
           <div style={{ flex: 1, overflowY: "auto", padding: 14 }}>
             {messages.map((m, i) => (
@@ -752,6 +756,7 @@ function ChatWidget() {
       <button
         className="mp-chat-bubble"
         onClick={() => setOpen(!open)}
+        aria-label={open ? "Close chat" : "Open chat"}
         style={{
           position: "fixed", bottom: 20, right: 20, width: 56, height: 56, borderRadius: "50%",
           background: "#8FBC6A", border: "none", boxShadow: "0 6px 18px rgba(0,0,0,0.3)", cursor: "pointer",
@@ -792,14 +797,14 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
       </div>
 
       {/* STORY */}
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "24px 24px 70px" }}>
+      <main style={{ maxWidth: 640, margin: "0 auto", padding: "24px 24px 70px" }}>
         <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Our Story</div>
         <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 24px" }}>
           Built one yard — and one door hanger — at a time.
         </h1>
 
         <div style={{ width: "100%", maxHeight: 420, overflow: "hidden", borderRadius: 16, marginBottom: 30, boxShadow: "0 16px 40px -18px rgba(0,0,0,0.5)" }}>
-          <img src="/images/our-story.jpg" alt="Joseph on the Mow Pro GA mower" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
+          <img src="/images/our-story.webp" alt="Joseph on the Mow Pro GA mower" width="700" height="1516" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
         </div>
 
         <div style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.85 }}>
@@ -828,7 +833,7 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
             Get My Free Instant Quote <ArrowRight size={18} />
           </button>
         </div>
-      </div>
+      </main>
 
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
 
@@ -893,6 +898,7 @@ export default function MowProLanding() {
         </div>
       </div>
 
+      <main>
       {/* HERO */}
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 50px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1C2B1B", color: "#8FBC6A", fontSize: 12.5, fontWeight: 700, padding: "6px 14px", borderRadius: 999, marginBottom: 22, maxWidth: 420 }}>
@@ -925,7 +931,7 @@ export default function MowProLanding() {
 
         {content.equipmentPhoto && (
           <div style={{ marginTop: 32, maxWidth: 720, marginLeft: "auto", marginRight: "auto" }}>
-            <img src={content.equipmentPhoto} alt="Mow Pro Lawn Care equipment" loading="lazy" style={{ width: "100%", borderRadius: 14, border: "1px solid #24331F", display: "block" }} />
+            <img src={content.equipmentPhoto} alt="Mow Pro Lawn Care equipment" width="1402" height="713" fetchPriority="high" style={{ width: "100%", height: "auto", borderRadius: 14, border: "1px solid #24331F", display: "block" }} />
             <div style={{ fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Real gear, real crew — not stock photos</div>
           </div>
         )}
@@ -968,11 +974,11 @@ export default function MowProLanding() {
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <h2 style={{ textAlign: "center", fontSize: 28, fontWeight: 800, margin: "0 0 8px" }}>What Neighbors Are Saying</h2>
           <p style={{ textAlign: "center", color: "#7C8A78", fontSize: 12.5, margin: "0 0 30px" }}>Real screenshots, straight from Google</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, alignItems: "start" }}>
             {content.reviews.map((r, i) => (
               <div key={i} style={{ background: "#0F1A10", border: "1px solid #24331F", borderRadius: 14, overflow: "hidden", position: "relative" }}>
                 {r.screenshot ? (
-                  <img src={r.screenshot} alt={`Review from ${r.name}`} loading="lazy" style={{ width: "100%", display: "block" }} />
+                  <img src={r.screenshot} alt={`Review from ${r.name}`} width={r.w || 800} height={r.h || 500} loading="lazy" style={{ width: "100%", height: "auto", display: "block" }} />
                 ) : (
                   <div style={{ padding: 20 }}>
                     <div style={{ display: "flex", gap: 2, marginBottom: 10 }}>
@@ -983,7 +989,7 @@ export default function MowProLanding() {
                   </div>
                 )}
                 {editing && (
-                  <button onClick={() => removeReview(i)} style={{ position: "absolute", top: 10, right: 10, background: "rgba(15,26,16,0.85)", border: "none", borderRadius: 6, color: "#B3441E", cursor: "pointer", padding: 5 }}>
+                  <button onClick={() => removeReview(i)} aria-label="Remove review" style={{ position: "absolute", top: 10, right: 10, background: "rgba(15,26,16,0.85)", border: "none", borderRadius: 6, color: "#B3441E", cursor: "pointer", padding: 5 }}>
                     <Trash2 size={14} />
                   </button>
                 )}
@@ -1078,6 +1084,8 @@ export default function MowProLanding() {
           </div>
         ))}
       </div>
+
+      </main>
 
       {/* FOOTER CTA */}
       <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center" }}>
