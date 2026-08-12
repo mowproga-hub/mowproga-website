@@ -43,8 +43,8 @@ const DEFAULT_CONTENT = {
     { name: "Elizabeth Chaney", stars: 5, screenshot: "/images/elizabeth-chaney.webp", w: 800, h: 355 },
   ],
   beforeAfterPairs: [
-    { before: "/images/before-lawn.jpg", after: "/images/after-lawn.jpg" },
-    { before: "/images/before-2.jpg", after: "/images/after-2.jpg" },
+    { before: "/images/before-lawn.webp", after: "/images/after-lawn.webp" },
+    { before: "/images/before-2.webp", after: "/images/after-2.webp" },
   ],
   introVideo: "",
   equipmentPhoto: "/images/equipment.webp",
