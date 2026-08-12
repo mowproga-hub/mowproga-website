@@ -31,12 +31,12 @@ const DEFAULT_CONTENT = {
   price: "60",
   ratingLine: "11 five-star reviews on Google",
   reviews: [
-    { name: "Lisa Banks", stars: 5, screenshot: "/images/reviews/lisa-banks.png" },
-    { name: "Dolly Johnson (Marlene)", stars: 5, screenshot: "/images/reviews/dolly-johnson.png" },
-    { name: "Ninti Chance", stars: 5, screenshot: "/images/reviews/ninti-chance.png" },
-    { name: "Toni Vasser", stars: 5, screenshot: "/images/reviews/toni-vasser.png" },
-    { name: "Jtillthebeast (Jimmy)", stars: 5, screenshot: "/images/reviews/jimmy-t.png" },
-    { name: "Tamekia Davis", stars: 5, screenshot: "/images/reviews/tamekia-davis.png" },
+    { name: "Lisa Banks", stars: 5, screenshot: "/images/lisa-banks.png" },
+    { name: "Dolly Johnson (Marlene)", stars: 5, screenshot: "/images/dolly-johnson.png" },
+    { name: "Ninti Chance", stars: 5, screenshot: "/images/ninti-chance.png" },
+    { name: "Toni Vasser", stars: 5, screenshot: "/images/toni-vasser.png" },
+    { name: "Jtillthebeast (Jimmy)", stars: 5, screenshot: "/images/jimmy-t.png" },
+    { name: "Tamekia Davis", stars: 5, screenshot: "/images/tamekia-davis.png" },
   ],
   beforeAfterPairs: [
     { before: "/images/before-lawn.jpg", after: "/images/after-lawn.jpg" },
