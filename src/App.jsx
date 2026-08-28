@@ -938,7 +938,7 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
 function FallPhotoPlaceholder() {
   return (
     <div style={{
-      position: "relative", width: "100%", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
+      position: "relative", width: "100%", boxSizing: "border-box", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
       border: "1px dashed #3A4A38", background: "#152016",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", padding: 24,
     }}>
