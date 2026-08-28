@@ -981,18 +981,18 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         </button>
       </div>
 
-      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0" }}>
+      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0", textAlign: "center" }}>
         {/* HERO */}
         <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Fall Cleanup Services</div>
         <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 16px" }}>
           Fall Cleanup Douglasville GA
         </h1>
-        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 0 26px", maxWidth: 560 }}>
+        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>
           Leaves piling up faster than you can rake them? We handle fall leaf removal and full yard cleanup for homeowners in Douglasville and the surrounding area — so your lawn goes into winter looking as good as it did in spring.
         </p>
 
         {/* CTA — kept high on the page so it's visible without scrolling */}
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 40 }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 40 }}>
           <button
             onClick={() => { trackEvent("quote_opened", { location: "fall_cleanup_hero" }); setShowQuote(true); }}
             style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
@@ -1008,16 +1008,18 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
           <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Real fall cleanups — Douglasville, GA and nearby</p>
-          <FallPhotoPlaceholder />
+          <div style={{ maxWidth: 560, margin: "0 auto" }}>
+            <FallPhotoPlaceholder />
+          </div>
         </div>
 
         {/* LEAF REMOVAL & FALL CLEANUP SERVICES */}
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal & Fall Yard Cleanup</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 0 24px", lineHeight: 1.6 }}>
+          <p style={{ color: "#B9C4B2", margin: "0 auto 24px", lineHeight: 1.6, maxWidth: 560 }}>
             Fall service covers everything a Douglasville-area yard needs before winter: clearing fallen leaves off the lawn and beds, a final mow and edge, and blowing off driveways and walkways. Leaves are mulched into the lawn at no extra charge by default, or bagged and hauled away if you'd rather have them gone completely.
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, textAlign: "left" }}>
             <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Leaf Removal" desc="Full-yard leaf clearing from the lawn, beds, and hardscapes." />
             <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Fall Mow & Edge" desc="One last clean cut and edge before the grass goes dormant." />
             <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Bed Cleanout" desc="Leaves and debris cleared out of flower beds and borders." />
@@ -1028,28 +1030,30 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         {/* PRICING */}
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Fall Cleanup Pricing</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 0 20px", lineHeight: 1.6 }}>
+          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
             Leaf removal is priced by yard size, same as our other services — Joseph confirms the exact price once he sees the property in person.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
-            {SIZE_OPTIONS.map((opt) => (
-              <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016" }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14.5 }}>{opt.label}</div>
-                  <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
+          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
+              {SIZE_OPTIONS.map((opt) => (
+                <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016" }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14.5 }}>{opt.label}</div>
+                    <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
+                  </div>
+                  <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
+                    {LEAF_PRICES[opt.key] === null ? "Custom" : `$${LEAF_PRICES[opt.key]}+`}
+                  </div>
                 </div>
-                <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
-                  {LEAF_PRICES[opt.key] === null ? "Custom" : `$${LEAF_PRICES[opt.key]}+`}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div style={{ background: "#1C2B1B", border: "1px solid #24331F", borderRadius: 10, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 14.5 }}>Bag & haul away</div>
-              <div style={{ fontSize: 12, color: "#7C8A78" }}>Optional add-on — default is mulching leaves into the lawn</div>
+              ))}
             </div>
-            <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>$5–8/bag</div>
+            <div style={{ background: "#1C2B1B", border: "1px solid #24331F", borderRadius: 10, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 14.5 }}>Bag & haul away</div>
+                <div style={{ fontSize: 12, color: "#7C8A78" }}>Optional add-on — default is mulching leaves into the lawn</div>
+              </div>
+              <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>$5–8/bag</div>
+            </div>
           </div>
         </div>
 
@@ -1057,7 +1061,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Fall Cleanup Service Areas</h2>
           <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Proudly serving Douglasville and Douglas County, GA, including:</p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
             {SERVICE_AREAS.map((area) => (
               <div key={area} style={{ display: "flex", alignItems: "center", gap: 6, background: "#152016", border: "1px solid #24331F", borderRadius: 999, padding: "8px 16px", fontSize: 13.5, fontWeight: 700 }}>
                 <MapPin size={14} color="#8FBC6A" />
