@@ -50,6 +50,91 @@ const DEFAULT_CONTENT = {
   equipmentPhoto: "/images/equipment.webp",
 };
 
+// Base <head> tags as shipped in index.html, so non-home routes can restore
+// them on the way out instead of leaving another page's SEO tags behind.
+const DEFAULT_SEO = {
+  title: "Mow Pro GA | Lawn Mowing & Edging in Douglasville, GA",
+  description: "Reliable biweekly lawn mowing, edging, and cleanup from a local, family-run crew in Douglasville, GA. Same-day quotes, no contracts. Get your free instant quote.",
+  url: "https://mowproga.com/",
+  image: "https://mowproga.com/images/our-story.webp",
+};
+
+const FALL_CLEANUP_SEO = {
+  title: "Fall Yard Cleanup Douglasville GA | Mow Pro Lawn Care",
+  description: "Fall leaf removal & yard cleanup in Douglasville, GA. Bag & haul $5-8/bag. Serving Villa Rica, Lithia Springs & Powder Springs. Free quote.",
+  url: "https://mowproga.com/fall-cleanup",
+  image: "https://mowproga.com/images/equipment.webp",
+};
+
+const FALL_CLEANUP_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Fall Yard Cleanup",
+  "name": "Fall Yard Cleanup",
+  "description": "Fall leaf removal and yard cleanup — mowing, bed cleanout, and debris blow-off — for residential properties.",
+  "areaServed": [
+    { "@type": "City", "name": "Douglasville, GA" },
+    { "@type": "City", "name": "Villa Rica, GA" },
+    { "@type": "City", "name": "Lithia Springs, GA" },
+    { "@type": "City", "name": "Powder Springs, GA" },
+    { "@type": "AdministrativeArea", "name": "Douglas County, GA" },
+  ],
+  "priceRange": "$5-$8 per bag",
+  "provider": {
+    "@type": "LocalBusiness",
+    "@id": "https://mowproga.com/#business",
+    "name": "Mow Pro GA",
+    "alternateName": "Mow Pro Lawn Care LLC",
+    "telephone": "+14046696945",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Douglasville",
+      "addressRegion": "GA",
+      "addressCountry": "US",
+    },
+  },
+};
+
+function applyPageSEO(seo) {
+  if (typeof document === "undefined") return;
+  document.title = seo.title;
+  const setContent = (selector, value) => {
+    const el = document.querySelector(selector);
+    if (el) el.setAttribute("content", value);
+  };
+  setContent('meta[name="description"]', seo.description);
+  setContent('meta[property="og:title"]', seo.title);
+  setContent('meta[property="og:description"]', seo.description);
+  setContent('meta[property="og:url"]', seo.url);
+  setContent('meta[property="og:image"]', seo.image);
+  setContent('meta[name="twitter:title"]', seo.title);
+  setContent('meta[name="twitter:description"]', seo.description);
+  setContent('meta[name="twitter:image"]', seo.image);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute("href", seo.url);
+}
+
+function pathToRoute(path) {
+  if (path === "/about") return "about";
+  if (path === "/fall-cleanup") return "fall-cleanup";
+  return "home";
+}
+
+function setPageJsonLd(json) {
+  if (typeof document === "undefined") return;
+  const existing = document.getElementById("page-jsonld");
+  if (!json) {
+    if (existing) existing.remove();
+    return;
+  }
+  const script = existing || document.createElement("script");
+  script.id = "page-jsonld";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(json);
+  if (!existing) document.head.appendChild(script);
+}
+
 function EditableText({ value, onChange, editing, style, as = "span", multiline = false }) {
   if (!editing) {
     const Tag = as;
@@ -193,9 +278,9 @@ const SIZE_OPTIONS = [
 const LEAF_PRICES = { small: 75, medium: 125, large: 200, xl: null };
 const HEAVY_TREE_FEE = 75;
 
-function QuoteModal({ open, onClose, basePrice }) {
+function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: "mowing", heavyTrees: false, bagHaul: false });
+  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -246,7 +331,7 @@ function QuoteModal({ open, onClose, basePrice }) {
 
   const close = () => {
     onClose();
-    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: "mowing", heavyTrees: false, bagHaul: false }); }, 300);
+    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false }); }, 300);
   };
 
   return (
@@ -779,6 +864,9 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
           Mow Pro GA
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <button onClick={() => navigate("/fall-cleanup")} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>
+            Fall Cleanup
+          </button>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
             <Phone size={14} color="#8FBC6A" />
             {content.phone}
@@ -844,25 +932,194 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
   );
 }
 
+// Placeholder shown until real fall before/after photos are added to
+// /public/images — swap in a beforeAfterPairs-style pair and render
+// <BeforeAfterSlider /> instead once they exist.
+function FallPhotoPlaceholder() {
+  return (
+    <div style={{
+      position: "relative", width: "100%", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
+      border: "1px dashed #3A4A38", background: "#152016",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", padding: 24,
+    }}>
+      <Wind size={26} color="#5C6B57" />
+      <div style={{ color: "#9AAE94", fontSize: 13.5, fontWeight: 700 }}>Fall before/after photos coming soon</div>
+      <div style={{ color: "#7C8A78", fontSize: 12 }}>Check back once this season's leaf cleanups are underway</div>
+    </div>
+  );
+}
+
+const SERVICE_AREAS = ["Douglasville", "Villa Rica", "Lithia Springs", "Powder Springs"];
+
+function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
+  return (
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
+      {/* NAV */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
+        <button onClick={() => navigate("/")} style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18, background: "none", border: "none", color: "#F5F3EE", cursor: "pointer", padding: 0 }}>
+          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
+          Mow Pro GA
+        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <button onClick={() => navigate("/fall-cleanup")} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>
+            Fall Cleanup
+          </button>
+          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
+            <Phone size={14} color="#8FBC6A" />
+            {content.phone}
+          </a>
+          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
+            Get Quote
+          </button>
+        </div>
+      </div>
+
+      {/* BACK LINK */}
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "20px 24px 0" }}>
+        <button onClick={() => navigate("/")} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 13.5, cursor: "pointer", padding: 0 }}>
+          ← Back to home
+        </button>
+      </div>
+
+      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0" }}>
+        {/* HERO */}
+        <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Fall Cleanup Services</div>
+        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 16px" }}>
+          Fall Cleanup Douglasville GA
+        </h1>
+        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 0 26px", maxWidth: 560 }}>
+          Leaves piling up faster than you can rake them? We handle fall leaf removal and full yard cleanup for homeowners in Douglasville and the surrounding area — so your lawn goes into winter looking as good as it did in spring.
+        </p>
+
+        {/* CTA — kept high on the page so it's visible without scrolling */}
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 40 }}>
+          <button
+            onClick={() => { trackEvent("quote_opened", { location: "fall_cleanup_hero" }); setShowQuote(true); }}
+            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            Get My Free Instant Quote <ArrowRight size={18} />
+          </button>
+          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 10, padding: "16px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Phone size={16} /> Call Now
+          </a>
+        </div>
+
+        {/* BEFORE / AFTER */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Real fall cleanups — Douglasville, GA and nearby</p>
+          <FallPhotoPlaceholder />
+        </div>
+
+        {/* LEAF REMOVAL & FALL CLEANUP SERVICES */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal & Fall Yard Cleanup</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 0 24px", lineHeight: 1.6 }}>
+            Fall service covers everything a Douglasville-area yard needs before winter: clearing fallen leaves off the lawn and beds, a final mow and edge, and blowing off driveways and walkways. Leaves are mulched into the lawn at no extra charge by default, or bagged and hauled away if you'd rather have them gone completely.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+            <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Leaf Removal" desc="Full-yard leaf clearing from the lawn, beds, and hardscapes." />
+            <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Fall Mow & Edge" desc="One last clean cut and edge before the grass goes dormant." />
+            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Bed Cleanout" desc="Leaves and debris cleared out of flower beds and borders." />
+            <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Bag & Haul Away" desc="Leaves bagged and removed from the property instead of mulched — $5–8/bag." />
+          </div>
+        </div>
+
+        {/* PRICING */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Fall Cleanup Pricing</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 0 20px", lineHeight: 1.6 }}>
+            Leaf removal is priced by yard size, same as our other services — Joseph confirms the exact price once he sees the property in person.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
+            {SIZE_OPTIONS.map((opt) => (
+              <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016" }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14.5 }}>{opt.label}</div>
+                  <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
+                </div>
+                <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
+                  {LEAF_PRICES[opt.key] === null ? "Custom" : `$${LEAF_PRICES[opt.key]}+`}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ background: "#1C2B1B", border: "1px solid #24331F", borderRadius: 10, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14.5 }}>Bag & haul away</div>
+              <div style={{ fontSize: 12, color: "#7C8A78" }}>Optional add-on — default is mulching leaves into the lawn</div>
+            </div>
+            <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>$5–8/bag</div>
+          </div>
+        </div>
+
+        {/* SERVICE AREAS */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Fall Cleanup Service Areas</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Proudly serving Douglasville and Douglas County, GA, including:</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+            {SERVICE_AREAS.map((area) => (
+              <div key={area} style={{ display: "flex", alignItems: "center", gap: 6, background: "#152016", border: "1px solid #24331F", borderRadius: 999, padding: "8px 16px", fontSize: 13.5, fontWeight: 700 }}>
+                <MapPin size={14} color="#8FBC6A" />
+                {area}
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+
+      {/* FOOTER CTA */}
+      <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center" }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Ready to clear the leaves before winter?</h2>
+        <p style={{ margin: "0 0 20px", opacity: 0.85 }}>Text, call, or request a quote — most yards confirmed same day.</p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => { trackEvent("quote_opened", { location: "fall_cleanup_footer" }); setShowQuote(true); }} style={{ background: "#0F1A10", color: "#F5F3EE", border: "none", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            Get My Free Instant Quote
+          </button>
+          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#0F1A10", border: "1.5px solid #0F1A10", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Phone size={16} /> Call Mow Pro Now
+          </a>
+        </div>
+      </div>
+
+      <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} initialServiceType="leaf" />
+
+      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
+        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
+      </div>
+    </div>
+  );
+}
+
 export default function MowProLanding() {
   const [content, setContent] = useState(DEFAULT_CONTENT);
   const editing = false; // Public site — editing happens by updating the code directly, not in-browser.
   const [showQuote, setShowQuote] = useState(false);
-  const [route, setRoute] = useState(() => (typeof window !== "undefined" && window.location.pathname === "/about" ? "about" : "home"));
+  const [route, setRoute] = useState(() => pathToRoute(typeof window !== "undefined" ? window.location.pathname : "/"));
 
   useEffect(() => {
     loadGoogleAnalytics();
   }, []);
 
   useEffect(() => {
-    const onPop = () => setRoute(window.location.pathname === "/about" ? "about" : "home");
+    const onPop = () => setRoute(pathToRoute(window.location.pathname));
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  useEffect(() => {
+    if (route === "fall-cleanup") {
+      applyPageSEO(FALL_CLEANUP_SEO);
+      setPageJsonLd(FALL_CLEANUP_JSONLD);
+    } else {
+      applyPageSEO(DEFAULT_SEO);
+      setPageJsonLd(null);
+    }
+  }, [route]);
+
   const navigate = (path) => {
     window.history.pushState({}, "", path);
-    setRoute(path === "/about" ? "about" : "home");
+    setRoute(pathToRoute(path));
     window.scrollTo(0, 0);
   };
 
@@ -879,6 +1136,10 @@ export default function MowProLanding() {
     return <AboutPage content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
   }
 
+  if (route === "fall-cleanup") {
+    return <FallCleanupPage content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
+  }
+
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE" }}>
       {/* NAV */}
@@ -888,6 +1149,9 @@ export default function MowProLanding() {
           Mow Pro GA
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <button onClick={() => navigate("/fall-cleanup")} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>
+            Fall Cleanup
+          </button>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
             <Phone size={14} color="#8FBC6A" />
             <EditableText editing={editing} value={content.phone} onChange={(v) => update("phone", v)} style={{ fontSize: 13, color: "#F5F3EE", maxWidth: 140 }} />
