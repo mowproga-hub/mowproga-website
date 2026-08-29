@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Inlined instead of a separate stylesheet request: this is the entire
+         global CSS for the site, so a network round-trip for it is pure
+         render-blocking overhead. -->
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #0F1A10; }
+    </style>
+
     <!-- Primary SEO -->
     <title>Mow Pro GA | Lawn Mowing & Edging in Douglasville, GA</title>
     <meta name="description" content="Reliable biweekly lawn mowing, edging, and cleanup from a local, family-run crew in Douglasville, GA. Same-day quotes, no contracts. Get your free instant quote." />
