@@ -979,6 +979,7 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
       </main>
 
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
+      <ChatWidget />
 
       <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
         Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
