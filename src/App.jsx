@@ -938,23 +938,6 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
   );
 }
 
-// Placeholder shown until real fall before/after photos are added to
-// /public/images — swap in a beforeAfterPairs-style pair and render
-// <BeforeAfterSlider /> instead once they exist.
-function FallPhotoPlaceholder() {
-  return (
-    <div style={{
-      position: "relative", width: "100%", boxSizing: "border-box", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
-      border: "1px dashed #3A4A38", background: "#152016",
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", padding: 24,
-    }}>
-      <Wind size={26} color="#5C6B57" />
-      <div style={{ color: "#9AAE94", fontSize: 13.5, fontWeight: 700 }}>Fall before/after photos coming soon</div>
-      <div style={{ color: "#7C8A78", fontSize: 12 }}>Check back once this season's leaf cleanups are underway</div>
-    </div>
-  );
-}
-
 const SERVICE_AREAS = ["Douglasville", "Villa Rica", "Lithia Springs", "Powder Springs"];
 
 function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
@@ -1015,7 +998,8 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
           <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Real fall cleanups — Douglasville, GA and nearby</p>
           <div style={{ maxWidth: 560, margin: "0 auto" }}>
-            <FallPhotoPlaceholder />
+            <BeforeAfterSlider before="/images/before-fall.webp" after="/images/after-fall.webp" />
+            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
           </div>
         </div>
 
