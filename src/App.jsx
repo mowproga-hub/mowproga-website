@@ -137,6 +137,7 @@ const FALL_CLEANUP_JSONLD = {
     "name": "Mow Pro Lawn Care LLC",
     "telephone": "+14046696945",
     "url": FALL_CLEANUP_SEO.url,
+    "image": FALL_CLEANUP_SEO.image,
     "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",

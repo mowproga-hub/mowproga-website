@@ -76,6 +76,7 @@ const JSON_LD = {
     name: "Mow Pro Lawn Care LLC",
     telephone: "+14046696945",
     url: PAGE.url,
+    image: PAGE.image,
     priceRange: "$$",
     address: {
       "@type": "PostalAddress",
