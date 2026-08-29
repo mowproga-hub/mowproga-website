@@ -31,6 +31,12 @@ const DEFAULT_CONTENT = {
   price: "60",
   ratingLine: "33 five-star reviews on Google",
   reviews: [
+    { name: "Kelsey Mckay", stars: 5, text: "Joseph did an excellent job on my yard! I reached out to him after finding him on Google. He came and serviced my yard last minute. He was very careful to do exactly what I asked. Very professional, very detailed. I would recommend." },
+    { name: "Al", stars: 5, text: "Total lifesaver! My mower broke down and the grass got so overgrown my push mower couldn't touch it, which meant an immediate HOA warning. I called Mow Pro Lawn Care and they knocked it out with ease. My yard looks incredible again, and my dog can finally run and play in the backyard without getting lost in the jungle. Highly recommend if you're in Douglasville and in a pinch! Thank you again Joseph!" },
+    { name: "Jamar Chappell", stars: 5, text: "His work was outstanding. He was reliable, professional, and paid excellent attention to detail throughout the entire process. I was extremely satisfied with the quality of his work and would highly recommend him." },
+    { name: "Yolanda Le Fridge", stars: 5, text: "I have tried many lawn care businesses. This is the best one, hands down. He is very meticulous and is very passionate about what he does. I will not let anyone else do my lawn." },
+    { name: "P Hall", stars: 5, text: "Joseph showed up when he promised and he did a very good job mowing and edging my yard. He seems to take pride in his work and he pays attention to detail." },
+    { name: "Skip Allen", stars: 5, text: "Joseph is fantastic. I have had a hard time finding anyone to tackle my yard. It isn't a normal tidy grassy lawn. I keep it wild and free. It makes the job difficult to do. Not for Joseph. I explained what I wanted and in no time it was done, and it looked amazing. His price was very reasonable. I am so glad I found him. I highly recommend this young man. I rarely have this much praise for anyone. Joseph deserves it and more." },
     { name: "Lisa Banks", stars: 5, screenshot: "/images/lisa-banks.webp", w: 800, h: 518 },
     { name: "Dolly Johnson (Marlene)", stars: 5, screenshot: "/images/dolly-johnson.webp", w: 800, h: 407 },
     { name: "Ninti Chance", stars: 5, screenshot: "/images/ninti-chance.webp", w: 800, h: 837 },
