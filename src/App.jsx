@@ -1026,7 +1026,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
               {SIZE_OPTIONS.map((opt) => (
-                <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016" }}>
+                <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016", cursor: "default" }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 14.5 }}>{opt.label}</div>
                     <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
@@ -1037,14 +1037,21 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
                 </div>
               ))}
             </div>
-            <div style={{ background: "#1C2B1B", border: "1px solid #24331F", borderRadius: 10, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ background: "#1C2B1B", border: "1px solid #24331F", borderRadius: 10, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "default" }}>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14.5 }}>Bag & haul away</div>
                 <div style={{ fontSize: 12, color: "#7C8A78" }}>Optional add-on — default is mulching leaves into the lawn</div>
               </div>
               <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>$5–8/bag</div>
             </div>
+            <div style={{ fontSize: 12, color: "#7C8A78", textAlign: "center", marginTop: 14 }}>Reference pricing — get your exact quote below</div>
           </div>
+          <button
+            onClick={() => { trackEvent("quote_opened", { location: "fall_cleanup_pricing" }); setShowQuote(true); }}
+            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, marginTop: 24 }}
+          >
+            Get My Free Fall Cleanup Quote <ArrowRight size={18} />
+          </button>
         </div>
 
         {/* SERVICE AREAS */}
