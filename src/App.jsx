@@ -981,6 +981,15 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
       <ChatWidget />
 
+      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
+        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
+          <img
+            src="/images/urban-ag-council-badge.webp"
+            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
+            style={{ maxWidth: 160, width: "100%", height: "auto" }}
+          />
+        </a>
+      </div>
       <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
         Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
       </div>
@@ -1152,6 +1161,15 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} initialServiceType="leaf" />
       <ChatWidget />
 
+      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
+        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
+          <img
+            src="/images/urban-ag-council-badge.webp"
+            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
+            style={{ maxWidth: 160, width: "100%", height: "auto" }}
+          />
+        </a>
+      </div>
       <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
         Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
       </div>
@@ -1447,6 +1465,15 @@ export default function MowProLanding() {
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
       <ChatWidget />
 
+      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
+        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
+          <img
+            src="/images/urban-ag-council-badge.webp"
+            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
+            style={{ maxWidth: 160, width: "100%", height: "auto" }}
+          />
+        </a>
+      </div>
       <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78", paddingBottom: 90 }}>
         <div style={{ marginBottom: 10 }}>
           Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
