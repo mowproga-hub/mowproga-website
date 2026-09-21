@@ -29,7 +29,7 @@ const DEFAULT_CONTENT = {
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "60",
-  ratingLine: "33 five-star reviews on Google",
+  ratingLine: "43 five-star reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
@@ -1258,7 +1258,18 @@ export default function MowProLanding() {
         </button>
         <div style={{ marginTop: 16, display: "flex", justifyContent: "center", alignItems: "center", gap: 4 }}>
           {[1, 2, 3, 4, 5].map((i) => <Star key={i} size={16} fill="#8FBC6A" color="#8FBC6A" />)}
-          <EditableText editing={editing} value={content.ratingLine} onChange={(v) => update("ratingLine", v)} style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2" }} />
+          {editing ? (
+            <EditableText editing={editing} value={content.ratingLine} onChange={(v) => update("ratingLine", v)} style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2" }} />
+          ) : (
+            <a
+              href="https://g.page/r/Ce4jwGMDfTNvEAE/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              {content.ratingLine}
+            </a>
+          )}
         </div>
 
         {content.equipmentPhoto && (
