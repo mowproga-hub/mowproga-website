@@ -27,7 +27,7 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
     ${service ? `<p><b>Service:</b> ${service}</p>` : ""}
     <p><b>Yard size:</b> ${size}</p>
     ${isLeaf ? `
-    <p><b>Bag &amp; haul away:</b> ${bagHaul ? "Yes" : "No (mulch into lawn)"}</p>
+    <p><b>Bag &amp; haul away:</b> ${bagHaul ? "Yes" : "No (piled on-site)"}</p>
     <p><b>Heavy tree coverage:</b> ${heavyTrees ? "Yes" : "No"}</p>
     ` : `
     <p><b>Crack spray add-on:</b> ${crackSpray ? "Yes" : "No"}</p>

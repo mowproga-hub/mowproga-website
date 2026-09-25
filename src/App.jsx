@@ -29,7 +29,7 @@ const DEFAULT_CONTENT = {
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "60",
-  ratingLine: "43 five-star reviews on Google",
+  ratingLine: "47 five-star reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
@@ -86,15 +86,15 @@ const FALL_CLEANUP_FAQ_JSONLD = {
       "name": "How much does fall yard cleanup cost in Douglasville, GA?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $75, medium at $125, large at $200, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.",
+        "text": "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.",
       },
     },
     {
       "@type": "Question",
-      "name": "Do you bag and haul away the leaves, or mulch them into the lawn?",
+      "name": "Do you bag and haul away the leaves, or leave them on the property?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Mulching leaves into the lawn is included at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.",
+        "text": "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.",
       },
     },
     {
@@ -326,10 +326,10 @@ const SIZE_OPTIONS = [
   { key: "xl", label: "Extra large / acreage", sub: "Over 20,000 sq ft", addOn: null },
 ];
 
-// Leaf removal starting prices by the same size tiers, based on Atlanta-area
-// market research (Angi/HomeGuide/LawnStarter). Shown as a "+" starting price
-// since actual cost depends heavily on tree coverage and volume.
-const LEAF_PRICES = { small: 75, medium: 125, large: 200, xl: null };
+// Leaf removal starting prices by the same size tiers as mowing. Shown as a
+// "+" starting price since actual cost depends heavily on tree coverage and
+// volume.
+const LEAF_PRICES = { small: 90, medium: 150, large: 225, xl: null };
 const HEAVY_TREE_FEE = 75;
 
 function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" }) {
@@ -608,7 +608,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         </div>
                         <div>
                           <div style={{ fontWeight: 700, fontSize: 13.5 }}>Bag & haul away</div>
-                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Leaves bagged and removed from property (default is mulched into the lawn)</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Leaves bagged and removed from the property (default is piled on-site)</div>
                         </div>
                       </div>
                       <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>$5–8/bag</div>
@@ -674,7 +674,7 @@ SERVICES & PRICING:
 - First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $60 cut becomes $120 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $45/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
-- Leaf removal (separate service from mowing): Small yard $75+, Medium yard $125+, Large yard $200+, Extra large: custom quote. Default is mulching leaves into the lawn at no extra charge; bagging and hauling them away instead is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
+- Leaf removal (separate service from mowing): Small yard $90+, Medium yard $150+, Large yard $225+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
 - No contracts, cancel anytime
 - Service area: Douglasville and surrounding Douglas County, GA, including Villa Rica, Lithia Springs, and Powder Springs
@@ -1066,13 +1066,13 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal & Fall Yard Cleanup</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 24px", lineHeight: 1.6, maxWidth: 560 }}>
-            Fall service covers everything a Douglasville-area yard needs before winter: clearing fallen leaves off the lawn and beds, a final mow and edge, and blowing off driveways and walkways. Leaves are mulched into the lawn at no extra charge by default, or bagged and hauled away if you'd rather have them gone completely.
+            Fall service covers everything a Douglasville-area yard needs before winter: clearing fallen leaves off the lawn and beds, a final mow and edge, and blowing off driveways and walkways. Leaves are blown into a pile at the wood line or a spot you choose at no extra charge by default, or bagged and hauled away if you'd rather have them gone completely.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, textAlign: "left" }}>
             <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Leaf Removal" desc="Full-yard leaf clearing from the lawn, beds, and hardscapes." />
             <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Fall Mow & Edge" desc="One last clean cut and edge before the grass goes dormant." />
             <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Bed Cleanout" desc="Leaves and debris cleared out of flower beds and borders." />
-            <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Bag & Haul Away" desc="Leaves bagged and removed from the property instead of mulched — $5–8/bag." />
+            <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Bag & Haul Away" desc="Leaves bagged and removed from the property instead of piled on-site — $5–8/bag." />
           </div>
         </div>
 
@@ -1099,7 +1099,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
             <div style={{ background: "#1C2B1B", border: "1px solid #24331F", borderRadius: 10, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "default" }}>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14.5 }}>Bag & haul away</div>
-                <div style={{ fontSize: 12, color: "#7C8A78" }}>Optional add-on — default is mulching leaves into the lawn</div>
+                <div style={{ fontSize: 12, color: "#7C8A78" }}>Optional add-on — default is piled on-site</div>
               </div>
               <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>$5–8/bag</div>
             </div>
@@ -1131,8 +1131,8 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 20, textAlign: "left" }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>Fall Cleanup Questions</h2>
           {[
-            { q: "How much does fall yard cleanup cost in Douglasville, GA?", a: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $75, medium at $125, large at $200, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person." },
-            { q: "Do you bag and haul away the leaves, or mulch them into the lawn?", a: "Mulching leaves into the lawn is included at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5–8 per bag, confirmed once Joseph sees the volume." },
+            { q: "How much does fall yard cleanup cost in Douglasville, GA?", a: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person." },
+            { q: "Do you bag and haul away the leaves, or leave them on the property?", a: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5–8 per bag, confirmed once Joseph sees the volume." },
             { q: "When should I schedule fall cleanup in Douglasville?", a: "Most yards need it once leaves start dropping heavily, typically October through December in the Douglasville area. There's no contract, so you can book a one-time cleanup whenever your yard needs it." },
             { q: "Does fall cleanup include flower bed and border cleanout?", a: "Yes — a fall cleanup covers leaf removal from the lawn and beds, a final mow and edge, and clearing debris out of flower beds and borders, with driveways and walkways blown off clean." },
           ].map((item, i) => (
