@@ -25,15 +25,15 @@ const FAQ_JSON_LD = {
       name: "How much does fall yard cleanup cost in Douglasville, GA?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $75, medium at $125, large at $200, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.",
+        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.",
       },
     },
     {
       "@type": "Question",
-      name: "Do you bag and haul away the leaves, or mulch them into the lawn?",
+      name: "Do you bag and haul away the leaves, or leave them on the property?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Mulching leaves into the lawn is included at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.",
+        text: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.",
       },
     },
     {
