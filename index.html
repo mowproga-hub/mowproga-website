@@ -69,15 +69,24 @@
         "opens": "09:00",
         "closes": "18:00"
       },
-      "makesOffer": {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Lawn Mowing & Edging",
-          "description": "Biweekly mowing, edging, weed eating, and blow-off cleanup for residential yards."
-        },
-        "priceCurrency": "USD",
-        "price": "60"
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "reviewCount": "47"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Mow Pro Lawn Care Services",
+        "itemListElement": [
+          { "@type": "Offer", "priceCurrency": "USD", "price": "50", "itemOffered": { "@type": "Service", "name": "Biweekly Lawn Mowing & Edging - Small Yard", "description": "Mowing, edging, weed eating, and blow-off cleanup for yards under 5,000 sq ft." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "60", "itemOffered": { "@type": "Service", "name": "Biweekly Lawn Mowing & Edging - Medium Yard", "description": "Mowing, edging, weed eating, and blow-off cleanup for yards 5,000-10,000 sq ft." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "80", "itemOffered": { "@type": "Service", "name": "Biweekly Lawn Mowing & Edging - Large Yard", "description": "Mowing, edging, weed eating, and blow-off cleanup for yards 10,000-20,000 sq ft." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "90", "itemOffered": { "@type": "Service", "name": "Leaf Removal - Small Yard", "description": "Leaves blown off the lawn, beds, and hard surfaces into a pile on-site by default; bagging and haul-away is $5-8 per bag." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "150", "itemOffered": { "@type": "Service", "name": "Leaf Removal - Medium Yard", "description": "Leaves blown off the lawn, beds, and hard surfaces into a pile on-site by default; bagging and haul-away is $5-8 per bag." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "225", "itemOffered": { "@type": "Service", "name": "Leaf Removal - Large Yard", "description": "Leaves blown off the lawn, beds, and hard surfaces into a pile on-site by default; bagging and haul-away is $5-8 per bag." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "25", "itemOffered": { "@type": "Service", "name": "Edge Restoration", "description": "Restores grass that has grown fully over a sidewalk or driveway edge." } },
+          { "@type": "Offer", "priceCurrency": "USD", "price": "15", "itemOffered": { "@type": "Service", "name": "Sidewalk & Driveway Crack Weed Spraying", "description": "Weed spraying for cracks along sidewalks and driveways." } }
+        ]
       },
       "sameAs": [
         "https://g.page/r/Ce4jwGMDfTNvEAE/review"
