@@ -351,6 +351,107 @@ const SIZE_OPTIONS = [
 const LEAF_PRICES = { small: 90, medium: 150, large: 225, xl: null };
 const HEAVY_TREE_FEE = 75;
 
+// Address input with Google Places suggestions as the visitor types, biased
+// toward the actual service area. A single session token covers one search
+// (every keystroke plus the final details lookup), which is what lets
+// Google bill it as one cheap "session" instead of a separate charge per
+// keystroke. Typing a manual address is always allowed — a missed
+// suggestion never blocks submitting the form.
+function AddressAutocompleteInput({ value, onChange, placeholder, style }) {
+  const [suggestions, setSuggestions] = useState([]);
+  const [open, setOpen] = useState(false);
+  const sessionTokenRef = useRef(null);
+  const debounceRef = useRef(null);
+  const wrapRef = useRef(null);
+
+  const newSessionToken = () => {
+    sessionTokenRef.current = (typeof crypto !== "undefined" && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random()}`;
+  };
+
+  const fetchSuggestions = async (text) => {
+    if (!sessionTokenRef.current) newSessionToken();
+    try {
+      const res = await fetch("/api/places", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "autocomplete", input: text, sessionToken: sessionTokenRef.current }),
+      });
+      const data = await res.json();
+      setSuggestions(data.predictions || []);
+      setOpen((data.predictions || []).length > 0);
+    } catch (e) {
+      setSuggestions([]);
+    }
+  };
+
+  const handleChange = (e) => {
+    const text = e.target.value;
+    onChange(text);
+    clearTimeout(debounceRef.current);
+    if (!text.trim() || text.trim().length < 3) {
+      setSuggestions([]); setOpen(false);
+      return;
+    }
+    debounceRef.current = setTimeout(() => fetchSuggestions(text), 300);
+  };
+
+  const selectSuggestion = async (prediction) => {
+    setOpen(false);
+    setSuggestions([]);
+    try {
+      const res = await fetch("/api/places", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "details", placeId: prediction.placeId, sessionToken: sessionTokenRef.current }),
+      });
+      const data = await res.json();
+      onChange(data.formattedAddress || prediction.description);
+    } catch (e) {
+      onChange(prediction.description);
+    }
+    newSessionToken(); // start a fresh session for the next search
+  };
+
+  useEffect(() => {
+    const onClickOutside = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  return (
+    <div ref={wrapRef} style={{ position: "relative" }}>
+      <input
+        style={style}
+        value={value}
+        onChange={handleChange}
+        onFocus={() => { if (suggestions.length) setOpen(true); }}
+        placeholder={placeholder}
+        autoComplete="off"
+      />
+      {open && suggestions.length > 0 && (
+        <div style={{
+          position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50,
+          background: "#152016", border: "1px solid #2A3A28", borderRadius: 8,
+          marginTop: 4, boxShadow: "0 4px 14px rgba(0,0,0,0.35)", maxHeight: 220, overflowY: "auto",
+        }}>
+          {suggestions.map((s) => (
+            <div
+              key={s.placeId}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => selectSuggestion(s)}
+              style={{ padding: "9px 12px", fontSize: 13.5, color: "#F5F3EE", cursor: "pointer", borderBottom: "1px solid #2A3A28" }}
+            >
+              {s.description}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" }) {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false });
@@ -450,7 +551,12 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                 </div>
 
                 <label style={miniLabel}>Property address</label>
-                <input style={miniInput} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, City, GA" />
+                <AddressAutocompleteInput
+                  style={miniInput}
+                  value={form.address}
+                  onChange={(v) => setForm({ ...form, address: v })}
+                  placeholder="Street, City, GA"
+                />
                 <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>
                 {SIZE_OPTIONS.map((opt) => (
                   <div
