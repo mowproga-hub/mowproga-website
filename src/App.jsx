@@ -65,11 +65,11 @@ const DEFAULT_SEO = {
   image: "https://mowproga.com/images/our-story.webp",
 };
 
-// Kept in sync by hand with the PAGE/JSON_LD constants in middleware.js —
-// middleware.js sets these in the raw HTML for crawlers/direct loads, this
-// applies the same values on the client for in-app SPA navigation (which
-// never hits the middleware, since it's a pushState navigation, not a new
-// request).
+// Kept in sync by hand with the PAGES/JSON_LD_BY_PATH constants in
+// middleware.js — middleware.js sets these in the raw HTML for
+// crawlers/direct loads, this applies the same values on the client for
+// in-app SPA navigation (which never hits the middleware, since it's a
+// pushState navigation, not a new request).
 const FALL_CLEANUP_SEO = {
   title: "Fall Yard Cleanup Douglasville GA | Leaf Removal & Debris Removal | Mow Pro Lawn Care",
   description: "Fall yard cleanup in Douglasville, GA — leaf removal, bed cleanout, and debris haul-away. Call 404-669-6945 or request a free fall cleanup quote today.",
@@ -148,6 +148,25 @@ const FALL_CLEANUP_JSONLD = {
       "addressCountry": "US",
     },
   },
+};
+
+const ABOUT_SEO = {
+  title: "About Mow Pro GA | Family-Run Lawn Care in Douglasville, GA",
+  description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just Joseph and his crew. Get a free instant quote.",
+  url: "https://mowproga.com/about",
+  image: "https://mowproga.com/images/our-story.webp",
+};
+
+// Lightweight and honest rather than fabricated: this page is a founder
+// story, not a service listing, so it just marks itself as the LocalBusiness's
+// About page instead of inventing Service/FAQ schema that isn't there.
+const ABOUT_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  url: ABOUT_SEO.url,
+  name: ABOUT_SEO.title,
+  description: ABOUT_SEO.description,
+  mainEntity: { "@id": "https://mowproga.com/#business" },
 };
 
 function applyPageSEO(seo) {
@@ -1197,6 +1216,9 @@ export default function MowProLanding() {
     if (route === "fall-cleanup") {
       applyPageSEO(FALL_CLEANUP_SEO);
       setPageJsonLd([FALL_CLEANUP_JSONLD, FALL_CLEANUP_FAQ_JSONLD]);
+    } else if (route === "about") {
+      applyPageSEO(ABOUT_SEO);
+      setPageJsonLd([ABOUT_JSONLD]);
     } else {
       applyPageSEO(DEFAULT_SEO);
       setPageJsonLd(null);
