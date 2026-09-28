@@ -1,6 +1,7 @@
 {
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/about", "destination": "/index.html" },
-    { "source": "/fall-cleanup", "destination": "/index.html" }
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/fall-cleanup", "destination": "/fall-cleanup/index.html" }
   ]
 }
