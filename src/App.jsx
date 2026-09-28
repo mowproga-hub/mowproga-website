@@ -60,16 +60,15 @@ const DEFAULT_CONTENT = {
 // them on the way out instead of leaving another page's SEO tags behind.
 const DEFAULT_SEO = {
   title: "Mow Pro GA | Lawn Mowing & Edging in Douglasville, GA",
-  description: "Reliable biweekly lawn mowing, edging, and cleanup from a local, family-run crew in Douglasville, GA. Same-day quotes, no contracts. Get your free instant quote.",
+  description: "Reliable biweekly lawn mowing, edging, and leaf cleanup in Douglasville, GA. Locally owned, insured, no contracts. Get an instant quote online.",
   url: "https://mowproga.com/",
   image: "https://mowproga.com/images/our-story.webp",
 };
 
-// Kept in sync by hand with the PAGES/JSON_LD_BY_PATH constants in
-// middleware.js — middleware.js sets these in the raw HTML for
-// crawlers/direct loads, this applies the same values on the client for
-// in-app SPA navigation (which never hits the middleware, since it's a
-// pushState navigation, not a new request).
+// This is the only place these per-page SEO values live — scripts/prerender.mjs
+// boots the real app in headless Chromium and captures whatever title/meta/
+// JSON-LD this sets (via applyPageSEO/setPageJsonLd below) directly into each
+// route's static HTML file. There's no separate copy to keep in sync anymore.
 const FALL_CLEANUP_SEO = {
   title: "Fall Yard Cleanup Douglasville GA | Leaf Removal & Debris Removal | Mow Pro Lawn Care",
   description: "Fall yard cleanup in Douglasville, GA — leaf removal, bed cleanout, and debris haul-away. Call 404-669-6945 or request a free fall cleanup quote today.",
@@ -141,7 +140,6 @@ const FALL_CLEANUP_JSONLD = {
     "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "1695 Hampton Pass",
       "addressLocality": "Douglasville",
       "addressRegion": "GA",
       "postalCode": "30134",
@@ -360,7 +358,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
   if (!open) return null;
 
   const CRACK_SPRAY_PRICE = 15;
-  const EDGE_RESTORE_PRICE = 25;
+  const EDGE_RESTORE_PRICE = 50;
   const isLeaf = form.serviceType === "leaf";
   const selectedOption = SIZE_OPTIONS.find((s) => s.key === form.size);
   const isCustomQuote = isLeaf ? LEAF_PRICES[form.size] === null : selectedOption?.addOn === null;
@@ -576,7 +574,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                       </div>
                       <div>
                         <div style={{ fontWeight: 700, fontSize: 13.5 }}>Edge restoration</div>
-                        <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Grass grown fully over the sidewalk/driveway edge</div>
+                        <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Grass grown over sidewalk/driveway edge. Sidewalk from $50; sidewalk + driveway $75–150, confirmed on-site.</div>
                       </div>
                     </div>
                     <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${EDGE_RESTORE_PRICE}+</div>
@@ -691,7 +689,7 @@ const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Law
 SERVICES & PRICING:
 - Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $50, Medium yard (5,000-10,000 sq ft) $60, Large yard (10,000-20,000 sq ft) $80, Extra large/acreage (over 20,000 sq ft): custom quote after Joseph assesses it in person
 - First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $60 cut becomes $120 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $45/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
-- Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
+- Edge restoration (grass grown over sidewalk/driveway edges): sidewalk only from $50; sidewalk plus one side of the driveway around $75; sidewalk plus both driveway sides or heavy creep $100–150; long driveways or corner lots about $1 per linear foot. Joseph confirms the final price on-site. Routine edging is included with every biweekly mowing visit.
 - Sidewalk & driveway crack weed spraying: $15
 - Leaf removal (separate service from mowing): Small yard $90+, Medium yard $150+, Large yard $225+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
@@ -1314,7 +1312,7 @@ export default function MowProLanding() {
 
         {content.equipmentPhoto && (
           <div style={{ marginTop: 32, maxWidth: 720, marginLeft: "auto", marginRight: "auto" }}>
-            <img src={content.equipmentPhoto} alt="Mow Pro Lawn Care equipment" width="1402" height="713" fetchPriority="high" style={{ width: "100%", height: "auto", borderRadius: 14, border: "1px solid #24331F", display: "block" }} />
+            <img src={content.equipmentPhoto} alt="Mow Pro Lawn Care equipment" width="1402" height="713" fetchpriority="high" style={{ width: "100%", height: "auto", borderRadius: 14, border: "1px solid #24331F", display: "block" }} />
             <div style={{ fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Real gear, real crew — not stock photos</div>
           </div>
         )}
