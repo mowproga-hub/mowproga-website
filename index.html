@@ -11,17 +11,28 @@
       * { box-sizing: border-box; }
       body { margin: 0; background: #0F1A10; }
       /* Styles the static fallback content that lives inside #root before
-         React mounts (see the comment in <body> below) — it's meant to be
-         invisible, since createRoot().render() replaces it the instant JS
-         runs, but on a slow connection or a refresh a real visitor can catch
-         it for a moment. Without this it was unstyled black text on the dark
-         body background — unreadable and looked broken. This just makes that
-         split-second flash look like part of the page instead of a bug;
-         React's own inline styles override all of this the moment it mounts. */
+         React mounts (see the comment in <body> below) — it exists purely
+         for crawlers that never run JavaScript (GPTBot, ClaudeBot,
+         PerplexityBot). A real visitor's browser hides it immediately via
+         the inline visibility:hidden on the #root tag itself, below, so
+         there's nothing to flash — just the plain dark background for a
+         moment while React loads, same as any other app. These rules only
+         matter for the rare case of a real visitor with JavaScript actually
+         disabled (see the <noscript> block below, which un-hides it), and
+         for crawlers reading the raw HTML with basic styling applied. */
       #root { font-family: 'Inter', system-ui, sans-serif; color: #F5F3EE; max-width: 700px; margin: 0 auto; padding: 24px; line-height: 1.6; }
       #root a { color: #8FBC6A; }
       #root h1, #root h2 { color: #F5F3EE; }
     </style>
+    <!-- Only reached if JavaScript is actually disabled — the overwhelming
+         majority of visitors have it on, and main.jsx un-hides #root the
+         instant React mounts. This is the fallback for that rare real human
+         with no JS, so they still see readable content instead of a blank
+         page. !important is required here since it must override the plain
+         inline style="visibility:hidden" on the #root tag. -->
+    <noscript>
+      <style>#root { visibility: visible !important; }</style>
+    </noscript>
 
     <!-- Primary SEO -->
     <title>Mow Pro GA | Lawn Mowing & Edging in Douglasville, GA</title>
@@ -115,7 +126,7 @@
          used to be nothing. This mirrors the real homepage copy so those
          crawlers (and any AI answer engine reading the page) get the actual
          content, not just meta tags and structured data. -->
-    <div id="root">
+    <div id="root" style="visibility: hidden">
       <main>
         <h1>Your Yard, Handled — Without Lifting a Finger.</h1>
         <p>Reliable mowing, edging, and cleanup from a local, family-run crew in Douglasville, GA. Same-day quotes. Fast response. No contracts.</p>
