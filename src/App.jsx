@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send } from "lucide-react";
+import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink } from "lucide-react";
+
+// g.page/r/{id}/review is Google's write-a-review shortlink — it drops
+// visitors straight into a blank star-rating form, not a reviews list. It's
+// the right link for a "leave us a review" CTA, but wrong for anything
+// claiming to show existing reviews. This is the correct read-only link: a
+// Maps search-action URL (Google's documented format for opening a specific
+// listing by name+address without needing a Place ID) that lands on the
+// business's Maps listing with its real rating and reviews visible.
+const GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134";
 
 // Replace with your real Measurement ID from analytics.google.com (looks like "G-XXXXXXXXXX").
 const GA_MEASUREMENT_ID = "G-RG2D6LV1ZL";
@@ -1252,17 +1261,18 @@ function QuoteLandingPage({ content, showQuote, setShowQuote, quoteServiceType, 
             whether to trust us enough to fill out the quote form below),
             not a general nav link — the quote page stays open behind it. */}
         <a
-          href="https://g.page/r/Ce4jwGMDfTNvEAE/review"
+          href={GOOGLE_REVIEWS_URL}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${content.ratingLine} — opens in a new tab`}
           onClick={() => trackEvent("reviews_link_click", { location: "quote_page_trust_bar" })}
-          style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1C2B1B", color: "#F5F3EE", fontSize: 13.5, fontWeight: 700, padding: "8px 16px", borderRadius: 999, margin: "0 0 20px", textDecoration: "none", cursor: "pointer" }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#1C2B1B", border: "1px solid #2A3A28", color: "#F5F3EE", fontSize: 13.5, fontWeight: 700, padding: "8px 16px", borderRadius: 999, margin: "0 0 20px", textDecoration: "underline", textUnderlineOffset: 2, cursor: "pointer" }}
         >
           <div style={{ display: "flex", gap: 1 }}>
             {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#8FBC6A" color="#8FBC6A" />)}
           </div>
           {content.ratingLine}
+          <ExternalLink size={12} style={{ opacity: 0.7, flexShrink: 0 }} />
         </a>
 
         {/* REAL PHOTO — proof of actual work, no stock imagery */}
@@ -1457,12 +1467,14 @@ export default function MowProLanding() {
             <EditableText editing={editing} value={content.ratingLine} onChange={(v) => update("ratingLine", v)} style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2" }} />
           ) : (
             <a
-              href="https://g.page/r/Ce4jwGMDfTNvEAE/review"
+              href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", textUnderlineOffset: 2 }}
+              aria-label={`${content.ratingLine} — opens in a new tab`}
+              style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", textUnderlineOffset: 2, display: "inline-flex", alignItems: "center", gap: 4 }}
             >
               {content.ratingLine}
+              <ExternalLink size={11} style={{ opacity: 0.7, flexShrink: 0 }} />
             </a>
           )}
         </div>
