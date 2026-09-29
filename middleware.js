@@ -374,7 +374,10 @@ export function rewriteHead(html, pathname) {
   // page's real content instead. React fully replaces this via
   // createRoot().render() the instant it mounts, so this only matters to
   // clients that never run that JS.
-  out = replaceLiteral(out, /<div id="root">[\s\S]*?<\/div>/, `<div id="root">${page.content}</div>`);
+  // Keeps the same inline visibility:hidden the homepage ships with — real
+  // visitors never see this content flash, since main.jsx un-hides #root the
+  // instant React mounts on every route, not just the homepage.
+  out = replaceLiteral(out, /<div id="root"[^>]*>[\s\S]*?<\/div>/, `<div id="root" style="visibility: hidden">${page.content}</div>`);
   return out;
 }
 
