@@ -10,6 +10,17 @@
     <style>
       * { box-sizing: border-box; }
       body { margin: 0; background: #0F1A10; }
+      /* Styles the static fallback content that lives inside #root before
+         React mounts (see the comment in <body> below) — it's meant to be
+         invisible, since createRoot().render() replaces it the instant JS
+         runs, but on a slow connection or a refresh a real visitor can catch
+         it for a moment. Without this it was unstyled black text on the dark
+         body background — unreadable and looked broken. This just makes that
+         split-second flash look like part of the page instead of a bug;
+         React's own inline styles override all of this the moment it mounts. */
+      #root { font-family: 'Inter', system-ui, sans-serif; color: #F5F3EE; max-width: 700px; margin: 0 auto; padding: 24px; line-height: 1.6; }
+      #root a { color: #8FBC6A; }
+      #root h1, #root h2 { color: #F5F3EE; }
     </style>
 
     <!-- Primary SEO -->
