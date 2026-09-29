@@ -9,7 +9,7 @@
 // This runs before any JS executes, so crawlers, curl, and "view source" all
 // see the real per-page values.
 export const config = {
-  matcher: ["/fall-cleanup", "/about"],
+  matcher: ["/fall-cleanup", "/about", "/quote"],
 };
 
 const PAGES = {
@@ -24,6 +24,18 @@ const PAGES = {
     description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just Joseph and his crew. Get a free instant quote.",
     url: "https://mowproga.com/about",
     image: "https://mowproga.com/images/our-story.webp",
+  },
+  // Built for paid ad clicks (Nextdoor, etc.), not organic search — it's a
+  // deliberately stripped-down duplicate of content that already lives on
+  // the homepage and /fall-cleanup for SEO purposes. noindex keeps it out of
+  // search results so it doesn't compete with or dilute those pages; "follow"
+  // still lets crawlers pass through it normally.
+  "/quote": {
+    title: "Get a Free Lawn Care Quote | Mow Pro GA — Douglasville",
+    description: "Fast, free quotes for lawn mowing and fall cleanup in Douglasville, GA. 5-star rated, no contracts. Get your price in under a minute.",
+    url: "https://mowproga.com/quote",
+    image: "https://mowproga.com/images/after-lawn.webp",
+    robots: "noindex, follow",
   },
 };
 
@@ -134,7 +146,7 @@ export function rewriteHead(html, pathname) {
   out = replaceLiteral(out, /<title>[^<]*<\/title>/, `<title>${page.title}</title>`);
   out = replaceLiteral(out, /<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${page.description}" />`);
   out = replaceLiteral(out, /<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${page.url}" />`);
-  out = replaceLiteral(out, /<meta name="robots" content="[^"]*" \/>/, `<meta name="robots" content="index, follow" />`);
+  out = replaceLiteral(out, /<meta name="robots" content="[^"]*" \/>/, `<meta name="robots" content="${page.robots || "index, follow"}" />`);
   out = replaceLiteral(out, /<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${page.title}" />`);
   out = replaceLiteral(out, /<meta property="og:description" content="[^"]*" \/>/, `<meta property="og:description" content="${page.description}" />`);
   out = replaceLiteral(out, /<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${page.url}" />`);
