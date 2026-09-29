@@ -2,6 +2,12 @@
   "rewrites": [
     { "source": "/about", "destination": "/index.html" },
     { "source": "/fall-cleanup", "destination": "/index.html" },
-    { "source": "/quote", "destination": "/index.html" }
+    { "source": "/quote", "destination": "/index.html" },
+    { "source": "/lawn-care/stewarts-mill", "destination": "/index.html" },
+    { "source": "/lawn-care/shallowford-heights", "destination": "/index.html" },
+    { "source": "/lawn-care/springwood-village", "destination": "/index.html" },
+    { "source": "/lawn-care/big-a", "destination": "/index.html" },
+    { "source": "/lawn-care/lithia-springs", "destination": "/index.html" },
+    { "source": "/lawn-care/villa-rica", "destination": "/index.html" }
   ]
 }
