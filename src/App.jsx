@@ -1245,13 +1245,25 @@ function QuoteLandingPage({ content, showQuote, setShowQuote, quoteServiceType, 
           Professional Lawn Care <span style={{ color: "#8FBC6A" }}>•</span> Douglasville <span style={{ color: "#8FBC6A" }}>•</span> Trusted by Neighbors
         </h1>
 
-        {/* TRUST BAR — right under the headline, not buried below the fold */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1C2B1B", color: "#F5F3EE", fontSize: 13.5, fontWeight: 700, padding: "8px 16px", borderRadius: 999, margin: "0 0 20px" }}>
+        {/* TRUST BAR — right under the headline, not buried below the fold.
+            Links to the real Google review page so the claim is verifiable
+            instead of just text; opens in a new tab specifically because
+            this is reference material a visitor checks mid-task (deciding
+            whether to trust us enough to fill out the quote form below),
+            not a general nav link — the quote page stays open behind it. */}
+        <a
+          href="https://g.page/r/Ce4jwGMDfTNvEAE/review"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${content.ratingLine} — opens in a new tab`}
+          onClick={() => trackEvent("reviews_link_click", { location: "quote_page_trust_bar" })}
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1C2B1B", color: "#F5F3EE", fontSize: 13.5, fontWeight: 700, padding: "8px 16px", borderRadius: 999, margin: "0 0 20px", textDecoration: "none", cursor: "pointer" }}
+        >
           <div style={{ display: "flex", gap: 1 }}>
             {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#8FBC6A" color="#8FBC6A" />)}
           </div>
           {content.ratingLine}
-        </div>
+        </a>
 
         {/* REAL PHOTO — proof of actual work, no stock imagery */}
         <div style={{ marginBottom: 24 }}>
