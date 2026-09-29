@@ -32,6 +32,34 @@ function trackEvent(name, params) {
   }
 }
 
+// Captures where a visitor came from (Nextdoor, Google, etc.) so it can be
+// stamped on the lead email — no need to check Google Analytics to know
+// where a customer found you. Reads ?utm_source (or a plain ?ref= for
+// quick manual tagging) on first landing and stashes it in sessionStorage,
+// so it survives even if they browse a few pages before requesting a quote.
+// Only overwrites what's stored if the URL actually carries a new tag, so a
+// later untagged pageview in the same session doesn't erase the original
+// source.
+function captureLeadSource() {
+  if (typeof window === "undefined") return;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get("utm_source") || params.get("ref");
+    if (source) sessionStorage.setItem("mp_lead_source", source);
+  } catch (e) {
+    // sessionStorage can throw in some private-browsing modes — fine to skip
+  }
+}
+
+function getLeadSource() {
+  if (typeof window === "undefined") return "Website (no source tag)";
+  try {
+    return sessionStorage.getItem("mp_lead_source") || "Website (no source tag)";
+  } catch (e) {
+    return "Website (no source tag)";
+  }
+}
+
 const DEFAULT_CONTENT = {
   headline: "Your Yard, Handled — Without Lifting a Finger.",
   subheading: "Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
@@ -514,6 +542,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
           heavyTrees: form.heavyTrees,
           bagHaul: form.bagHaul,
           price: needsCustomQuote ? "Custom quote needed" : `$${price}`,
+          source: getLeadSource(),
         }),
       });
     } catch (e) {
@@ -871,6 +900,7 @@ function ChatWidget() {
           size: details.service || "See chat conversation",
           price: details.estimated_price || "Not estimated",
           crackSpray: false, overgrown: "none", edgeRestore: false,
+          source: getLeadSource(),
         }),
       });
       setLeadSent(true);
@@ -1460,6 +1490,7 @@ export default function MowProLanding() {
 
   useEffect(() => {
     loadGoogleAnalytics();
+    captureLeadSource();
   }, []);
 
   useEffect(() => {

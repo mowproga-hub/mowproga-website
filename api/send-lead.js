@@ -4,7 +4,7 @@
 
 // Pure function, kept separate from the handler so the email content can be
 // unit-tested without needing a live RESEND_API_KEY or network access.
-export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul }) {
+export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, source }) {
   // form.overgrownLevel is "none" | "mild" | "severe" — "none" is a
   // non-empty string, so a plain `overgrown ? "Yes" : "No"` check always
   // printed "Yes" regardless of what was actually selected.
@@ -19,8 +19,14 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
   // spray, edge restoration) no matter which service was requested.
   const isLeaf = service === "Leaf removal";
 
+  // Shown right at the top since this is meant to be read at a glance on a
+  // phone, not dug for — "Nextdoor", "Google", or "Website (no source tag)"
+  // when the visitor arrived without a ?utm_source= or ?ref= tag on the link.
+  const sourceLabel = source || "Website (no source tag)";
+
   const html = `
     <h2>New quote request from mowproga.com</h2>
+    <p><b>Source:</b> ${sourceLabel}</p>
     <p><b>Name:</b> ${name}</p>
     <p><b>Phone:</b> ${phone}</p>
     <p><b>Address:</b> ${address}</p>
