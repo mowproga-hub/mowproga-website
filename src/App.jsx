@@ -254,6 +254,21 @@ function getNeighborhood(slug) {
   return NEIGHBORHOODS.find((n) => n.slug === slug) || null;
 }
 
+// Real before/after photos of actual completed jobs — not staged per
+// neighborhood (there's no photo library tagged by neighborhood), so rather
+// than imply a photo was taken in a specific place, each page just alternates
+// between the two general-purpose before/after pairs already used elsewhere
+// on the site, for visual variety across the 6 pages.
+const NEIGHBORHOOD_PHOTO_PAIRS = [
+  { before: "/images/before-lawn.webp", after: "/images/after-lawn.webp", w: 1120, h: 708 },
+  { before: "/images/before-2.webp", after: "/images/after-2.webp", w: 1120, h: 795 },
+];
+
+function neighborhoodPhotos(n) {
+  const i = NEIGHBORHOODS.findIndex((x) => x.slug === n.slug);
+  return NEIGHBORHOOD_PHOTO_PAIRS[i % 2];
+}
+
 // Kept in sync by hand with neighborhoodPage()/neighborhoodJsonLd() in
 // middleware.js — that file sets these in the raw HTML for crawlers/direct
 // loads, this applies the same values on the client for in-app SPA
@@ -270,7 +285,7 @@ function neighborhoodSEO(n) {
     title: `Lawn Care in ${placeLabel(n)} | Mow Pro GA`,
     description: `Biweekly lawn mowing, edging, and cleanup for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`,
     url: `https://mowproga.com/lawn-care/${n.slug}`,
-    image: "https://mowproga.com/images/after-lawn.webp",
+    image: `https://mowproga.com${neighborhoodPhotos(n).after}`,
   };
 }
 
@@ -1432,6 +1447,7 @@ const NEIGHBORHOOD_NEARBY_LIST = (currentSlug) =>
 
 function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQuote }) {
   const n = neighborhood;
+  const photos = neighborhoodPhotos(n);
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
       {/* NAV */}
@@ -1495,6 +1511,22 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
           {content.ratingLine}
           <ExternalLink size={12} />
         </a>
+
+        {/* BEFORE / AFTER — a real completed job, not staged for this
+            specific neighborhood (no photo library is tagged that way), but
+            genuine proof of work rather than a stock or invented image. Sized
+            with an explicit aspect-ratio via BeforeAfterSlider so it doesn't
+            shift layout while loading, and it's the only large image this
+            page loads — no separate preload, no eager hint — so it doesn't
+            add weight beyond what the homepage already costs. */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>A real Mow Pro GA yard, before and after</p>
+          <div style={{ maxWidth: 560, margin: "0 auto" }}>
+            <BeforeAfterSlider before={photos.before} after={photos.after} />
+            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
+          </div>
+        </div>
 
         {/* WHAT'S INCLUDED */}
         <div style={{ marginBottom: 50, textAlign: "left" }}>

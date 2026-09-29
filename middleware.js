@@ -51,6 +51,21 @@ function placeLabel(n) {
   return n.name === n.city ? `${n.name}, GA` : `${n.name}, ${n.city}, GA`;
 }
 
+// Real before/after photos of actual completed jobs — mirrored from
+// src/App.jsx's NEIGHBORHOOD_PHOTO_PAIRS/neighborhoodPhotos(). There's no
+// photo library tagged by neighborhood, so rather than imply a photo was
+// taken in a specific place, each page just alternates between these two
+// general-purpose pairs already used elsewhere on the site.
+const NEIGHBORHOOD_PHOTO_PAIRS = [
+  { before: "/images/before-lawn.webp", after: "/images/after-lawn.webp", w: 1120, h: 708 },
+  { before: "/images/before-2.webp", after: "/images/after-2.webp", w: 1120, h: 795 },
+];
+
+function neighborhoodPhotos(n) {
+  const i = NEIGHBORHOODS.findIndex((x) => x.slug === n.slug);
+  return NEIGHBORHOOD_PHOTO_PAIRS[i % 2];
+}
+
 function neighborhoodPricingList() {
   return `
     <ul>
@@ -66,7 +81,8 @@ function neighborhoodPage(n) {
   const title = `Lawn Care in ${placeLabel(n)} | Mow Pro GA`;
   const description = `Biweekly lawn mowing, edging, and cleanup for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`;
   const url = `https://mowproga.com/lawn-care/${n.slug}`;
-  const image = "https://mowproga.com/images/after-lawn.webp";
+  const photos = neighborhoodPhotos(n);
+  const image = `https://mowproga.com${photos.after}`;
   return {
     title,
     description,
@@ -78,6 +94,11 @@ function neighborhoodPage(n) {
         <p>Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in ${n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run crew — Joseph quotes the job, shows up, and does the work himself. Same-day quotes, no contracts.</p>
         <p>Call or text <a href="tel:4046696945">404-669-6945</a>, or request a free instant quote online.</p>
         <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134" target="_blank" rel="noopener noreferrer">5 stars, 49 reviews on Google</a></p>
+
+        <h2>See the Difference</h2>
+        <p>A real Mow Pro GA yard, before and after:</p>
+        <img src="${photos.before}" alt="Before a Mow Pro GA lawn service visit" width="${photos.w}" height="${photos.h}" loading="lazy" />
+        <img src="${photos.after}" alt="After a Mow Pro GA lawn service visit" width="${photos.w}" height="${photos.h}" loading="lazy" />
 
         <h2>What's Included, Every Visit</h2>
         <ul>
