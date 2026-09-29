@@ -236,10 +236,82 @@ function applyPageSEO(seo) {
   if (canonical) canonical.setAttribute("href", seo.url);
 }
 
+// Non-gated residential neighborhoods within the actual service area (7-mile
+// primary radius from Douglasville core, 12-mile extension to Villa Rica) —
+// mirrored by hand in middleware.js's NEIGHBORHOODS constant, since
+// middleware and this Vite/React bundle are built and run separately and
+// can't share a module. Keep both in sync when adding or editing one.
+const NEIGHBORHOODS = [
+  { slug: "stewarts-mill", name: "Stewarts Mill", city: "Douglasville" },
+  { slug: "shallowford-heights", name: "Shallowford Heights", city: "Douglasville" },
+  { slug: "springwood-village", name: "Springwood Village", city: "Douglasville" },
+  { slug: "big-a", name: "the Big A / Highway 166 area", city: "Douglasville" },
+  { slug: "lithia-springs", name: "Lithia Springs", city: "Lithia Springs" },
+  { slug: "villa-rica", name: "Villa Rica", city: "Villa Rica" },
+];
+
+function getNeighborhood(slug) {
+  return NEIGHBORHOODS.find((n) => n.slug === slug) || null;
+}
+
+// Kept in sync by hand with neighborhoodPage()/neighborhoodJsonLd() in
+// middleware.js — that file sets these in the raw HTML for crawlers/direct
+// loads, this applies the same values on the client for in-app SPA
+// navigation (which never hits the middleware, since it's a pushState
+// navigation, not a new request).
+// Avoids the redundant "Villa Rica, Villa Rica GA" for the two entries where
+// the neighborhood itself is the whole city, not a district within one.
+function placeLabel(n) {
+  return n.name === n.city ? `${n.name}, GA` : `${n.name}, ${n.city}, GA`;
+}
+
+function neighborhoodSEO(n) {
+  return {
+    title: `Lawn Care in ${placeLabel(n)} | Mow Pro GA`,
+    description: `Biweekly lawn mowing, edging, and cleanup for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`,
+    url: `https://mowproga.com/lawn-care/${n.slug}`,
+    image: "https://mowproga.com/images/after-lawn.webp",
+  };
+}
+
+function neighborhoodJsonLd(n) {
+  const seo = neighborhoodSEO(n);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Residential Lawn Mowing & Edging",
+    name: `Lawn Care in ${n.name}`,
+    url: seo.url,
+    description: seo.description,
+    areaServed: { "@type": n.slug === "lithia-springs" || n.slug === "villa-rica" ? "City" : "Neighborhood", name: placeLabel(n) },
+    provider: {
+      "@type": "LocalBusiness",
+      "@id": "https://mowproga.com/#business",
+      name: "Mow Pro Lawn Care LLC",
+      telephone: "+14046696945",
+      url: seo.url,
+      image: seo.image,
+      priceRange: "$$",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "1695 Hampton Pass",
+        addressLocality: "Douglasville",
+        addressRegion: "GA",
+        postalCode: "30134",
+        addressCountry: "US",
+      },
+    },
+  };
+}
+
 function pathToRoute(path) {
   if (path === "/about") return "about";
   if (path === "/fall-cleanup") return "fall-cleanup";
   if (path === "/quote") return "quote";
+  if (path.startsWith("/lawn-care/")) {
+    const slug = path.slice("/lawn-care/".length);
+    if (getNeighborhood(slug)) return `neighborhood:${slug}`;
+  }
   return "home";
 }
 
@@ -1353,6 +1425,160 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
   );
 }
 
+// Same pricing tiers shown on the homepage and /fall-cleanup, reused here so
+// a neighborhood page's numbers can't drift out of sync with the real prices.
+const NEIGHBORHOOD_NEARBY_LIST = (currentSlug) =>
+  NEIGHBORHOODS.filter((x) => x.slug !== currentSlug).map((x) => x.name).join(", ");
+
+function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQuote }) {
+  const n = neighborhood;
+  return (
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
+      {/* NAV */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 10, padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
+        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18, background: "none", border: "none", color: "#F5F3EE", cursor: "pointer", padding: 0, textDecoration: "none" }}>
+          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
+          Mow Pro GA
+        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
+          <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+            Fall Cleanup
+          </a>
+          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
+            <Phone size={14} color="#8FBC6A" />
+            {content.phone}
+          </a>
+          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
+            Get Quote
+          </button>
+        </div>
+      </div>
+
+      {/* BACK LINK */}
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "20px 24px 0" }}>
+        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 13.5, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+          ← Back to home
+        </a>
+      </div>
+
+      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0", textAlign: "center" }}>
+        <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Local Lawn Care</div>
+        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 16px" }}>
+          Lawn Care in {placeLabel(n)}
+        </h1>
+        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>
+          Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in {n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run crew — Joseph quotes the job, shows up, and does the work himself. Same-day quotes, no contracts.
+        </p>
+
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 20 }}>
+          <button
+            onClick={() => { trackEvent("quote_opened", { location: "neighborhood_hero", neighborhood: n.slug }); setShowQuote(true); }}
+            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            Get My Free Instant Quote <ArrowRight size={18} />
+          </button>
+          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 10, padding: "16px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Phone size={16} /> Call Now
+          </a>
+        </div>
+
+        <a
+          href={GOOGLE_REVIEWS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${content.ratingLine} — opens in a new tab`}
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", marginBottom: 46 }}
+        >
+          <div style={{ display: "flex", gap: 2 }}>
+            {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={13} fill="#8FBC6A" color="#8FBC6A" />)}
+          </div>
+          {content.ratingLine}
+          <ExternalLink size={12} />
+        </a>
+
+        {/* WHAT'S INCLUDED */}
+        <div style={{ marginBottom: 50, textAlign: "left" }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px", textAlign: "center" }}>What's Included, Every Visit</h2>
+          <p style={{ textAlign: "center", color: "#B9C4B2", margin: "0 0 24px" }}>No surprises. No upsells. Just a clean yard.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+            <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Mowing & Edging" desc="Clean, consistent cuts with sharp, well-maintained equipment." />
+            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Weed Eating" desc="Fence lines, mailboxes, and obstacles — fully trimmed, every time." />
+            <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Blow-Off Cleanup" desc="Driveways and walkways left spotless when we're done." />
+            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Crack Spray Add-On" desc="Keep walkways weed-free — available as an add-on, +$15." />
+          </div>
+        </div>
+
+        {/* PRICING */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
+            Biweekly maintenance starting at $50 per visit, priced by yard size. Joseph confirms the exact price once he sees the property in person.
+          </p>
+          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {SIZE_OPTIONS.map((opt) => (
+                <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016" }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14.5 }}>{opt.label}</div>
+                    <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
+                  </div>
+                  <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
+                    {opt.key === "small" ? "$50" : opt.key === "medium" ? "$60" : opt.key === "large" ? "$80" : "Custom"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={() => { trackEvent("quote_opened", { location: "neighborhood_pricing", neighborhood: n.slug }); setShowQuote(true); }}
+            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, marginTop: 24 }}
+          >
+            Get My Free Instant Quote <ArrowRight size={18} />
+          </button>
+        </div>
+
+        {/* NEARBY */}
+        <div style={{ marginBottom: 20 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 10px" }}>Also Serving Nearby</h2>
+          <p style={{ color: "#B9C4B2", lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>
+            Mow Pro GA also serves {NEIGHBORHOOD_NEARBY_LIST(n.slug)}, plus Douglasville and Douglas County, GA generally.
+          </p>
+        </div>
+      </main>
+
+      {/* FOOTER CTA */}
+      <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center", marginTop: 30 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Ready for a yard you don't have to think about?</h2>
+        <p style={{ margin: "0 0 20px", opacity: 0.85 }}>Text, call, or request a quote — most yards confirmed same day.</p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => { trackEvent("quote_opened", { location: "neighborhood_footer", neighborhood: n.slug }); setShowQuote(true); }} style={{ background: "#0F1A10", color: "#F5F3EE", border: "none", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            Get My Free Instant Quote
+          </button>
+          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#0F1A10", border: "1.5px solid #0F1A10", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Phone size={16} /> Call Mow Pro Now
+          </a>
+        </div>
+      </div>
+
+      <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
+      <ChatWidget />
+
+      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
+        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
+          <img
+            src="/images/urban-ag-council-badge.webp"
+            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
+            style={{ maxWidth: 160, width: "100%", height: "auto" }}
+          />
+        </a>
+      </div>
+      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
+        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
+      </div>
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────
 // QUOTE LANDING PAGE — built specifically for paid ad clicks (Nextdoor first,
 // same shape works for any platform), not for organic visitors browsing the
@@ -1509,6 +1735,12 @@ export default function MowProLanding() {
     } else if (route === "quote") {
       applyPageSEO(QUOTE_SEO);
       setPageJsonLd(null);
+    } else if (route.startsWith("neighborhood:")) {
+      const n = getNeighborhood(route.slice("neighborhood:".length));
+      if (n) {
+        applyPageSEO(neighborhoodSEO(n));
+        setPageJsonLd([neighborhoodJsonLd(n)]);
+      }
     } else {
       applyPageSEO(DEFAULT_SEO);
       setPageJsonLd(null);
@@ -1536,6 +1768,13 @@ export default function MowProLanding() {
 
   if (route === "fall-cleanup") {
     return <FallCleanupPage content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
+  }
+
+  if (route.startsWith("neighborhood:")) {
+    const n = getNeighborhood(route.slice("neighborhood:".length));
+    if (n) {
+      return <NeighborhoodPage neighborhood={n} content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
+    }
   }
 
   if (route === "quote") {
@@ -1753,6 +1992,27 @@ export default function MowProLanding() {
           <a href="/about" onClick={(e) => { e.preventDefault(); navigate("/about"); }} style={{ background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 14, marginTop: 14, cursor: "pointer", padding: 0, display: "inline-flex", alignItems: "center", gap: 5, textDecoration: "none" }}>
             Read our full story <ArrowRight size={14} />
           </a>
+        </div>
+      </div>
+
+      {/* SERVICE AREAS — real links to each neighborhood page, so visitors
+          and crawlers alike can discover them from the homepage instead of
+          relying on the sitemap alone. */}
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "10px 24px 50px", textAlign: "center" }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Neighborhoods We Serve</h2>
+        <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Proudly serving Douglasville, GA and nearby, including:</p>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+          {NEIGHBORHOODS.map((n) => (
+            <a
+              key={n.slug}
+              href={`/lawn-care/${n.slug}`}
+              onClick={(e) => { e.preventDefault(); navigate(`/lawn-care/${n.slug}`); }}
+              style={{ display: "flex", alignItems: "center", gap: 6, background: "#152016", border: "1px solid #24331F", borderRadius: 999, padding: "8px 16px", fontSize: 13.5, fontWeight: 700, color: "#F5F3EE", textDecoration: "none" }}
+            >
+              <MapPin size={14} color="#8FBC6A" />
+              {n.name}
+            </a>
+          ))}
         </div>
       </div>
 
