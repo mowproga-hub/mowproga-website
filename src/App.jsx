@@ -29,7 +29,7 @@ const DEFAULT_CONTENT = {
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "60",
-  ratingLine: "47 five-star reviews on Google",
+  ratingLine: "49 five-star reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
@@ -150,6 +150,17 @@ const FALL_CLEANUP_JSONLD = {
   },
 };
 
+// This page is for paid ad clicks (Nextdoor, etc.), not organic search — it's
+// a deliberately thin, stripped-down duplicate of content that already lives
+// on the homepage and /fall-cleanup for SEO purposes. So unlike those pages,
+// it's marked noindex in middleware.js: its job is conversion, not ranking.
+const QUOTE_SEO = {
+  title: "Get a Free Lawn Care Quote | Mow Pro GA — Douglasville",
+  description: "Fast, free quotes for lawn mowing and fall cleanup in Douglasville, GA. 5-star rated, no contracts. Get your price in under a minute.",
+  url: "https://mowproga.com/quote",
+  image: "https://mowproga.com/images/after-lawn.webp",
+};
+
 const ABOUT_SEO = {
   title: "About Mow Pro GA | Family-Run Lawn Care in Douglasville, GA",
   description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just Joseph and his crew. Get a free instant quote.",
@@ -191,6 +202,7 @@ function applyPageSEO(seo) {
 function pathToRoute(path) {
   if (path === "/about") return "about";
   if (path === "/fall-cleanup") return "fall-cleanup";
+  if (path === "/quote") return "quote";
   return "home";
 }
 
@@ -1196,10 +1208,126 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// QUOTE LANDING PAGE — built specifically for paid ad clicks (Nextdoor first,
+// same shape works for any platform), not for organic visitors browsing the
+// site. Follows conversion-centered design principles (Oli Gardner/Unbounce):
+//   - 1:1 attention ratio: no nav links, no "About", no footer link maze —
+//     the only things a visitor can click on this page lead to a quote.
+//   - Message match: headline and body copy mirror the ad's own wording
+//     exactly, so a visitor recognizes they landed in the right place.
+//   - Design match: same real photo style, same brand colors as the ad.
+//   - Trust signals (rating) sit right under the headline, not buried below
+//     the fold.
+//   - A sticky click-to-call bar runs alongside the quote-form path, since
+//     some mobile visitors will always prefer calling over typing.
+function QuoteLandingPage({ content, showQuote, setShowQuote, quoteServiceType, setQuoteServiceType }) {
+  const openQuote = (serviceType, location) => {
+    trackEvent("quote_opened", { location });
+    setQuoteServiceType(serviceType);
+    setShowQuote(true);
+  };
+
+  return (
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh", paddingBottom: 84 }}>
+      {/* Minimal header — logo only, no nav links, nothing to click except
+          the two paths to a quote below */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "18px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 17 }}>
+          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 36, height: 36, borderRadius: "50%", display: "block" }} />
+          Mow Pro GA
+        </div>
+      </div>
+
+      <main style={{ maxWidth: 480, margin: "0 auto", padding: "8px 20px 0", textAlign: "center" }}>
+        {/* HEADLINE — message-matches the Nextdoor ad exactly */}
+        <h1 style={{ fontSize: "clamp(24px, 6vw, 32px)", fontWeight: 800, lineHeight: 1.2, margin: "0 0 10px" }}>
+          Professional Lawn Care <span style={{ color: "#8FBC6A" }}>•</span> Douglasville <span style={{ color: "#8FBC6A" }}>•</span> Trusted by Neighbors
+        </h1>
+
+        {/* TRUST BAR — right under the headline, not buried below the fold */}
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1C2B1B", color: "#F5F3EE", fontSize: 13.5, fontWeight: 700, padding: "8px 16px", borderRadius: 999, margin: "0 0 20px" }}>
+          <div style={{ display: "flex", gap: 1 }}>
+            {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#8FBC6A" color="#8FBC6A" />)}
+          </div>
+          {content.ratingLine}
+        </div>
+
+        {/* REAL PHOTO — proof of actual work, no stock imagery */}
+        <div style={{ marginBottom: 24 }}>
+          <BeforeAfterSlider before="/images/before-lawn.webp" after="/images/after-lawn.webp" />
+        </div>
+
+        <p style={{ fontSize: 15.5, color: "#D8DED2", lineHeight: 1.6, margin: "0 0 28px" }}>
+          Mowing, edging, weed eating — all included. Fall cleanup & leaf removal now available. Book now before peak season.
+        </p>
+
+        {/* THE ONE DECISION ON THIS PAGE: pick a service, land straight in the quote form */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
+          <button
+            onClick={() => openQuote("leaf", "quote_page_fall")}
+            style={{
+              background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 14,
+              padding: "20px 22px", cursor: "pointer", textAlign: "left",
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+            }}
+          >
+            <span>
+              <span style={{ display: "block", fontSize: 17, fontWeight: 800 }}>Fall Cleanup & Leaf Removal</span>
+              <span style={{ display: "block", fontSize: 13, fontWeight: 600, opacity: 0.85, marginTop: 2 }}>Leaves bagged or piled — you choose</span>
+            </span>
+            <ArrowRight size={22} style={{ flexShrink: 0 }} />
+          </button>
+
+          <button
+            onClick={() => openQuote("mowing", "quote_page_mowing")}
+            style={{
+              background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 14,
+              padding: "20px 22px", cursor: "pointer", textAlign: "left",
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+            }}
+          >
+            <span>
+              <span style={{ display: "block", fontSize: 17, fontWeight: 800 }}>Lawn Mowing</span>
+              <span style={{ display: "block", fontSize: 13, fontWeight: 600, opacity: 0.75, marginTop: 2 }}>Mowing, edging, weed eating — all included</span>
+            </span>
+            <ArrowRight size={22} style={{ flexShrink: 0 }} />
+          </button>
+        </div>
+
+        <div style={{ fontSize: 12.5, color: "#7C8A78", marginBottom: 20 }}>
+          No contracts. Free estimate. Most quotes confirmed same day.
+        </div>
+      </main>
+
+      {/* Keyed by service type so switching between the two buttons above
+          resets the modal to the right service instead of reusing whatever
+          the form's internal state happened to be from a previous open. */}
+      <QuoteModal key={quoteServiceType} open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} initialServiceType={quoteServiceType} />
+
+      {/* STICKY CALL BAR — thumb-reachable parallel path to the form, always
+          visible since this traffic is ~100% mobile app users */}
+      <a
+        href={`tel:${content.phone}`}
+        onClick={() => trackEvent("call_click", { location: "quote_page_sticky" })}
+        style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, background: "#0F1A10",
+          borderTop: "1px solid #24331F", padding: "14px 20px", display: "flex",
+          alignItems: "center", justifyContent: "center", gap: 8, textDecoration: "none",
+          color: "#F5F3EE", fontWeight: 800, fontSize: 15.5, zIndex: 150,
+        }}
+      >
+        <Phone size={18} color="#8FBC6A" /> Call {content.phone} for a Free Estimate
+      </a>
+    </div>
+  );
+}
+
 export default function MowProLanding() {
   const [content, setContent] = useState(DEFAULT_CONTENT);
   const editing = false; // Public site — editing happens by updating the code directly, not in-browser.
   const [showQuote, setShowQuote] = useState(false);
+  const [quoteServiceType, setQuoteServiceType] = useState("mowing");
   const [route, setRoute] = useState(() => pathToRoute(typeof window !== "undefined" ? window.location.pathname : "/"));
 
   useEffect(() => {
@@ -1219,6 +1347,9 @@ export default function MowProLanding() {
     } else if (route === "about") {
       applyPageSEO(ABOUT_SEO);
       setPageJsonLd([ABOUT_JSONLD]);
+    } else if (route === "quote") {
+      applyPageSEO(QUOTE_SEO);
+      setPageJsonLd(null);
     } else {
       applyPageSEO(DEFAULT_SEO);
       setPageJsonLd(null);
@@ -1246,6 +1377,18 @@ export default function MowProLanding() {
 
   if (route === "fall-cleanup") {
     return <FallCleanupPage content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
+  }
+
+  if (route === "quote") {
+    return (
+      <QuoteLandingPage
+        content={content}
+        showQuote={showQuote}
+        setShowQuote={setShowQuote}
+        quoteServiceType={quoteServiceType}
+        setQuoteServiceType={setQuoteServiceType}
+      />
+    );
   }
 
   return (

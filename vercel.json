@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/about", "destination": "/index.html" },
-    { "source": "/fall-cleanup", "destination": "/index.html" }
+    { "source": "/fall-cleanup", "destination": "/index.html" },
+    { "source": "/quote", "destination": "/index.html" }
   ]
 }
