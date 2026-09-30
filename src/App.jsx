@@ -60,13 +60,62 @@ function getLeadSource() {
   }
 }
 
+// Homepage FAQ — mirrored by hand in index.html (the crawler fallback <dl>
+// and the FAQPage JSON-LD). Keep all three in sync when editing.
+const HOME_FAQ = [
+  {
+    "q": "How much does lawn mowing cost in Douglasville, GA?",
+    "a": "Biweekly mowing starts at $50 per visit for small yards (under 5,000 sq ft), $60 for medium yards (5,000–10,000 sq ft), and $80 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
+  },
+  {
+    "q": "What's included in every biweekly visit?",
+    "a": "Every visit includes mowing, edging, weed eating along fence lines and obstacles, and blowing debris off your driveway and walkways. Hedge trimming and crack weed spraying are available as add-ons."
+  },
+  {
+    "q": "Which areas do you serve?",
+    "a": "We serve Douglasville, GA (30134 and 30135) and nearby areas including Stewarts Mill, Shallowford Heights, Springwood Village, the Big A / Highway 166 area, Lithia Springs, and Villa Rica. We service non-gated residential neighborhoods."
+  },
+  {
+    "q": "Do I need to be home for service?",
+    "a": "No — as long as the yard is accessible, you don't need to be there. We'll take care of it and you'll see the difference when you're back."
+  },
+  {
+    "q": "What if it rains on my scheduled day?",
+    "a": "We'll reach out to reschedule for the next dry day — no need to call and check, we'll handle it."
+  },
+  {
+    "q": "Is there a contract?",
+    "a": "No. Biweekly service, cancel anytime — no long-term commitment required."
+  },
+  {
+    "q": "What if my lawn is overgrown?",
+    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $45/hr after that. Restoring edges that have grown over sidewalks or driveways is $25. Joseph confirms everything on your quote before any work starts."
+  },
+  {
+    "q": "Do you do fall leaf cleanup?",
+    "a": "Yes. Fall cleanup includes leaf removal, bed cleanout, and debris removal, with leaf removal starting at $90 for small yards. See our Fall Cleanup page for details and pricing."
+  },
+  {
+    "q": "Is Mow Pro insured?",
+    "a": "Yes. Mow Pro Lawn Care LLC is a registered Georgia business and carries general liability insurance."
+  },
+  {
+    "q": "How can I pay?",
+    "a": "We accept Zelle, Cash App, debit or credit card through an emailed invoice, and cash."
+  },
+  {
+    "q": "How accurate is the instant quote?",
+    "a": "It's a real starting estimate based on your yard size and what you tell us — Joseph confirms the final price once he sees the property in person, so there are no surprises."
+  }
+];
+
 const DEFAULT_CONTENT = {
   headline: "Your Yard, Handled — Without Lifting a Finger.",
   subheading: "Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "60",
-  ratingLine: "49 five-star reviews on Google",
+  ratingLine: "5.0 stars · 52 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
@@ -2051,12 +2100,7 @@ export default function MowProLanding() {
       {/* FAQ */}
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "10px 24px 60px" }}>
         <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 30px" }}>Before You Reach Out</h2>
-        {[
-          { q: "Do I need to be home for service?", a: "No — as long as the yard is accessible, you don't need to be there. We'll take care of it and you'll see the difference when you're back." },
-          { q: "What if it rains on my scheduled day?", a: "We'll reach out to reschedule for the next dry day — no need to call and check, we'll handle it." },
-          { q: "Is there a contract?", a: "No. Biweekly service, cancel anytime — no long-term commitment required." },
-          { q: "How accurate is the instant quote?", a: "It's a real starting estimate based on your yard size and what you tell us — Joseph confirms the final price once he sees the property in person, so there are no surprises." },
-        ].map((item, i) => (
+        {HOME_FAQ.map((item, i) => (
           <div key={i} style={{ borderBottom: "1px solid #24331F", padding: "18px 0" }}>
             <div style={{ fontWeight: 700, fontSize: 15.5, color: "#F5F3EE", marginBottom: 6 }}>{item.q}</div>
             <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{item.a}</div>
