@@ -533,7 +533,7 @@ const SIZE_OPTIONS = [
 // Leaf removal starting prices by the same size tiers as mowing. Shown as a
 // "+" starting price since actual cost depends heavily on tree coverage and
 // volume.
-const LEAF_PRICES = { small: 90, medium: 150, large: 225, xl: null };
+const LEAF_PRICES = { small: 130, medium: 260, large: 400, xl: null };
 const HEAVY_TREE_FEE = 75;
 
 // Address field with live Google-powered suggestions, via api/places.js
