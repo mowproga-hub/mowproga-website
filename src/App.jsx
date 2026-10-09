@@ -89,7 +89,7 @@ const HOME_FAQ = [
   },
   {
     "q": "What if my lawn is overgrown?",
-    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways starts at $25. We confirm everything on your quote before any work starts."
+    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways starts at $50. We confirm everything on your quote before any work starts."
   },
   {
     "q": "Do you do fall leaf cleanup?",
@@ -657,7 +657,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
   if (!open) return null;
 
   const CRACK_SPRAY_PRICE = 15;
-  const EDGE_RESTORE_PRICE = 25;
+  const EDGE_RESTORE_PRICE = 50;
   const isLeaf = form.serviceType === "leaf";
   const isHedge = form.serviceType === "hedge";
   const isMowing = !isLeaf && !isHedge;
@@ -1130,7 +1130,7 @@ const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Law
 SERVICES & PRICING:
 - Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $70, Large yard (10,000-20,000 sq ft) $90, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
 - First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
-- Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
+- Edge restoration (grass grown fully over sidewalk/driveway edge): $50+ for a typical driveway and sidewalk; $75-100+ for long driveways, corner lots, or edges buried several inches deep
 - Sidewalk & driveway crack weed spraying: $15
 - Hedge & shrub trimming ($100 minimum per visit): 1-6 shrubs $100+, 7-12 shrubs $200+, 13-25 shrubs $350+. Shrubs 6-10 ft tall add $40 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$40. Mowing clients get 10% off hedge trimming added to a regular visit.
 - Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once we see the property. Heavy tree coverage needs a custom quote in person.
