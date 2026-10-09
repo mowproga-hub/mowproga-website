@@ -209,7 +209,7 @@ const PAGES = {
     content: `
       <main>
         <h1>Get a Free Lawn Care Quote in Douglasville, GA</h1>
-        <p>Fast, free quotes for lawn mowing and fall cleanup in Douglasville, GA. 5-star rated, no contracts. Call or text <a href="tel:4046696945">404-669-6945</a>, or request your price online — most quotes confirmed same day.</p>
+        <p>Fast, free quotes for lawn mowing, fall cleanup, and hedge trimming in Douglasville, GA. 5-star rated, no contracts. Call or text <a href="tel:4046696945">404-669-6945</a>, or request your price online — most quotes confirmed same day.</p>
         <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
       </main>
     `,
