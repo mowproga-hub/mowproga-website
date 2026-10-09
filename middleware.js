@@ -74,12 +74,13 @@ function neighborhoodPricingList() {
       <li>Large yard (10,000–20,000 sq ft): $90</li>
       <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
     </ul>
+    <p>Hedge &amp; shrub trimming: 1–6 shrubs $100+, 7–12 shrubs $200+, 13–25 shrubs $350+ (shrubs 6–10 ft tall +$40 each).</p>
   `;
 }
 
 function neighborhoodPage(n) {
   const title = `Lawn Care in ${placeLabel(n)} | Mow Pro GA`;
-  const description = `Biweekly lawn mowing, edging, and cleanup for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`;
+  const description = `Biweekly lawn mowing, edging, leaf cleanup, and hedge trimming for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`;
   const url = `https://mowproga.com/lawn-care/${n.slug}`;
   const photos = neighborhoodPhotos(n);
   const image = `https://mowproga.com${photos.after}`;
@@ -201,7 +202,7 @@ const PAGES = {
   // still lets crawlers pass through it normally.
   "/quote": {
     title: "Get a Free Lawn Care Quote | Mow Pro GA — Douglasville",
-    description: "Fast, free quotes for lawn mowing and fall cleanup in Douglasville, GA. 5-star rated, no contracts. Get your price in under a minute.",
+    description: "Fast, free quotes for lawn mowing, fall cleanup, and hedge trimming in Douglasville, GA. 5-star rated, no contracts. Get your price in under a minute.",
     url: "https://mowproga.com/quote",
     image: "https://mowproga.com/images/after-lawn.webp",
     robots: "noindex, follow",
