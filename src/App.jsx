@@ -65,7 +65,7 @@ function getLeadSource() {
 const HOME_FAQ = [
   {
     "q": "How much does lawn mowing cost in Douglasville, GA?",
-    "a": "Biweekly mowing starts at $50 per visit for small yards (under 5,000 sq ft), $60 for medium yards (5,000–10,000 sq ft), and $80 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
+    "a": "Biweekly mowing starts at $55 per visit for small yards (under 5,000 sq ft), $70 for medium yards (5,000–10,000 sq ft), and $90 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
   },
   {
     "q": "What's included in every biweekly visit?",
@@ -89,7 +89,7 @@ const HOME_FAQ = [
   },
   {
     "q": "What if my lawn is overgrown?",
-    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $45/hr after that. Restoring edges that have grown over sidewalks or driveways is $25. Joseph confirms everything on your quote before any work starts."
+    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways is $25. Joseph confirms everything on your quote before any work starts."
   },
   {
     "q": "Do you do fall leaf cleanup?",
@@ -114,7 +114,7 @@ const DEFAULT_CONTENT = {
   subheading: "Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
-  price: "60",
+  price: "70",
   ratingLine: "5.0 stars · 52 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
@@ -524,7 +524,7 @@ function ImageSlot({ label, src, onUpload, editing, badgeColor, badgeText }) {
 }
 
 const SIZE_OPTIONS = [
-  { key: "small", label: "Small yard", sub: "Under 5,000 sq ft", addOn: -10 },
+  { key: "small", label: "Small yard", sub: "Under 5,000 sq ft", addOn: -15 },
   { key: "medium", label: "Medium yard", sub: "5,000 – 10,000 sq ft", addOn: 0 },
   { key: "large", label: "Large yard", sub: "10,000 – 20,000 sq ft", addOn: 20 },
   { key: "xl", label: "Extra large / acreage", sub: "Over 20,000 sq ft", addOn: null },
@@ -981,8 +981,8 @@ const modalBtn = { width: "100%", background: "#8FBC6A", color: "#0F1A10", borde
 const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned lawn care company in Douglasville, Georgia, run by Joseph. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so Joseph can follow up with a real quote.
 
 SERVICES & PRICING:
-- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $50, Medium yard (5,000-10,000 sq ft) $60, Large yard (10,000-20,000 sq ft) $80, Extra large/acreage (over 20,000 sq ft): custom quote after Joseph assesses it in person
-- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $60 cut becomes $120 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $45/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
+- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $70, Large yard (10,000-20,000 sq ft) $90, Extra large/acreage (over 20,000 sq ft): custom quote after Joseph assesses it in person
+- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
 - Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
@@ -1007,7 +1007,7 @@ const CHAT_TOOLS = [
         phone: { type: "string", description: "Phone number, if given" },
         address: { type: "string", description: "Property address, if given" },
         service: { type: "string", description: "What they're asking about, e.g. 'biweekly mowing, medium yard, overgrown'" },
-        estimated_price: { type: "string", description: "The estimate you gave them, if any, e.g. '$80+' or 'custom quote needed'" },
+        estimated_price: { type: "string", description: "The estimate you gave them, if any, e.g. '$90+' or 'custom quote needed'" },
       },
       required: ["name"],
     },
@@ -1593,7 +1593,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Biweekly maintenance starting at $50 per visit, priced by yard size. Joseph confirms the exact price once he sees the property in person.
+            Biweekly maintenance starting at $55 per visit, priced by yard size. Joseph confirms the exact price once he sees the property in person.
           </p>
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1604,7 +1604,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
                     <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
                   </div>
                   <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
-                    {opt.key === "small" ? "$50" : opt.key === "medium" ? "$60" : opt.key === "large" ? "$80" : "Custom"}
+                    {opt.key === "small" ? "$55" : opt.key === "medium" ? "$70" : opt.key === "large" ? "$90" : "Custom"}
                   </div>
                 </div>
               ))}
