@@ -73,7 +73,7 @@ const HOME_FAQ = [
   },
   {
     "q": "Which areas do you serve?",
-    "a": "We serve Douglasville, GA (30134 and 30135) and nearby areas including Stewarts Mill, Shallowford Heights, Springwood Village, the Big A / Highway 166 area, Lithia Springs, and Villa Rica. We service non-gated residential neighborhoods."
+    "a": "We serve Douglasville, GA (30134 and 30135) and nearby areas including Stewarts Mill, Shallowford Heights, Springwood Village, the Big A / Highway 166 area, Lithia Springs, Villa Rica, and Powder Springs. We service non-gated residential neighborhoods."
   },
   {
     "q": "Do I need to be home for service?",
@@ -89,7 +89,7 @@ const HOME_FAQ = [
   },
   {
     "q": "What if my lawn is overgrown?",
-    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways is $25. We confirm everything on your quote before any work starts."
+    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways starts at $25. We confirm everything on your quote before any work starts."
   },
   {
     "q": "Do you do fall leaf cleanup?",
@@ -534,7 +534,6 @@ const SIZE_OPTIONS = [
 // "+" starting price since actual cost depends heavily on tree coverage and
 // volume.
 const LEAF_PRICES = { small: 130, medium: 260, large: 400, xl: null };
-const HEAVY_TREE_FEE = 75;
 
 // Hedge trimming: priced by shrub count (easier for customers than hedge
 // length), with a $100 minimum. Shrubs 6-10 ft tall add a per-shrub ladder

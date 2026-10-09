@@ -6,6 +6,7 @@
 - Phone / text: 404-669-6945
 - Address: 1695 Hampton Pass, Douglasville, GA 30134
 - Service area: Douglasville and Douglas County, GA, including Lithia Springs, Villa Rica, Powder Springs, Stewarts Mill, Shallowford Heights, Springwood Village, and the Big A / Highway 166 area
+- Hours: Monday–Saturday, 9 AM–6 PM
 - Payment: Zelle, Cash App, card (Stripe invoice), or cash, due the day of service
 
 ## Lawn mowing (biweekly, everything included)

@@ -148,9 +148,9 @@ const PAGES = {
         <h2>Fall Cleanup Pricing</h2>
         <p>Leaf removal is priced by yard size, same as our other services:</p>
         <ul>
-          <li>Small yard (under 5,000 sq ft): $90+</li>
-          <li>Medium yard (5,000–10,000 sq ft): $150+</li>
-          <li>Large yard (10,000–20,000 sq ft): $225+</li>
+          <li>Small yard (under 5,000 sq ft): $130+</li>
+          <li>Medium yard (5,000–10,000 sq ft): $260+</li>
+          <li>Large yard (10,000–20,000 sq ft): $400+</li>
           <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
           <li>Bag &amp; haul away (optional add-on, default is piled on-site): $5–8/bag</li>
         </ul>
@@ -162,7 +162,7 @@ const PAGES = {
         <h2>Fall Cleanup Questions</h2>
         <dl>
           <dt>How much does fall yard cleanup cost in Douglasville, GA?</dt>
-          <dd>Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.</dd>
+          <dd>Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.</dd>
           <dt>Do you bag and haul away the leaves, or leave them on the property?</dt>
           <dd>By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once we see the volume.</dd>
           <dt>When should I schedule fall cleanup in Douglasville?</dt>
@@ -229,7 +229,7 @@ const FALL_CLEANUP_FAQ_JSON_LD = {
       name: "How much does fall yard cleanup cost in Douglasville, GA?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.",
+        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.",
       },
     },
     {
