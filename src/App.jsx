@@ -773,6 +773,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   placeholder="Start typing your address…"
                 />
                 {!isHedge && <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>}
+                {isMowing && <div style={{ fontSize: 11.5, color: "#9AAE94", marginTop: -2 }}>Mowing, edging, weed eating & blow-off all included</div>}
                 {!isHedge && SIZE_OPTIONS.map((opt) => (
                   <div
                     key={opt.key}
@@ -1741,7 +1742,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Biweekly maintenance starting at $55 per visit, priced by yard size. Joseph confirms the exact price once he sees the property in person.
+            Biweekly maintenance starting at $55 per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. Joseph confirms the exact price once he sees the property in person.
           </p>
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -2194,11 +2195,14 @@ export default function MowProLanding() {
         <p style={{ color: "#B9C4B2", margin: "0 0 30px" }}>Biweekly maintenance starting at</p>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "baseline", gap: 4 }}>
           <span style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A" }}>$</span>
-          <EditableText editing={editing} value={content.price} onChange={(v) => update("price", v)} style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A", width: 90 }} />
+          {editing
+            ? <EditableText editing={editing} value={content.price} onChange={(v) => update("price", v)} style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A", width: 90 }} />
+            : <span style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A" }}>{parseInt(content.price, 10) + SIZE_OPTIONS[0].addOn}</span>}
         </div>
-        <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 30 }}>per visit</div>
+        <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 8 }}>per visit</div>
+        <div style={{ color: "#8FBC6A", fontSize: 14.5, fontWeight: 700, marginBottom: 30 }}>Everything included. No hidden add-ons.</div>
         <div style={{ display: "inline-flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 34 }}>
-          {["Mowing, edging & weed eating", "Debris blown off walkways & driveway", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
+          {["Mowing, edging & weed eating — all included", "Debris blown off walkways & driveway — included", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
             <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14.5, color: "#D8DED2" }}>
               <CheckCircle2 size={17} color="#8FBC6A" /> {f}
             </div>

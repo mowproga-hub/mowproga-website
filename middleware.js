@@ -109,7 +109,7 @@ function neighborhoodPage(n) {
         </ul>
 
         <h2>${n.name} Lawn Care Pricing</h2>
-        <p>Biweekly maintenance starting at $55 per visit, priced by yard size:</p>
+        <p>Biweekly maintenance starting at $55 per visit, with mowing, edging, weed eating, and blow-off all included, priced by yard size:</p>
         ${neighborhoodPricingList()}
         <p>No contracts — cancel anytime. Joseph confirms the exact price once he sees the property in person.</p>
 
