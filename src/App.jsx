@@ -69,7 +69,7 @@ const HOME_FAQ = [
   },
   {
     "q": "What's included in every biweekly visit?",
-    "a": "Every visit includes mowing, edging, weed eating along fence lines and obstacles, and blowing debris off your driveway and walkways. Hedge trimming and crack weed spraying are available as add-ons."
+    "a": "Every visit includes mowing, edging, weed eating along fence lines and obstacles, and blowing debris off your driveway and walkways. Hedge and shrub trimming (starting at $150) and crack weed spraying are available as add-ons."
   },
   {
     "q": "Which areas do you serve?",
@@ -536,6 +536,18 @@ const SIZE_OPTIONS = [
 const LEAF_PRICES = { small: 130, medium: 260, large: 400, xl: null };
 const HEAVY_TREE_FEE = 75;
 
+// Hedge trimming: priced by shrub count (easier for customers than hedge
+// length), with a $150 minimum. Shrubs 6-10 ft tall add a per-shrub ladder
+// fee; anything over 10 ft, 25+ shrubs, or badly overgrown is a custom quote.
+const HEDGE_OPTIONS = [
+  { key: "h1", label: "1 – 6 shrubs", sub: "Small job · $150 minimum", price: 150, max: 6 },
+  { key: "h2", label: "7 – 12 shrubs", sub: "Medium job", price: 275, max: 12 },
+  { key: "h3", label: "13 – 25 shrubs", sub: "Large job", price: 450, max: 25 },
+  { key: "h4", label: "25+ shrubs or long hedge rows", sub: "Needs an on-site look", price: null, max: 0 },
+];
+const HEDGE_TALL_FEE = 50;
+const HEDGE_HAUL_FEE = 50;
+
 // Address field with live Google-powered suggestions, via api/places.js
 // (Places API (New), proxied server-side so the API key never reaches the
 // browser). Debounced so it doesn't fire a request on every keystroke, and
@@ -639,7 +651,7 @@ function AddressAutocompleteInput({ value, onChange, placeholder, style }) {
 
 function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false });
+  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -648,15 +660,28 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
   const CRACK_SPRAY_PRICE = 15;
   const EDGE_RESTORE_PRICE = 25;
   const isLeaf = form.serviceType === "leaf";
+  const isHedge = form.serviceType === "hedge";
+  const isMowing = !isLeaf && !isHedge;
   const selectedOption = SIZE_OPTIONS.find((s) => s.key === form.size);
-  const isCustomQuote = isLeaf ? LEAF_PRICES[form.size] === null : selectedOption?.addOn === null;
-  const needsCustomQuote = isCustomQuote || (!isLeaf && form.overgrownLevel === "severe") || (isLeaf && form.heavyTrees);
+  const hedgeOption = HEDGE_OPTIONS.find((h) => h.key === form.hedgeSize);
+  const maxTall = hedgeOption?.max || 0;
+  const tallCount = Math.min(form.tallCount, maxTall);
+  const isCustomQuote = isHedge
+    ? hedgeOption?.price === null
+    : isLeaf ? LEAF_PRICES[form.size] === null : selectedOption?.addOn === null;
+  const needsCustomQuote = isCustomQuote
+    || (isMowing && form.overgrownLevel === "severe")
+    || (isLeaf && form.heavyTrees)
+    || (isHedge && (form.hedgeOver10 || form.hedgeOvergrown));
   const normalCutPrice = parseInt(basePrice, 10) + (selectedOption?.addOn || 0);
   const price = needsCustomQuote
     ? null
+    : isHedge
+    ? hedgeOption.price + tallCount * HEDGE_TALL_FEE + (form.hedgeHaul ? HEDGE_HAUL_FEE : 0)
     : isLeaf
     ? LEAF_PRICES[form.size]
     : (form.overgrownLevel === "mild" ? normalCutPrice * 2 : normalCutPrice) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
+  const showPlus = isLeaf || isHedge || form.overgrownLevel === "mild" || form.edgeRestore;
 
   const submit = async () => {
     setSubmitting(true);
@@ -670,8 +695,12 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
           name: form.name,
           phone: form.phone,
           address: form.address,
-          size: selectedOption?.label || "",
-          service: isLeaf ? "Leaf removal" : "Mowing",
+          size: isHedge ? (hedgeOption?.label || "") : (selectedOption?.label || ""),
+          service: isHedge ? "Hedge trimming" : isLeaf ? "Leaf removal" : "Mowing",
+          tallCount: isHedge ? tallCount : undefined,
+          hedgeOver10: isHedge ? form.hedgeOver10 : undefined,
+          hedgeOvergrown: isHedge ? form.hedgeOvergrown : undefined,
+          hedgeHaul: isHedge ? form.hedgeHaul : undefined,
           crackSpray: form.crackSpray,
           overgrown: form.overgrownLevel,
           edgeRestore: form.edgeRestore,
@@ -691,7 +720,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
 
   const close = () => {
     onClose();
-    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false }); }, 300);
+    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false }); }, 300);
   };
 
   return (
@@ -717,10 +746,10 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
             {step === 1 && (
               <>
                 <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Get your instant quote</div>
-                <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 14 }}>Enter your address and yard size for an estimated price.</div>
+                <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 14 }}>{isHedge ? "Enter your address and how many shrubs need trimming." : "Enter your address and yard size for an estimated price."}</div>
 
                 <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                  {[{ key: "mowing", label: "Mowing" }, { key: "leaf", label: "Leaf Removal" }].map((s) => (
+                  {[{ key: "mowing", label: "Mowing" }, { key: "leaf", label: "Leaves" }, { key: "hedge", label: "Hedges" }].map((s) => (
                     <button
                       key={s.key}
                       onClick={() => setForm({ ...form, serviceType: s.key })}
@@ -743,8 +772,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   onChange={(v) => setForm({ ...form, address: v })}
                   placeholder="Start typing your address…"
                 />
-                <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>
-                {SIZE_OPTIONS.map((opt) => (
+                {!isHedge && <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>}
+                {!isHedge && SIZE_OPTIONS.map((opt) => (
                   <div
                     key={opt.key}
                     onClick={() => setForm({ ...form, size: opt.key })}
@@ -767,7 +796,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   </div>
                 ))}
 
-                {!isCustomQuote && !isLeaf && (
+                {!isCustomQuote && isMowing && (
                   <div
                     onClick={() => setForm({ ...form, crackSpray: !form.crackSpray })}
                     style={{
@@ -793,7 +822,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   </div>
                 )}
 
-                {!isCustomQuote && !isLeaf && (
+                {!isCustomQuote && isMowing && (
                   <>
                     <label style={{ ...miniLabel, marginTop: 14 }}>Yard condition (if overgrown)</label>
                     <div
@@ -849,7 +878,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   </>
                 )}
 
-                {!isCustomQuote && !isLeaf && (
+                {!isCustomQuote && isMowing && (
                   <div
                     onClick={() => setForm({ ...form, edgeRestore: !form.edgeRestore })}
                     style={{
@@ -927,6 +956,124 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   </>
                 )}
 
+                {isHedge && (
+                  <>
+                    <label style={{ ...miniLabel, marginTop: 12 }}>How many shrubs?</label>
+                    {HEDGE_OPTIONS.map((opt) => (
+                      <div
+                        key={opt.key}
+                        onClick={() => setForm({ ...form, hedgeSize: opt.key })}
+                        style={{
+                          border: `1.5px solid ${form.hedgeSize === opt.key ? "#8FBC6A" : "#2A3A28"}`,
+                          background: form.hedgeSize === opt.key ? "#1C2B1B" : "transparent",
+                          borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
+                          display: "flex", justifyContent: "space-between", alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>{opt.label}</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>{opt.sub}</div>
+                        </div>
+                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>{opt.price === null ? "Custom" : `$${opt.price}+`}</div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {isHedge && !isCustomQuote && (
+                  <>
+                    <label style={{ ...miniLabel, marginTop: 14 }}>How many are taller than 6 ft?</label>
+                    <div style={{ border: "1.5px solid #2A3A28", borderRadius: 10, padding: "10px 14px", marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 13.5 }}>Shrubs 6 – 10 ft tall</div>
+                        <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Ladder work · +${HEDGE_TALL_FEE} each</div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <button
+                          aria-label="Fewer tall shrubs"
+                          onClick={() => setForm({ ...form, tallCount: Math.max(0, tallCount - 1) })}
+                          style={{ width: 30, height: 30, borderRadius: 8, border: "1.5px solid #2A3A28", background: "transparent", color: "#F5F3EE", fontSize: 18, fontWeight: 800, cursor: "pointer" }}
+                        >−</button>
+                        <div style={{ minWidth: 18, textAlign: "center", fontWeight: 800, fontSize: 15 }}>{tallCount}</div>
+                        <button
+                          aria-label="More tall shrubs"
+                          onClick={() => setForm({ ...form, tallCount: Math.min(maxTall, tallCount + 1) })}
+                          style={{ width: 30, height: 30, borderRadius: 8, border: "1.5px solid #2A3A28", background: "transparent", color: "#F5F3EE", fontSize: 18, fontWeight: 800, cursor: "pointer" }}
+                        >+</button>
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => setForm({ ...form, hedgeOver10: !form.hedgeOver10 })}
+                      style={{
+                        border: `1.5px solid ${form.hedgeOver10 ? "#8FBC6A" : "#2A3A28"}`,
+                        background: form.hedgeOver10 ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeOver10 ? "#8FBC6A" : "#5C6B57"}`,
+                          background: form.hedgeOver10 ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {form.hedgeOver10 && <CheckCircle2 size={14} color="#0F1A10" />}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>Any shrubs over 10 ft tall</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Closer to tree work — needs an on-site look</div>
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                    </div>
+                    <div
+                      onClick={() => setForm({ ...form, hedgeOvergrown: !form.hedgeOvergrown })}
+                      style={{
+                        border: `1.5px solid ${form.hedgeOvergrown ? "#8FBC6A" : "#2A3A28"}`,
+                        background: form.hedgeOvergrown ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeOvergrown ? "#8FBC6A" : "#5C6B57"}`,
+                          background: form.hedgeOvergrown ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {form.hedgeOvergrown && <CheckCircle2 size={14} color="#0F1A10" />}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>Badly overgrown</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Hasn't been trimmed in a year or more</div>
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                    </div>
+                    <div
+                      onClick={() => setForm({ ...form, hedgeHaul: !form.hedgeHaul })}
+                      style={{
+                        border: `1.5px solid ${form.hedgeHaul ? "#8FBC6A" : "#2A3A28"}`,
+                        background: form.hedgeHaul ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeHaul ? "#8FBC6A" : "#5C6B57"}`,
+                          background: form.hedgeHaul ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {form.hedgeHaul && <CheckCircle2 size={14} color="#0F1A10" />}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>Haul away clippings</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Bagged and removed (default is piled on-site)</div>
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${HEDGE_HAUL_FEE}</div>
+                    </div>
+                  </>
+                )}
+
                 <button disabled={!form.address.trim()} onClick={() => setStep(2)} style={{ ...modalBtn, opacity: form.address.trim() ? 1 : 0.5, marginTop: 18 }}>
                   Continue <ArrowRight size={15} />
                 </button>
@@ -941,15 +1088,15 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                 <div style={{ background: "#0F1A10", borderRadius: 12, padding: 16, textAlign: "center" }}>
                   {needsCustomQuote ? (
                     <>
-                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>Property size</div>
+                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isHedge ? "Your hedges" : "Property size"}</div>
                       <div style={{ fontSize: 17, fontWeight: 800, color: "#8FBC6A", lineHeight: 1.4 }}>Custom Quote Needed</div>
                       <div style={{ fontSize: 12, color: "#B9C4B2", marginTop: 4 }}>Joseph will assess your property and follow up with pricing</div>
                     </>
                   ) : (
                     <>
                       <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>Estimated price</div>
-                      <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{(isLeaf || form.overgrownLevel === "mild" || form.edgeRestore) && "+"}</div>
-                      {(isLeaf || form.overgrownLevel === "mild" || form.edgeRestore) && (
+                      <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{showPlus && "+"}</div>
+                      {showPlus && (
                         <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once Joseph sees the property</div>
                       )}
                     </>
@@ -985,6 +1132,7 @@ SERVICES & PRICING:
 - First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
+- Hedge & shrub trimming (premium service, $150 minimum per visit): 1-6 shrubs $150+, 7-12 shrubs $275+, 13-25 shrubs $450+. Shrubs 6-10 ft tall add $50 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$50. Mowing clients get 10% off hedge trimming added to a regular visit.
 - Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
 - No contracts, cancel anytime

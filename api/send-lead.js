@@ -4,7 +4,7 @@
 
 // Pure function, kept separate from the handler so the email content can be
 // unit-tested without needing a live RESEND_API_KEY or network access.
-export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, source }) {
+export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source }) {
   // form.overgrownLevel is "none" | "mild" | "severe" — "none" is a
   // non-empty string, so a plain `overgrown ? "Yes" : "No"` check always
   // printed "Yes" regardless of what was actually selected.
@@ -18,6 +18,7 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
   // so every lead email showed only the mowing add-on fields (crack
   // spray, edge restoration) no matter which service was requested.
   const isLeaf = service === "Leaf removal";
+  const isHedge = service === "Hedge trimming";
 
   // Shown right at the top since this is meant to be read at a glance on a
   // phone, not dug for — "Nextdoor", "Google", or "Website (no source tag)"
@@ -31,8 +32,13 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
     <p><b>Phone:</b> ${phone}</p>
     <p><b>Address:</b> ${address}</p>
     ${service ? `<p><b>Service:</b> ${service}</p>` : ""}
-    <p><b>Yard size:</b> ${size}</p>
-    ${isLeaf ? `
+    <p><b>${isHedge ? "Shrubs" : "Yard size"}:</b> ${size}</p>
+    ${isHedge ? `
+    <p><b>Shrubs 6–10 ft tall:</b> ${tallCount || 0}</p>
+    <p><b>Any over 10 ft:</b> ${hedgeOver10 ? "Yes" : "No"}</p>
+    <p><b>Badly overgrown:</b> ${hedgeOvergrown ? "Yes" : "No"}</p>
+    <p><b>Haul away clippings:</b> ${hedgeHaul ? "Yes" : "No (piled on-site)"}</p>
+    ` : isLeaf ? `
     <p><b>Bag &amp; haul away:</b> ${bagHaul ? "Yes" : "No (piled on-site)"}</p>
     <p><b>Heavy tree coverage:</b> ${heavyTrees ? "Yes" : "No"}</p>
     ` : `
