@@ -115,7 +115,7 @@ const DEFAULT_CONTENT = {
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "70",
-  ratingLine: "5.0 stars · 52 reviews on Google",
+  ratingLine: "5.0 stars · 55 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
@@ -2220,7 +2220,7 @@ export default function MowProLanding() {
         <div style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 16, padding: 28 }}>
           <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 10 }}>Who's Behind It</div>
           <p style={{ fontSize: 15, color: "#D8DED2", lineHeight: 1.7, margin: 0 }}>
-            Mow Pro GA is run by Joseph — a Douglasville local who quotes the job, shows up, and does the work himself. No subcontractors, no rotating crews. This isn't a side project — his son helps hand out door hangers around the neighborhood, and gets to watch the results land in real time. One afternoon, right after hanger number 97, a client called. When you book with Mow Pro, you're not booking a call center; you're booking a family that's building something real, one yard at a time.
+            Mow Pro GA is run by Joseph — a Douglasville local who quotes every job personally and stands behind every cut. Your yard is handled by Joseph or a trusted, experienced member of his small team — familiar faces, not a rotating crew. This isn't a side project — his son helps hand out door hangers around the neighborhood, and gets to watch the results land in real time. One afternoon, right after hanger number 97, a client called. When you book with Mow Pro, you're not booking a call center; you're booking a family that's building something real, one yard at a time.
           </p>
           <a href="/about" onClick={(e) => { e.preventDefault(); navigate("/about"); }} style={{ background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 14, marginTop: 14, cursor: "pointer", padding: 0, display: "inline-flex", alignItems: "center", gap: 5, textDecoration: "none" }}>
             Read our full story <ArrowRight size={14} />

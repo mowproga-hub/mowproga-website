@@ -94,7 +94,7 @@ function neighborhoodPage(n) {
         <h1>Lawn Care in ${placeLabel(n)}</h1>
         <p>Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in ${n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run crew — Joseph quotes the job, shows up, and does the work himself. Same-day quotes, no contracts.</p>
         <p>Call or text <a href="tel:4046696945">404-669-6945</a>, or request a free instant quote online.</p>
-        <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134" target="_blank" rel="noopener noreferrer">5.0 stars, 52 reviews on Google</a></p>
+        <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134" target="_blank" rel="noopener noreferrer">5.0 stars, 55 reviews on Google</a></p>
 
         <h2>See the Difference</h2>
         <p>A real Mow Pro GA yard, before and after:</p>
