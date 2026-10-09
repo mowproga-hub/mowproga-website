@@ -89,7 +89,7 @@ const HOME_FAQ = [
   },
   {
     "q": "What if my lawn is overgrown?",
-    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways is $25. Joseph confirms everything on your quote before any work starts."
+    "a": "The first cut on an overgrown lawn is priced at 2x the normal cut, covering the first 2 hours, then $55/hr after that. Restoring edges that have grown over sidewalks or driveways is $25. We confirm everything on your quote before any work starts."
   },
   {
     "q": "Do you do fall leaf cleanup?",
@@ -105,7 +105,7 @@ const HOME_FAQ = [
   },
   {
     "q": "How accurate is the instant quote?",
-    "a": "It's a real starting estimate based on your yard size and what you tell us — Joseph confirms the final price once he sees the property in person, so there are no surprises."
+    "a": "It's a real starting estimate based on your yard size and what you tell us — we confirm the final price once we see the property in person, so there are no surprises."
   }
 ];
 
@@ -172,7 +172,7 @@ const FALL_CLEANUP_FAQ_JSONLD = {
       "name": "How much does fall yard cleanup cost in Douglasville, GA?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.",
+        "text": "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.",
       },
     },
     {
@@ -180,7 +180,7 @@ const FALL_CLEANUP_FAQ_JSONLD = {
       "name": "Do you bag and haul away the leaves, or leave them on the property?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.",
+        "text": "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once we see the volume.",
       },
     },
     {
@@ -249,7 +249,7 @@ const QUOTE_SEO = {
 
 const ABOUT_SEO = {
   title: "About Mow Pro GA | Family-Run Lawn Care in Douglasville, GA",
-  description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just Joseph and his crew. Get a free instant quote.",
+  description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just a local team that shows up. Get a free instant quote.",
   url: "https://mowproga.com/about",
   image: "https://mowproga.com/images/our-story.webp",
 };
@@ -733,7 +733,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
             <CheckCircle2 size={40} color="#8FBC6A" style={{ marginBottom: 12 }} />
             <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Quote request sent!</div>
             <div style={{ fontSize: 14, color: "#B9C4B2" }}>
-              Joseph will text or call you shortly
+              Our team will text or call you shortly
               {needsCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price} estimate.`}
             </div>
           </div>
@@ -1091,20 +1091,20 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <>
                       <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isHedge ? "Your hedges" : "Property size"}</div>
                       <div style={{ fontSize: 17, fontWeight: 800, color: "#8FBC6A", lineHeight: 1.4 }}>Custom Quote Needed</div>
-                      <div style={{ fontSize: 12, color: "#B9C4B2", marginTop: 4 }}>Joseph will assess your property and follow up with pricing</div>
+                      <div style={{ fontSize: 12, color: "#B9C4B2", marginTop: 4 }}>Our team will assess your property and follow up with pricing</div>
                     </>
                   ) : (
                     <>
                       <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>Estimated price</div>
                       <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{showPlus && "+"}</div>
                       {showPlus && (
-                        <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once Joseph sees the property</div>
+                        <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once we see the property</div>
                       )}
                     </>
                   )}
                 </div>
 
-                <div style={{ fontSize: 13, color: "#B9C4B2", margin: "18px 0 12px" }}>Where should Joseph send the confirmation?</div>
+                <div style={{ fontSize: 13, color: "#B9C4B2", margin: "18px 0 12px" }}>Where should we send the confirmation?</div>
                 <label style={miniLabel}>Your name</label>
                 <input style={miniInput} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Full name" />
                 <label style={{ ...miniLabel, marginTop: 10 }}>Phone number</label>
@@ -1126,29 +1126,29 @@ const miniLabel = { display: "block", fontSize: 11.5, fontWeight: 700, color: "#
 const miniInput = { width: "100%", padding: "10px 12px", borderRadius: 9, border: "1px solid #2A3A28", background: "#0F1A10", color: "#F5F3EE", fontSize: 14, boxSizing: "border-box" };
 const modalBtn = { width: "100%", background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "13px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 };
 
-const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned lawn care company in Douglasville, Georgia, run by Joseph. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so Joseph can follow up with a real quote.
+const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned, family-run lawn care company in Douglasville, Georgia. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so the Mow Pro team can follow up with a real quote.
 
 SERVICES & PRICING:
-- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $70, Large yard (10,000-20,000 sq ft) $90, Extra large/acreage (over 20,000 sq ft): custom quote after Joseph assesses it in person
-- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
+- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $70, Large yard (10,000-20,000 sq ft) $90, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
+- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
 - Hedge & shrub trimming ($100 minimum per visit): 1-6 shrubs $100+, 7-12 shrubs $200+, 13-25 shrubs $350+. Shrubs 6-10 ft tall add $40 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$40. Mowing clients get 10% off hedge trimming added to a regular visit.
-- Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
+- Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once we see the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
 - No contracts, cancel anytime
 - Service area: Douglasville and surrounding Douglas County, GA, including Villa Rica, Lithia Springs, and Powder Springs
 
-GIVING QUOTE ESTIMATES: If someone gives you their address and wants a quote, you cannot look up the property automatically. Instead, ask them a quick question to estimate size — e.g. "Is your yard small (like a townhome-sized lot), medium (typical suburban yard), or large (over a quarter acre)?" or ask for an approximate square footage if they know it. Once you have a rough size, give them the matching price from the tiers above, and ask if the yard needs the first-cut fee, edge restoration, or crack spraying too, adding those if relevant. ALWAYS clearly state that this is only an ESTIMATE and that Joseph will confirm the final price once he actually sees the property in person — never present a number as final or guaranteed. Say something like: "Based on what you've described, that would run about $X — but that's just an estimate. Joseph will confirm the exact price once he sees the yard in person."
+GIVING QUOTE ESTIMATES: If someone gives you their address and wants a quote, you cannot look up the property automatically. Instead, ask them a quick question to estimate size — e.g. "Is your yard small (like a townhome-sized lot), medium (typical suburban yard), or large (over a quarter acre)?" or ask for an approximate square footage if they know it. Once you have a rough size, give them the matching price from the tiers above, and ask if the yard needs the first-cut fee, edge restoration, or crack spraying too, adding those if relevant. ALWAYS clearly state that this is only an ESTIMATE and that the team will confirm the final price once they actually see the property in person — never present a number as final or guaranteed. Say something like: "Based on what you've described, that would run about $X — but that's just an estimate. Our team will confirm the exact price once we see the yard in person."
 
-TONE: Warm, direct, no corporate jargon. Keep answers short (2-4 sentences). If asked something you don't know (e.g. availability for a specific date, whether Joseph does a service not listed above), say Joseph will confirm that personally, and ask for their contact info so he can follow up.
+TONE: Warm, direct, no corporate jargon. Keep answers short (2-4 sentences). If asked something you don't know (e.g. availability for a specific date, whether we offer a service not listed above), say the team will confirm that personally, and ask for their contact info so he can follow up.
 
-Once you have their name AND at least a phone number or address, use the submit_lead tool right away to actually send their information to Joseph — don't just say you will, actually call the tool. You can keep chatting naturally after that if they have more questions.`;
+Once you have their name AND at least a phone number or address, use the submit_lead tool right away to actually send their information to the Mow Pro team — don't just say you will, actually call the tool. You can keep chatting naturally after that if they have more questions.`;
 
 const CHAT_TOOLS = [
   {
     name: "submit_lead",
-    description: "Send a visitor's contact info and quote details to Joseph so he can follow up. Call this as soon as you have a name plus a phone number or address — don't wait until the end of the conversation.",
+    description: "Send a visitor's contact info and quote details to the Mow Pro team so they can follow up. Call this as soon as you have a name plus a phone number or address — don't wait until the end of the conversation.",
     input_schema: {
       type: "object",
       properties: {
@@ -1273,7 +1273,7 @@ function ChatWidget() {
           const toolResults = [];
           for (const tu of toolUses) {
             if (tu.name === "submit_lead" && !leadSent) await submitLead(tu.input);
-            toolResults.push({ type: "tool_result", tool_use_id: tu.id, content: "Lead sent to Joseph." });
+            toolResults.push({ type: "tool_result", tool_use_id: tu.id, content: "Lead sent to the Mow Pro team." });
           }
           conversation = [...conversation, { role: "user", content: toolResults }];
         } else {
@@ -1282,7 +1282,7 @@ function ChatWidget() {
       }
       trackEvent("chat_widget_message", {});
     } catch (err) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong — feel free to text or call Joseph directly at (404) 669-6945." }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong — feel free to text or call us directly at (404) 669-6945." }]);
     }
     setLoading(false);
   };
@@ -1428,7 +1428,7 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
             That's what Mow Pro GA actually is. Not a franchise, not a call center, not a crew of strangers rotating through your yard. It's a family building something real, one lawn and one door hanger at a time — and hopefully, something my kids will be proud to say they helped build from the ground up.
           </p>
           <p style={{ margin: 0 }}>
-            When you book with us, that's what you're getting: someone who shows up, does the work himself, and has a very good reason to make sure it's done right every single time.
+            When you book with us, that's what you're getting: a family business that shows up, stands behind its work, and has a very good reason to make sure it's done right every single time.
           </p>
         </div>
 
@@ -1541,7 +1541,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Fall Cleanup Pricing</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Leaf removal is priced by yard size, same as our other services — Joseph confirms the exact price once he sees the property in person.
+            Leaf removal is priced by yard size, same as our other services — We confirm the exact price once we see the property in person.
           </p>
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
@@ -1592,8 +1592,8 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 20, textAlign: "left" }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>Fall Cleanup Questions</h2>
           {[
-            { q: "How much does fall yard cleanup cost in Douglasville, GA?", a: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person." },
-            { q: "Do you bag and haul away the leaves, or leave them on the property?", a: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5–8 per bag, confirmed once Joseph sees the volume." },
+            { q: "How much does fall yard cleanup cost in Douglasville, GA?", a: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person." },
+            { q: "Do you bag and haul away the leaves, or leave them on the property?", a: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5–8 per bag, confirmed once we see the volume." },
             { q: "When should I schedule fall cleanup in Douglasville?", a: "Most yards need it once leaves start dropping heavily, typically October through December in the Douglasville area. There's no contract, so you can book a one-time cleanup whenever your yard needs it." },
             { q: "Does fall cleanup include flower bed and border cleanout?", a: "Yes — a fall cleanup covers leaf removal from the lawn and beds, a final mow and edge, and clearing debris out of flower beds and borders, with driveways and walkways blown off clean." },
           ].map((item, i) => (
@@ -1681,7 +1681,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
           Lawn Care in {placeLabel(n)}
         </h1>
         <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>
-          Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in {n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run crew — Joseph quotes the job, shows up, and does the work himself. Same-day quotes, no contracts.
+          Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in {n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.
         </p>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 20 }}>
@@ -1742,7 +1742,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Biweekly maintenance starting at $55 per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. Joseph confirms the exact price once he sees the property in person.
+            Biweekly maintenance starting at $55 per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. We confirm the exact price once we see the property in person.
           </p>
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -2218,9 +2218,9 @@ export default function MowProLanding() {
       {/* FOUNDER STORY */}
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "10px 24px 50px" }}>
         <div style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 16, padding: 28 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 10 }}>Who's Behind It</div>
+          <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 10 }}>Who We Are</div>
           <p style={{ fontSize: 15, color: "#D8DED2", lineHeight: 1.7, margin: 0 }}>
-            Mow Pro GA is run by Joseph — a Douglasville local who quotes every job personally and stands behind every cut. Your yard is handled by Joseph or a trusted, experienced member of his small team — familiar faces, not a rotating crew. This isn't a side project — his son helps hand out door hangers around the neighborhood, and gets to watch the results land in real time. One afternoon, right after hanger number 97, a client called. When you book with Mow Pro, you're not booking a call center; you're booking a family that's building something real, one yard at a time.
+            Mow Pro GA is a locally owned, family-run, fully insured lawn care company in Douglasville, GA. Every job is quoted in person, every visit is held to the same standard, and every finished yard gets a photo-confirmed invoice. Your property is handled by our trusted, experienced team — familiar faces, not a rotating crew. This isn't a side project — the whole family is part of it, down to the kids handing out door hangers around the neighborhood and watching the results land in real time. One afternoon, right after hanger number 97, a client called. When you book with Mow Pro, you're not booking a call center; you're booking a family that's building something real, one yard at a time.
           </p>
           <a href="/about" onClick={(e) => { e.preventDefault(); navigate("/about"); }} style={{ background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 14, marginTop: 14, cursor: "pointer", padding: 0, display: "inline-flex", alignItems: "center", gap: 5, textDecoration: "none" }}>
             Read our full story <ArrowRight size={14} />

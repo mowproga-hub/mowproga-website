@@ -92,7 +92,7 @@ function neighborhoodPage(n) {
     content: `
       <main>
         <h1>Lawn Care in ${placeLabel(n)}</h1>
-        <p>Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in ${n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run crew — Joseph quotes the job, shows up, and does the work himself. Same-day quotes, no contracts.</p>
+        <p>Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in ${n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.</p>
         <p>Call or text <a href="tel:4046696945">404-669-6945</a>, or request a free instant quote online.</p>
         <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134" target="_blank" rel="noopener noreferrer">5.0 stars, 55 reviews on Google</a></p>
 
@@ -112,7 +112,7 @@ function neighborhoodPage(n) {
         <h2>${n.name} Lawn Care Pricing</h2>
         <p>Biweekly maintenance starting at $55 per visit, with mowing, edging, weed eating, and blow-off all included, priced by yard size:</p>
         ${neighborhoodPricingList()}
-        <p>No contracts — cancel anytime. Joseph confirms the exact price once he sees the property in person.</p>
+        <p>No contracts — cancel anytime. We confirm the exact price once we see the property in person.</p>
 
         <h2>Also Serving Nearby</h2>
         <p>Mow Pro GA also serves ${NEIGHBORHOODS.filter((x) => x.slug !== n.slug).map((x) => x.name).join(", ")}, plus Douglasville and Douglas County, GA generally.</p>
@@ -154,7 +154,7 @@ const PAGES = {
           <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
           <li>Bag &amp; haul away (optional add-on, default is piled on-site): $5–8/bag</li>
         </ul>
-        <p>Joseph confirms the exact price once he sees the property in person.</p>
+        <p>We confirm the exact price once we see the property in person.</p>
 
         <h2>Fall Cleanup Service Areas</h2>
         <p>Proudly serving Douglasville and Douglas County, GA, including Douglasville, Villa Rica, Lithia Springs, and Powder Springs.</p>
@@ -162,9 +162,9 @@ const PAGES = {
         <h2>Fall Cleanup Questions</h2>
         <dl>
           <dt>How much does fall yard cleanup cost in Douglasville, GA?</dt>
-          <dd>Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.</dd>
+          <dd>Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.</dd>
           <dt>Do you bag and haul away the leaves, or leave them on the property?</dt>
-          <dd>By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.</dd>
+          <dd>By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once we see the volume.</dd>
           <dt>When should I schedule fall cleanup in Douglasville?</dt>
           <dd>Most yards need it once leaves start dropping heavily, typically October through December in the Douglasville area. There's no contract, so you can book a one-time cleanup whenever your yard needs it.</dd>
           <dt>Does fall cleanup include flower bed and border cleanout?</dt>
@@ -178,7 +178,7 @@ const PAGES = {
   },
   "/about": {
     title: "About Mow Pro GA | Family-Run Lawn Care in Douglasville, GA",
-    description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just Joseph and his crew. Get a free instant quote.",
+    description: "Meet the family behind Mow Pro GA — a family-run lawn care crew serving Douglasville, GA. No franchise, no call center, just a local team that shows up. Get a free instant quote.",
     url: "https://mowproga.com/about",
     image: "https://mowproga.com/images/our-story.webp",
     content: `
@@ -189,7 +189,7 @@ const PAGES = {
         <p>Then one afternoon, right after he hung our 97th door hanger of the day, my phone rang. A new customer, calling because of the hanger he'd just placed. Before the day was out, five more calls came in from that same neighborhood.</p>
         <p>I watched it click for him — the hours in that heat weren't wasted, they were working. That's not a lesson you can just tell a kid. He had to feel it for himself.</p>
         <p>That's what Mow Pro GA actually is. Not a franchise, not a call center, not a crew of strangers rotating through your yard. It's a family building something real, one lawn and one door hanger at a time — and hopefully, something my kids will be proud to say they helped build from the ground up.</p>
-        <p>When you book with us, that's what you're getting: someone who shows up, does the work himself, and has a very good reason to make sure it's done right every single time.</p>
+        <p>When you book with us, that's what you're getting: a family business that shows up, stands behind its work, and has a very good reason to make sure it's done right every single time.</p>
         <p><a href="/">Mow Pro GA home</a> · <a href="tel:4046696945">404-669-6945</a></p>
         <address>Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA</address>
       </main>
@@ -229,7 +229,7 @@ const FALL_CLEANUP_FAQ_JSON_LD = {
       name: "How much does fall yard cleanup cost in Douglasville, GA?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. Joseph confirms the exact price once he sees the property in person.",
+        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $90, medium at $150, large at $225, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.",
       },
     },
     {
@@ -237,7 +237,7 @@ const FALL_CLEANUP_FAQ_JSON_LD = {
       name: "Do you bag and haul away the leaves, or leave them on the property?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once Joseph sees the volume.",
+        text: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once we see the volume.",
       },
     },
     {
