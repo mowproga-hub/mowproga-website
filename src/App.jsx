@@ -69,7 +69,7 @@ const HOME_FAQ = [
   },
   {
     "q": "What's included in every biweekly visit?",
-    "a": "Every visit includes mowing, edging, weed eating along fence lines and obstacles, and blowing debris off your driveway and walkways. Hedge and shrub trimming (starting at $150) and crack weed spraying are available as add-ons."
+    "a": "Every visit includes mowing, edging, weed eating along fence lines and obstacles, and blowing debris off your driveway and walkways. Hedge and shrub trimming (starting at $100) and crack weed spraying are available as add-ons."
   },
   {
     "q": "Which areas do you serve?",
@@ -537,16 +537,16 @@ const LEAF_PRICES = { small: 130, medium: 260, large: 400, xl: null };
 const HEAVY_TREE_FEE = 75;
 
 // Hedge trimming: priced by shrub count (easier for customers than hedge
-// length), with a $150 minimum. Shrubs 6-10 ft tall add a per-shrub ladder
+// length), with a $100 minimum. Shrubs 6-10 ft tall add a per-shrub ladder
 // fee; anything over 10 ft, 25+ shrubs, or badly overgrown is a custom quote.
 const HEDGE_OPTIONS = [
-  { key: "h1", label: "1 – 6 shrubs", sub: "Small job · $150 minimum", price: 150, max: 6 },
-  { key: "h2", label: "7 – 12 shrubs", sub: "Medium job", price: 275, max: 12 },
-  { key: "h3", label: "13 – 25 shrubs", sub: "Large job", price: 450, max: 25 },
+  { key: "h1", label: "1 – 6 shrubs", sub: "Small job · $100 minimum", price: 100, max: 6 },
+  { key: "h2", label: "7 – 12 shrubs", sub: "Medium job", price: 200, max: 12 },
+  { key: "h3", label: "13 – 25 shrubs", sub: "Large job", price: 350, max: 25 },
   { key: "h4", label: "25+ shrubs or long hedge rows", sub: "Needs an on-site look", price: null, max: 0 },
 ];
-const HEDGE_TALL_FEE = 50;
-const HEDGE_HAUL_FEE = 50;
+const HEDGE_TALL_FEE = 40;
+const HEDGE_HAUL_FEE = 40;
 
 // Address field with live Google-powered suggestions, via api/places.js
 // (Places API (New), proxied server-side so the API key never reaches the
@@ -1133,7 +1133,7 @@ SERVICES & PRICING:
 - First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — Joseph has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $25+
 - Sidewalk & driveway crack weed spraying: $15
-- Hedge & shrub trimming (premium service, $150 minimum per visit): 1-6 shrubs $150+, 7-12 shrubs $275+, 13-25 shrubs $450+. Shrubs 6-10 ft tall add $50 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$50. Mowing clients get 10% off hedge trimming added to a regular visit.
+- Hedge & shrub trimming ($100 minimum per visit): 1-6 shrubs $100+, 7-12 shrubs $200+, 13-25 shrubs $350+. Shrubs 6-10 ft tall add $40 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$40. Mowing clients get 10% off hedge trimming added to a regular visit.
 - Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once Joseph sees the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
 - No contracts, cancel anytime
