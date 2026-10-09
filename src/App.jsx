@@ -65,7 +65,7 @@ function getLeadSource() {
 const HOME_FAQ = [
   {
     "q": "How much does lawn mowing cost in Douglasville, GA?",
-    "a": "Biweekly mowing starts at $55 per visit for small yards (under 5,000 sq ft), $70 for medium yards (5,000–10,000 sq ft), and $90 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
+    "a": "Biweekly mowing starts at $55 per visit for small yards (under 5,000 sq ft), $65 for medium yards (5,000–10,000 sq ft), and $85 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
   },
   {
     "q": "What's included in every biweekly visit?",
@@ -114,7 +114,7 @@ const DEFAULT_CONTENT = {
   subheading: "Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
-  price: "70",
+  price: "65",
   ratingLine: "5.0 stars · 55 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
@@ -524,7 +524,7 @@ function ImageSlot({ label, src, onUpload, editing, badgeColor, badgeText }) {
 }
 
 const SIZE_OPTIONS = [
-  { key: "small", label: "Small yard", sub: "Under 5,000 sq ft", addOn: -15 },
+  { key: "small", label: "Small yard", sub: "Under 5,000 sq ft", addOn: -10 },
   { key: "medium", label: "Medium yard", sub: "5,000 – 10,000 sq ft", addOn: 0 },
   { key: "large", label: "Large yard", sub: "10,000 – 20,000 sq ft", addOn: 20 },
   { key: "xl", label: "Extra large / acreage", sub: "Over 20,000 sq ft", addOn: null },
@@ -1128,8 +1128,8 @@ const modalBtn = { width: "100%", background: "#8FBC6A", color: "#0F1A10", borde
 const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned, family-run lawn care company in Douglasville, Georgia. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so the Mow Pro team can follow up with a real quote.
 
 SERVICES & PRICING:
-- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $70, Large yard (10,000-20,000 sq ft) $90, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
-- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $70 cut becomes $140 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
+- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $65, Large yard (10,000-20,000 sq ft) $85, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
+- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $65 cut becomes $130 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $50+ for a typical driveway and sidewalk; $75-100+ for long driveways, corner lots, or edges buried several inches deep
 - Sidewalk & driveway crack weed spraying: $15
 - Hedge & shrub trimming ($100 minimum per visit): 1-6 shrubs $100+, 7-12 shrubs $200+, 13-25 shrubs $350+. Shrubs 6-10 ft tall add $40 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$40. Mowing clients get 10% off hedge trimming added to a regular visit.
@@ -1155,7 +1155,7 @@ const CHAT_TOOLS = [
         phone: { type: "string", description: "Phone number, if given" },
         address: { type: "string", description: "Property address, if given" },
         service: { type: "string", description: "What they're asking about, e.g. 'biweekly mowing, medium yard, overgrown'" },
-        estimated_price: { type: "string", description: "The estimate you gave them, if any, e.g. '$90+' or 'custom quote needed'" },
+        estimated_price: { type: "string", description: "The estimate you gave them, if any, e.g. '$85+' or 'custom quote needed'" },
       },
       required: ["name"],
     },
@@ -1752,7 +1752,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
                     <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
                   </div>
                   <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
-                    {opt.key === "small" ? "$55" : opt.key === "medium" ? "$70" : opt.key === "large" ? "$90" : "Custom"}
+                    {opt.key === "small" ? "$55" : opt.key === "medium" ? "$65" : opt.key === "large" ? "$85" : "Custom"}
                   </div>
                 </div>
               ))}

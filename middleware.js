@@ -70,8 +70,8 @@ function neighborhoodPricingList() {
   return `
     <ul>
       <li>Small yard (under 5,000 sq ft): $55</li>
-      <li>Medium yard (5,000–10,000 sq ft): $70</li>
-      <li>Large yard (10,000–20,000 sq ft): $90</li>
+      <li>Medium yard (5,000–10,000 sq ft): $65</li>
+      <li>Large yard (10,000–20,000 sq ft): $85</li>
       <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
     </ul>
     <p>Hedge &amp; shrub trimming: 1–6 shrubs $100+, 7–12 shrubs $200+, 13–25 shrubs $350+ (shrubs 6–10 ft tall +$40 each).</p>
