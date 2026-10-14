@@ -2208,7 +2208,7 @@ export default function MowProLanding() {
         <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 8 }}>per visit</div>
         <div style={{ color: "#8FBC6A", fontSize: 14.5, fontWeight: 700, marginBottom: 30 }}>Mowing, edging & cleanup included. No hidden fees.</div>
         <div style={{ display: "inline-flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 34 }}>
-          {["Mowing, edging & weed eating — all included", "Clippings blown off walkways & driveway — included", "Leaf season (Oct–Dec): leaf cleanup billed separately at $45/hr, only when leaves are down", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
+          {["Mowing, edging & weed eating — all included", "Clippings blown off walkways & driveway — included", "Leaf season (Oct–Dec): recurring clients add leaf cleanup at a discounted $45/hr, only when leaves are down. One-time cleanups use Fall Cleanup pricing", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
             <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14.5, color: "#D8DED2" }}>
               <CheckCircle2 size={17} color="#8FBC6A" /> {f}
             </div>
