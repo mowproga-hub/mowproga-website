@@ -76,8 +76,8 @@ function neighborhoodPhotos(n) {
 function neighborhoodPricingList() {
   return `
     <ul>
-      <li>Small yard (under 5,000 sq ft): $55</li>
-      <li>Medium yard (5,000–10,000 sq ft): $65</li>
+      <li>Small yard (under 5,000 sq ft): $65</li>
+      <li>Medium yard (5,000–10,000 sq ft): $75</li>
       <li>Large yard (10,000–20,000 sq ft): $85</li>
       <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
     </ul>
@@ -117,7 +117,7 @@ function neighborhoodPage(n) {
         </ul>
 
         <h2>${n.name} Lawn Care Pricing</h2>
-        <p>Biweekly maintenance starting at $55 per visit, with mowing, edging, weed eating, and blow-off all included, priced by yard size:</p>
+        <p>Biweekly maintenance starting at $65 per visit, with mowing, edging, weed eating, and blow-off all included, priced by yard size:</p>
         ${neighborhoodPricingList()}
         <p>No contracts — cancel anytime. We confirm the exact price once we see the property in person.</p>
 

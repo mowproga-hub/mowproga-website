@@ -65,7 +65,7 @@ function getLeadSource() {
 const HOME_FAQ = [
   {
     "q": "How much does lawn mowing cost in Douglasville, GA?",
-    "a": "Biweekly mowing starts at $55 per visit for small yards (under 5,000 sq ft), $65 for medium yards (5,000–10,000 sq ft), and $85 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
+    "a": "Biweekly mowing starts at $65 per visit for small yards (under 5,000 sq ft), $75 for medium yards (5,000–10,000 sq ft), and $85 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
   },
   {
     "q": "What's included in every biweekly visit?",
@@ -114,7 +114,7 @@ const DEFAULT_CONTENT = {
   subheading: "Your yard, handled. Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
-  price: "65",
+  price: "75",
   ratingLine: "5.0 stars · 56 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
@@ -533,7 +533,7 @@ function ImageSlot({ label, src, onUpload, editing, badgeColor, badgeText }) {
 const SIZE_OPTIONS = [
   { key: "small", label: "Small yard", sub: "Under 5,000 sq ft", addOn: -10 },
   { key: "medium", label: "Medium yard", sub: "5,000 – 10,000 sq ft", addOn: 0 },
-  { key: "large", label: "Large yard", sub: "10,000 – 20,000 sq ft", addOn: 20 },
+  { key: "large", label: "Large yard", sub: "10,000 – 20,000 sq ft", addOn: 10 },
   { key: "xl", label: "Extra large / acreage", sub: "Over 20,000 sq ft", addOn: null },
 ];
 
@@ -1135,7 +1135,7 @@ const modalBtn = { width: "100%", background: "#8FBC6A", color: "#0F1A10", borde
 const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned, family-run lawn care company in Douglasville, Georgia. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so the Mow Pro team can follow up with a real quote.
 
 SERVICES & PRICING:
-- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $55, Medium yard (5,000-10,000 sq ft) $65, Large yard (10,000-20,000 sq ft) $85, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
+- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $65, Medium yard (5,000-10,000 sq ft) $75, Large yard (10,000-20,000 sq ft) $85, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
 - First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $65 cut becomes $130 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $50+ for a typical driveway and sidewalk; $75-100+ for long driveways, corner lots, or edges buried several inches deep
 - Sidewalk & driveway crack weed spraying: $15
@@ -1748,7 +1748,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Biweekly maintenance starting at $55 per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. We confirm the exact price once we see the property in person.
+            Biweekly maintenance starting at $65 per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. We confirm the exact price once we see the property in person.
           </p>
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1759,7 +1759,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
                     <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
                   </div>
                   <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
-                    {opt.key === "small" ? "$55" : opt.key === "medium" ? "$65" : opt.key === "large" ? "$85" : "Custom"}
+                    {opt.key === "small" ? "$65" : opt.key === "medium" ? "$75" : opt.key === "large" ? "$85" : "Custom"}
                   </div>
                 </div>
               ))}
