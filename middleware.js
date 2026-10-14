@@ -40,7 +40,7 @@ const NEIGHBORHOODS = [
   { slug: "stewarts-mill", name: "Stewarts Mill", city: "Douglasville", zip: "30134" },
   { slug: "shallowford-heights", name: "Shallowford Heights", city: "Douglasville", zip: "30134" },
   { slug: "springwood-village", name: "Springwood Village", city: "Douglasville", zip: "30135" },
-  { slug: "big-a", name: "the Big A / Highway 166 area", city: "Douglasville", zip: "30134" },
+  { slug: "big-a", name: "the Big A / Highway 166 area", short: "Big A / Hwy 166", city: "Douglasville", zip: "30134" },
   { slug: "lithia-springs", name: "Lithia Springs", city: "Lithia Springs", zip: "30122" },
   { slug: "villa-rica", name: "Villa Rica", city: "Villa Rica", zip: "30180" },
 ];
@@ -49,6 +49,13 @@ const NEIGHBORHOODS = [
 // the neighborhood itself is the whole city, not a district within one.
 function placeLabel(n) {
   return n.name === n.city ? `${n.name}, GA` : `${n.name}, ${n.city}, GA`;
+}
+
+// Shorter label for <title> tags only, so titles stay under ~60 characters
+// (Google truncates longer ones). Uses n.short when a name is long.
+function titleLabel(n) {
+  const name = n.short || n.name;
+  return n.name === n.city ? `${name}, GA` : `${name}, ${n.city} GA`;
 }
 
 // Real before/after photos of actual completed jobs — mirrored from
@@ -79,7 +86,7 @@ function neighborhoodPricingList() {
 }
 
 function neighborhoodPage(n) {
-  const title = `Lawn Care in ${placeLabel(n)} | Mow Pro GA`;
+  const title = `Lawn Care in ${titleLabel(n)} | Mow Pro`;
   const description = `Biweekly lawn mowing, edging, leaf cleanup, and hedge trimming for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`;
   const url = `https://mowproga.com/lawn-care/${n.slug}`;
   const photos = neighborhoodPhotos(n);
@@ -126,7 +133,7 @@ function neighborhoodPage(n) {
 
 const PAGES = {
   "/fall-cleanup": {
-    title: "Fall Yard Cleanup Douglasville GA | Leaf Removal & Debris Removal | Mow Pro Lawn Care",
+    title: "Leaf Removal & Fall Cleanup in Douglasville, GA | Mow Pro",
     description: "Fall yard cleanup in Douglasville, GA — leaf removal, bed cleanout, and debris haul-away. Call 404-669-6945 or request a free fall cleanup quote today.",
     url: "https://mowproga.com/fall-cleanup",
     image: "https://mowproga.com/images/after-fall.webp",
