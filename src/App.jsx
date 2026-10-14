@@ -110,12 +110,12 @@ const HOME_FAQ = [
 ];
 
 const DEFAULT_CONTENT = {
-  headline: "Your Yard, Handled — Without Lifting a Finger.",
-  subheading: "Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
+  headline: "Biweekly Lawn Mowing in Douglasville, GA",
+  subheading: "Your yard, handled. Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "65",
-  ratingLine: "5.0 stars · 55 reviews on Google",
+  ratingLine: "5.0 stars · 56 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
@@ -2206,9 +2206,9 @@ export default function MowProLanding() {
             : <span style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A" }}>{parseInt(content.price, 10) + SIZE_OPTIONS[0].addOn}</span>}
         </div>
         <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 8 }}>per visit</div>
-        <div style={{ color: "#8FBC6A", fontSize: 14.5, fontWeight: 700, marginBottom: 30 }}>Everything included. No hidden add-ons.</div>
+        <div style={{ color: "#8FBC6A", fontSize: 14.5, fontWeight: 700, marginBottom: 30 }}>Mowing, edging & cleanup included. No hidden fees.</div>
         <div style={{ display: "inline-flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 34 }}>
-          {["Mowing, edging & weed eating — all included", "Debris blown off walkways & driveway — included", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
+          {["Mowing, edging & weed eating — all included", "Clippings blown off walkways & driveway — included", "Leaf season (Oct–Dec): leaf cleanup billed separately at $45/hr, only when leaves are down", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
             <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14.5, color: "#D8DED2" }}>
               <CheckCircle2 size={17} color="#8FBC6A" /> {f}
             </div>
