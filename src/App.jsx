@@ -115,7 +115,7 @@ const DEFAULT_CONTENT = {
   phone: "4046696945",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "75",
-  ratingLine: "5.0 stars · 56 reviews on Google",
+  ratingLine: "5.0 stars · 57 reviews on Google",
   reviews: [
     { name: "Kelsey Mckay", stars: 5, screenshot: "/images/kelsey-mckay.webp", w: 800, h: 424 },
     { name: "Al", stars: 5, screenshot: "/images/al.webp", w: 800, h: 699 },
