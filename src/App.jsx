@@ -145,7 +145,7 @@ const DEFAULT_CONTENT = {
 // Base <head> tags as shipped in index.html, so non-home routes can restore
 // them on the way out instead of leaving another page's SEO tags behind.
 const DEFAULT_SEO = {
-  title: "Mow Pro GA | Lawn Mowing & Edging in Douglasville, GA",
+  title: "Lawn Care & Mowing Service in Douglasville, GA | Mow Pro GA",
   description: "Reliable biweekly lawn mowing, edging, and cleanup from a local, family-run crew in Douglasville, GA. Same-day quotes, no contracts. Get your free instant quote.",
   url: "https://mowproga.com/",
   image: "https://mowproga.com/images/our-story.webp",
