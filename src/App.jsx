@@ -44,8 +44,18 @@ function captureLeadSource() {
   if (typeof window === "undefined") return;
   try {
     const params = new URLSearchParams(window.location.search);
-    const source = params.get("utm_source") || params.get("ref");
-    if (source) sessionStorage.setItem("mp_lead_source", source);
+    let source = params.get("utm_source") || params.get("ref");
+    // No tag? Fall back to the referring site (e.g. yelp.com, nextdoor.com),
+    // since some listings like Yelp don't allow tracking URLs.
+    if (!source && document.referrer) {
+      try {
+        const host = new URL(document.referrer).hostname.replace(/^www\./, "").replace(/^m\./, "");
+        if (host && host !== window.location.hostname.replace(/^www\./, "")) source = `referral: ${host}`;
+      } catch (e) { /* bad referrer — ignore */ }
+    }
+    if (source && !(sessionStorage.getItem("mp_lead_source") && source.startsWith("referral:"))) {
+      sessionStorage.setItem("mp_lead_source", source);
+    }
   } catch (e) {
     // sessionStorage can throw in some private-browsing modes — fine to skip
   }
