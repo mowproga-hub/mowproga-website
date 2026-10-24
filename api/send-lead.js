@@ -4,7 +4,7 @@
 
 // Pure function, kept separate from the handler so the email content can be
 // unit-tested without needing a live RESEND_API_KEY or network access.
-export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source }) {
+export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source, frequency, regularPrice, brushHaul }) {
   // form.overgrownLevel is "none" | "mild" | "severe" — "none" is a
   // non-empty string, so a plain `overgrown ? "Yes" : "No"` check always
   // printed "Yes" regardless of what was actually selected.
@@ -19,6 +19,7 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
   // spray, edge restoration) no matter which service was requested.
   const isLeaf = service === "Leaf removal";
   const isHedge = service === "Hedge trimming";
+  const isBrush = service === "Brush & overgrowth";
 
   // Shown right at the top since this is meant to be read at a glance on a
   // phone, not dug for — "Nextdoor", "Google", or "Website (no source tag)"
@@ -32,8 +33,11 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
     <p><b>Phone:</b> ${phone}</p>
     <p><b>Address:</b> ${address}</p>
     ${service ? `<p><b>Service:</b> ${service}</p>` : ""}
-    <p><b>${isHedge ? "Shrubs" : "Yard size"}:</b> ${size}</p>
-    ${isHedge ? `
+    <p><b>${isHedge ? "Shrubs" : isBrush ? "Area" : "Yard size"}:</b> ${size}</p>
+    ${frequency ? `<p><b>How often:</b> ${frequency}</p>` : ""}
+    ${isBrush ? `
+    <p><b>Haul away debris:</b> ${brushHaul ? "Yes" : "No (piled on-site)"}</p>
+    ` : isHedge ? `
     <p><b>Shrubs 6–10 ft tall:</b> ${tallCount || 0}</p>
     <p><b>Any over 10 ft:</b> ${hedgeOver10 ? "Yes" : "No"}</p>
     <p><b>Badly overgrown:</b> ${hedgeOvergrown ? "Yes" : "No"}</p>
@@ -47,6 +51,7 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
     <p><b>Edge restoration:</b> ${edgeRestore ? "Yes" : "No"}</p>
     `}
     <p><b>Estimated price:</b> ${price}</p>
+    ${regularPrice ? `<p><b>Regular price after that:</b> ${regularPrice}</p>` : ""}
   `;
 
   const subject = service ? `New ${service} quote request from ${name}` : `New quote request from ${name}`;

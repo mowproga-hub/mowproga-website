@@ -9,18 +9,22 @@
 - Hours: Monday–Saturday, 9 AM–6 PM
 - Payment: Zelle, Cash App, card (Stripe invoice), or cash, due the day of service
 
-## Lawn mowing (biweekly, everything included)
+## Lawn mowing (everything included)
 
-Every visit includes mowing, edging, weed eating, and blowing debris off driveways and walkways.
+Every visit includes mowing, edging, weed eating, and blowing debris off driveways and walkways. Prices are per visit and are starting prices; slopes or uneven ground can add a little.
 
-- Small yard (under 5,000 sq ft): $65 per visit
-- Medium yard (5,000-10,000 sq ft): $75 per visit
-- Large yard (10,000-20,000 sq ft): $85 per visit
-- Extra large / acreage (over 20,000 sq ft): custom quote
-- Overgrown first cut: 2x the normal cut price, covering the first 2 hours, then $55/hour
+| Yard size | Every 2 weeks | Weekly | Monthly | One-time |
+|---|---|---|---|---|
+| Small (under 5,000 sq ft) | $65+ | $55+ | $130+ | $105+ |
+| Medium (5,000-10,000 sq ft) | $75+ | $65+ | $150+ | $120+ |
+| Large (10,000-20,000 sq ft) | $85+ | $75+ | $170+ | $135+ |
+| Extra large / acreage (over 20,000 sq ft) | Custom | Custom | Custom | Custom |
+
+- First-cut fee for new weekly, every-2-weeks, or monthly customers: $25+ (one time)
+- Overgrown first cut: 2x the every-2-weeks cut price, covering the first 2 hours, then $55/hour
 - Grass over 12 inches: custom quote
 - Edge restoration: $50+ (typical driveway and sidewalk); $75-100+ for long driveways, corner lots, or deeply buried edges
-- Sidewalk and driveway crack weed spray: $15
+- Sidewalk and driveway crack weed spray: $25+
 
 ## Leaf removal and fall cleanup
 
@@ -44,6 +48,16 @@ Includes trimming and shaping, with beds and walkways blown off and clippings pi
 - Haul away clippings: +$40
 - 25+ shrubs, long hedge rows, shrubs over 10 ft, or badly overgrown: custom quote
 - Mowing clients get 10% off hedge trimming added to a regular visit
+
+## Brush and overgrowth clearing
+
+For anything a regular cut doesn't cover: areas outside the mowed lawn, growth over a foot tall, and woody underbrush (vines, briars, privet, saplings). A regular cut already includes weed eating around everything inside the mowed lawn.
+
+- Overgrown fence line or ditch (up to ~150 ft): $75+
+- Small brushy area (about 10 x 50 ft): $150+
+- Medium brushy area (about 20 x 100 ft): $300+
+- Large area, wooded lot, or trees over 3 inches thick: custom quote
+- Haul away debris: +$75+ (default is piled on-site)
 
 All prices are estimates. Our team confirms the final price after seeing the property.
 

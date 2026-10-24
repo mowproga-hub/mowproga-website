@@ -76,9 +76,9 @@ function neighborhoodPhotos(n) {
 function neighborhoodPricingList() {
   return `
     <ul>
-      <li>Small yard (under 5,000 sq ft): $65</li>
-      <li>Medium yard (5,000–10,000 sq ft): $75</li>
-      <li>Large yard (10,000–20,000 sq ft): $85</li>
+      <li>Small yard (under 5,000 sq ft): $65+ every 2 weeks · $55+ weekly · $130+ monthly · $105+ one-time</li>
+      <li>Medium yard (5,000–10,000 sq ft): $75+ every 2 weeks · $65+ weekly · $150+ monthly · $120+ one-time</li>
+      <li>Large yard (10,000–20,000 sq ft): $85+ every 2 weeks · $75+ weekly · $170+ monthly · $135+ one-time</li>
       <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
     </ul>
     <p>Hedge &amp; shrub trimming: 1–6 shrubs $100+, 7–12 shrubs $200+, 13–25 shrubs $350+ (shrubs 6–10 ft tall +$40 each).</p>
@@ -113,11 +113,11 @@ function neighborhoodPage(n) {
           <li><strong>Mowing &amp; Edging</strong> — Clean, consistent cuts with sharp, well-maintained equipment.</li>
           <li><strong>Weed Eating</strong> — Fence lines, mailboxes, and obstacles — fully trimmed, every time.</li>
           <li><strong>Blow-Off Cleanup</strong> — Driveways and walkways left spotless when we're done.</li>
-          <li><strong>Sidewalk &amp; Driveway Crack Spray</strong> — Available as an add-on, +$15.</li>
+          <li><strong>Sidewalk &amp; Driveway Crack Spray</strong> — Available as an add-on, +$25+.</li>
         </ul>
 
         <h2>${n.name} Lawn Care Pricing</h2>
-        <p>Biweekly maintenance starting at $65 per visit, with mowing, edging, weed eating, and blow-off all included, priced by yard size:</p>
+        <p>Every-2-weeks maintenance starting at $65+ per visit, with mowing, edging, weed eating, and blow-off all included, priced by yard size and how often we come (new recurring customers have a one-time $25+ first-cut fee):</p>
         ${neighborhoodPricingList()}
         <p>No contracts — cancel anytime. We confirm the exact price once we see the property in person.</p>
 

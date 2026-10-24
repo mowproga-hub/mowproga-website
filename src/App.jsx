@@ -75,7 +75,7 @@ function getLeadSource() {
 const HOME_FAQ = [
   {
     "q": "How much does lawn mowing cost in Douglasville, GA?",
-    "a": "Biweekly mowing starts at $65 per visit for small yards (under 5,000 sq ft), $75 for medium yards (5,000–10,000 sq ft), and $85 for large yards (10,000–20,000 sq ft). Acreage over 20,000 sq ft gets a custom quote."
+    "a": "Every-2-weeks mowing starts at $65+ per visit for small yards (under 5,000 sq ft), $75+ for medium yards (5,000–10,000 sq ft), and $85+ for large yards (10,000–20,000 sq ft). Weekly service is $55+/$65+/$75+, monthly is $130+/$150+/$170+, and a one-time cut is $105+/$120+/$135+. New recurring customers have a one-time $25+ first-cut fee. Acreage over 20,000 sq ft gets a custom quote."
   },
   {
     "q": "What's included in every biweekly visit?",
@@ -564,6 +564,34 @@ const HEDGE_OPTIONS = [
 const HEDGE_TALL_FEE = 40;
 const HEDGE_HAUL_FEE = 40;
 
+// Mowing price per visit by how often we come — same numbers as the UmmiYard
+// quote form. Less frequent = taller grass each visit = more work per cut.
+const MOW_FREQUENCIES = [
+  { key: "Weekly", label: "Weekly" },
+  { key: "Biweekly", label: "Every 2 wks" },
+  { key: "Monthly", label: "Monthly" },
+  { key: "One-time", label: "One-time" },
+];
+const MOW_PRICES = {
+  Weekly: { small: 55, medium: 65, large: 75, xl: null },
+  Biweekly: { small: 65, medium: 75, large: 85, xl: null },
+  Monthly: { small: 130, medium: 150, large: 170, xl: null },
+  "One-time": { small: 105, medium: 120, large: 135, xl: null },
+};
+const FIRST_CUT_FEE = 25; // once, on a new recurring customer's first visit
+const CRACK_SPRAY_PRICE = 25;
+const EDGE_RESTORE_PRICE = 50;
+
+// Brush & overgrowth — anything a regular cut doesn't cover: areas outside
+// the mowed lawn, growth over a foot tall, or woody underbrush.
+const BRUSH_OPTIONS = [
+  { key: "b1", label: "Overgrown fence line or ditch", sub: "Tall grass & weeds outside the mowed lawn · up to ~150 ft", price: 75 },
+  { key: "b2", label: "Small brushy area", sub: "Vines, briars, privet, small saplings · about 10 × 50 ft", price: 150 },
+  { key: "b3", label: "Medium brushy area", sub: "About 20 × 100 ft, like a grown-in back fence line", price: 300 },
+  { key: "b4", label: "Large area or wooded lot", sub: "Bigger than that, or trees over 3 inches thick", price: null },
+];
+const BRUSH_HAUL_FEE = 75;
+
 // Address field with live Google-powered suggestions, via api/places.js
 // (Places API (New), proxied server-side so the API key never reaches the
 // browser). Debounced so it doesn't fire a request on every keystroke, and
@@ -667,37 +695,50 @@ function AddressAutocompleteInput({ value, onChange, placeholder, style }) {
 
 function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false });
+  const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
   if (!open) return null;
 
-  const CRACK_SPRAY_PRICE = 15;
-  const EDGE_RESTORE_PRICE = 50;
   const isLeaf = form.serviceType === "leaf";
   const isHedge = form.serviceType === "hedge";
-  const isMowing = !isLeaf && !isHedge;
+  const isBrush = form.serviceType === "brush";
+  const isMowing = !isLeaf && !isHedge && !isBrush;
+  const freq = MOW_PRICES[form.frequency] ? form.frequency : "Biweekly";
+  const recurring = freq !== "One-time";
+  const brushOption = BRUSH_OPTIONS.find((b) => b.key === form.brushSize) || BRUSH_OPTIONS[0];
+  // Monthly already prices in a month of growth, so it has no "overgrown" option.
+  const overgrownMild = form.overgrownLevel === "mild" && freq !== "Monthly";
   const selectedOption = SIZE_OPTIONS.find((s) => s.key === form.size);
   const hedgeOption = HEDGE_OPTIONS.find((h) => h.key === form.hedgeSize);
   const maxTall = hedgeOption?.max || 0;
   const tallCount = Math.min(form.tallCount, maxTall);
   const isCustomQuote = isHedge
     ? hedgeOption?.price === null
-    : isLeaf ? LEAF_PRICES[form.size] === null : selectedOption?.addOn === null;
+    : isBrush ? brushOption.price === null
+    : isLeaf ? LEAF_PRICES[form.size] === null : MOW_PRICES[freq][form.size] === null;
   const needsCustomQuote = isCustomQuote
     || (isMowing && form.overgrownLevel === "severe")
     || (isLeaf && form.heavyTrees)
     || (isHedge && (form.hedgeOver10 || form.hedgeOvergrown));
-  const normalCutPrice = parseInt(basePrice, 10) + (selectedOption?.addOn || 0);
+  // Regular per-visit price for the chosen frequency and yard size.
+  const normalCutPrice = MOW_PRICES[freq][form.size] ?? 0;
+  // Overgrown price = 2x the regular every-2-weeks cut (one-time included).
+  const overgrownPrice = (freq === "One-time" ? MOW_PRICES.Biweekly[form.size] ?? 0 : normalCutPrice) * 2;
+  const firstCutFee = recurring && !overgrownMild ? FIRST_CUT_FEE : 0;
   const price = needsCustomQuote
     ? null
     : isHedge
     ? hedgeOption.price + tallCount * HEDGE_TALL_FEE + (form.hedgeHaul ? HEDGE_HAUL_FEE : 0)
+    : isBrush
+    ? brushOption.price + (form.brushHaul ? BRUSH_HAUL_FEE : 0)
     : isLeaf
     ? LEAF_PRICES[form.size]
-    : (form.overgrownLevel === "mild" ? normalCutPrice * 2 : normalCutPrice) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
-  const showPlus = isLeaf || isHedge || form.overgrownLevel === "mild" || form.edgeRestore;
+    : (overgrownMild ? overgrownPrice : normalCutPrice + firstCutFee) + (form.crackSpray ? CRACK_SPRAY_PRICE : 0) + (form.edgeRestore ? EDGE_RESTORE_PRICE : 0);
+  // Every price is a starting price, confirmed once we see the yard.
+  const showPlus = true;
+  const isFirstVisitPrice = isMowing && recurring && !needsCustomQuote;
 
   const submit = async () => {
     setSubmitting(true);
@@ -711,18 +752,21 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
           name: form.name,
           phone: form.phone,
           address: form.address,
-          size: isHedge ? (hedgeOption?.label || "") : (selectedOption?.label || ""),
-          service: isHedge ? "Hedge trimming" : isLeaf ? "Leaf removal" : "Mowing",
+          size: isHedge ? (hedgeOption?.label || "") : isBrush ? brushOption.label : (selectedOption?.label || ""),
+          service: isHedge ? "Hedge trimming" : isBrush ? "Brush & overgrowth" : isLeaf ? "Leaf removal" : "Mowing",
+          frequency: isMowing ? freq : undefined,
+          regularPrice: isMowing && recurring && !needsCustomQuote ? `$${normalCutPrice}+ per visit` : undefined,
+          brushHaul: isBrush ? form.brushHaul : undefined,
           tallCount: isHedge ? tallCount : undefined,
           hedgeOver10: isHedge ? form.hedgeOver10 : undefined,
           hedgeOvergrown: isHedge ? form.hedgeOvergrown : undefined,
           hedgeHaul: isHedge ? form.hedgeHaul : undefined,
           crackSpray: form.crackSpray,
-          overgrown: form.overgrownLevel,
+          overgrown: overgrownMild ? "mild" : form.overgrownLevel === "severe" ? "severe" : "none",
           edgeRestore: form.edgeRestore,
           heavyTrees: form.heavyTrees,
           bagHaul: form.bagHaul,
-          price: needsCustomQuote ? "Custom quote needed" : `$${price}`,
+          price: needsCustomQuote ? "Custom quote needed" : `$${price}+${isFirstVisitPrice ? " (first visit)" : ""}`,
           source: getLeadSource(),
         }),
       });
@@ -736,7 +780,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
 
   const close = () => {
     onClose();
-    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false }); }, 300);
+    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false }); }, 300);
   };
 
   return (
@@ -750,7 +794,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
             <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Quote request sent!</div>
             <div style={{ fontSize: 14, color: "#B9C4B2" }}>
               Our team will text or call you shortly
-              {needsCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price} estimate.`}
+              {needsCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price}+ estimate.`}
             </div>
           </div>
         ) : (
@@ -762,15 +806,15 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
             {step === 1 && (
               <>
                 <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Get your instant quote</div>
-                <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 14 }}>{isHedge ? "Enter your address and how many shrubs need trimming." : "Enter your address and yard size for an estimated price."}</div>
+                <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 14 }}>{isHedge ? "Enter your address and how many shrubs need trimming." : isBrush ? "Enter your address and how big the overgrown area is." : "Enter your address and yard size for an estimated price."} All prices are starting prices; slopes or uneven ground can add a little.</div>
 
                 <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                  {[{ key: "mowing", label: "Mowing" }, { key: "leaf", label: "Leaves" }, { key: "hedge", label: "Hedges" }].map((s) => (
+                  {[{ key: "mowing", label: "Mowing" }, { key: "leaf", label: "Leaves" }, { key: "hedge", label: "Hedges" }, { key: "brush", label: "Brush" }].map((s) => (
                     <button
                       key={s.key}
                       onClick={() => setForm({ ...form, serviceType: s.key })}
                       style={{
-                        flex: 1, padding: "10px", borderRadius: 10, fontSize: 13.5, fontWeight: 700, cursor: "pointer",
+                        flex: 1, padding: "10px 4px", borderRadius: 10, fontSize: 13.5, fontWeight: 700, cursor: "pointer",
                         border: `1.5px solid ${form.serviceType === s.key ? "#8FBC6A" : "#2A3A28"}`,
                         background: form.serviceType === s.key ? "#8FBC6A" : "transparent",
                         color: form.serviceType === s.key ? "#0F1A10" : "#F5F3EE",
@@ -788,9 +832,23 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   onChange={(v) => setForm({ ...form, address: v })}
                   placeholder="Start typing your address…"
                 />
-                {!isHedge && <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>}
+                {isMowing && (
+                  <>
+                    <label style={{ ...miniLabel, marginTop: 12 }}>How often?</label>
+                    <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
+                      {MOW_FREQUENCIES.map((f) => (
+                        <button key={f.key} onClick={() => setForm({ ...form, frequency: f.key })} style={{
+                          flex: 1, padding: "9px 2px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, cursor: "pointer",
+                          border: `1.5px solid ${freq === f.key ? "#8FBC6A" : "#2A3A28"}`, background: freq === f.key ? "#1C2B1B" : "transparent", color: "#F5F3EE",
+                        }}>{f.label}</button>
+                      ))}
+                    </div>
+                    <div style={{ fontSize: 11.5, color: "#7C8A78", marginTop: 6 }}>Prices are per visit. More frequent cuts cost less per visit because the grass never gets as tall.</div>
+                  </>
+                )}
+                {!isHedge && !isBrush && <label style={{ ...miniLabel, marginTop: 12 }}>Yard size</label>}
                 {isMowing && <div style={{ fontSize: 11.5, color: "#9AAE94", marginTop: -2 }}>Mowing, edging, weed eating & blow-off all included</div>}
-                {!isHedge && SIZE_OPTIONS.map((opt) => (
+                {!isHedge && !isBrush && SIZE_OPTIONS.map((opt) => (
                   <div
                     key={opt.key}
                     onClick={() => setForm({ ...form, size: opt.key })}
@@ -808,10 +866,14 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>
                       {isLeaf
                         ? (LEAF_PRICES[opt.key] === null ? "Custom" : `$${LEAF_PRICES[opt.key]}+`)
-                        : (opt.addOn === null ? "Custom" : `$${parseInt(basePrice, 10) + opt.addOn}`)}
+                        : (MOW_PRICES[freq][opt.key] === null ? "Custom" : `$${MOW_PRICES[freq][opt.key]}+`)}
                     </div>
                   </div>
                 ))}
+
+                {!isCustomQuote && isMowing && recurring && !overgrownMild && (
+                  <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 12, lineHeight: 1.45 }}>Your first visit includes a one-time ${FIRST_CUT_FEE}+ first-cut fee: the first cut takes longer to set clean edges and learn your yard.</div>
+                )}
 
                 {!isCustomQuote && isMowing && (
                   <div
@@ -835,14 +897,14 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Weed-free walkways and driveway edges</div>
                       </div>
                     </div>
-                    <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${CRACK_SPRAY_PRICE}</div>
+                    <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${CRACK_SPRAY_PRICE}+</div>
                   </div>
                 )}
 
                 {!isCustomQuote && isMowing && (
                   <>
                     <label style={{ ...miniLabel, marginTop: 14 }}>Yard condition (if overgrown)</label>
-                    <div
+                    {freq !== "Monthly" && <div
                       onClick={() => setForm({ ...form, overgrownLevel: form.overgrownLevel === "mild" ? "none" : "mild" })}
                       style={{
                         border: `1.5px solid ${form.overgrownLevel === "mild" ? "#8FBC6A" : "#2A3A28"}`,
@@ -860,14 +922,14 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         </div>
                         <div>
                           <div style={{ fontWeight: 700, fontSize: 13.5 }}>A few weeks overgrown</div>
-                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>First-cut fee for a couple extra passes</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>{recurring ? "First cut only, extra passes needed" : "Extra passes needed"}</div>
                         </div>
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>${normalCutPrice * 2}</div>
-                        <div style={{ fontSize: 10.5, color: "#7C8A78" }}>2× cut price</div>
+                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>${overgrownPrice}+</div>
+                        <div style={{ fontSize: 10.5, color: "#7C8A78" }}>{freq === "One-time" ? "overgrown price" : "2× first cut"}</div>
                       </div>
-                    </div>
+                    </div>}
 
                     <div
                       onClick={() => setForm({ ...form, overgrownLevel: form.overgrownLevel === "severe" ? "none" : "severe" })}
@@ -1003,7 +1065,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <div style={{ border: "1.5px solid #2A3A28", borderRadius: 10, padding: "10px 14px", marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
                         <div style={{ fontWeight: 700, fontSize: 13.5 }}>Shrubs 6 – 10 ft tall</div>
-                        <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Ladder work · +${HEDGE_TALL_FEE} each</div>
+                        <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Ladder work · ${HEDGE_TALL_FEE}+ each</div>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <button
@@ -1086,8 +1148,47 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Bagged and removed (default is piled on-site)</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${HEDGE_HAUL_FEE}</div>
+                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${HEDGE_HAUL_FEE}+</div>
                     </div>
+                  </>
+                )}
+
+                {isBrush && (
+                  <>
+                    <div style={{ fontSize: 12, color: "#B9C4B2", background: "#0F1A10", borderRadius: 10, padding: "10px 12px", marginTop: 12, lineHeight: 1.5 }}>
+                      <b style={{ color: "#F5F3EE" }}>Already in a regular cut:</b> weed eating around everything in your mowed lawn (beds, trees, posts, fences, the AC unit).<br />
+                      <b style={{ color: "#F5F3EE" }}>This is for:</b> areas outside the mowed lawn, growth over a foot tall, and woody stuff like vines, briars, privet and saplings.
+                    </div>
+                    <label style={{ ...miniLabel, marginTop: 12 }}>How big is the area?</label>
+                    {BRUSH_OPTIONS.map((opt) => (
+                      <div key={opt.key} onClick={() => setForm({ ...form, brushSize: opt.key })} style={{
+                        border: `1.5px solid ${form.brushSize === opt.key ? "#8FBC6A" : "#2A3A28"}`, background: form.brushSize === opt.key ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10,
+                      }}>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 13.5 }}>{opt.label}</div>
+                          <div style={{ fontSize: 11.5, color: "#7C8A78" }}>{opt.sub}</div>
+                        </div>
+                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5, whiteSpace: "nowrap" }}>{opt.price === null ? "Custom" : `$${opt.price}+`}</div>
+                      </div>
+                    ))}
+                    {brushOption.price !== null && (
+                      <div onClick={() => setForm({ ...form, brushHaul: !form.brushHaul })} style={{
+                        border: `1.5px solid ${form.brushHaul ? "#8FBC6A" : "#2A3A28"}`, background: form.brushHaul ? "#1C2B1B" : "transparent",
+                        borderRadius: 10, padding: "10px 14px", marginTop: 14, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center",
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <div style={{ width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.brushHaul ? "#8FBC6A" : "#5C6B57"}`, background: form.brushHaul ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            {form.brushHaul && <CheckCircle2 size={14} color="#0F1A10" />}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 700, fontSize: 13.5 }}>Haul away debris</div>
+                            <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Cut brush loaded up and removed (default is piled on-site)</div>
+                          </div>
+                        </div>
+                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${BRUSH_HAUL_FEE}+</div>
+                      </div>
+                    )}
                   </>
                 )}
 
@@ -1111,11 +1212,12 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     </>
                   ) : (
                     <>
-                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>Estimated price</div>
+                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isFirstVisitPrice ? "First visit" : "Estimated price"}</div>
                       <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{showPlus && "+"}</div>
-                      {showPlus && (
-                        <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once we see the property</div>
+                      {isFirstVisitPrice && (
+                        <div style={{ fontSize: 12.5, color: "#F5F3EE", marginTop: 2 }}>Then ${normalCutPrice}+ per visit ({freq === "Weekly" ? `about $${normalCutPrice * 4}+` : freq === "Biweekly" ? `about $${normalCutPrice * 2}+` : `$${normalCutPrice}+`} a month)</div>
                       )}
+                      <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once we see the property</div>
                     </>
                   )}
                 </div>
@@ -1145,10 +1247,17 @@ const modalBtn = { width: "100%", background: "#8FBC6A", color: "#0F1A10", borde
 const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned, family-run lawn care company in Douglasville, Georgia. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so the Mow Pro team can follow up with a real quote.
 
 SERVICES & PRICING:
-- Biweekly maintenance (mowing, edging, weed eating, debris blow-off): Small yard (under 5,000 sq ft) $65, Medium yard (5,000-10,000 sq ft) $75, Large yard (10,000-20,000 sq ft) $85, Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
-- First-cut/overgrown fee: if it's been a few weeks since it was last cut, the price doubles the normal cut price for that yard size (e.g. a Medium yard's normal $65 cut becomes $130 for the first overgrown cut). That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
+- Mowing (mowing, edging, weed eating, debris blow-off all included), price per visit by how often we come. All prices are starting prices ("+"):
+  - Every 2 weeks (most popular): Small yard (under 5,000 sq ft) $65+, Medium yard (5,000-10,000 sq ft) $75+, Large yard (10,000-20,000 sq ft) $85+
+  - Weekly: Small $55+, Medium $65+, Large $75+
+  - Monthly: Small $130+, Medium $150+, Large $170+ (a month of growth is close to an overgrown cut every visit)
+  - One-time cut (lawn not overgrown): Small $105+, Medium $120+, Large $135+
+  - Extra large/acreage (over 20,000 sq ft): custom quote after our team assesses it in person
+- First-cut fee: new weekly, every-2-weeks, and monthly customers pay a one-time $25+ on their first visit (the first cut takes longer to set clean edges and learn the yard). It doesn't apply if the overgrown price applies instead.
+- Overgrown fee: if it's been a few weeks since it was last cut, the first cut is 2x the regular every-2-weeks price for that yard size (e.g. a Medium yard's $75 cut becomes $150 for the first overgrown cut). One-time cuts on an overgrown lawn use this same overgrown price. That covers the first 2 hours on-site; if the job runs longer than that, it's $55/hr for each additional hour. If the grass is over 12 inches tall, that needs a custom quote — the team has to see it in person before pricing it, don't guess a number for that case
 - Edge restoration (grass grown fully over sidewalk/driveway edge): $50+ for a typical driveway and sidewalk; $75-100+ for long driveways, corner lots, or edges buried several inches deep
-- Sidewalk & driveway crack weed spraying: $15
+- Sidewalk & driveway crack weed spraying: $25+
+- Brush & overgrowth (anything a regular cut doesn't cover: areas outside the mowed lawn, growth over a foot tall, or woody underbrush like vines, briars, privet, and saplings): overgrown fence line or ditch (up to ~150 ft) $75+, small brushy area (about 10x50 ft) $150+, medium brushy area (about 20x100 ft) $300+, large area or wooded lot (or trees over 3 inches thick) custom quote. Hauling the cut brush away is +$75+; default is piled on-site. A regular cut already includes weed eating around everything inside the mowed lawn.
 - Hedge & shrub trimming ($100 minimum per visit): 1-6 shrubs $100+, 7-12 shrubs $200+, 13-25 shrubs $350+. Shrubs 6-10 ft tall add $40 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$40. Mowing clients get 10% off hedge trimming added to a regular visit.
 - Leaf removal (separate service from mowing): Small yard $130+, Medium yard $260+, Large yard $400+, Extra large: custom quote. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once we see the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
@@ -1750,7 +1859,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
             <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Mowing & Edging" desc="Clean, consistent cuts with sharp, well-maintained equipment." />
             <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Weed Eating" desc="Fence lines, mailboxes, and obstacles — fully trimmed, every time." />
             <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Blow-Off Cleanup" desc="Driveways and walkways left spotless when we're done." />
-            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Crack Spray Add-On" desc="Keep walkways weed-free — available as an add-on, +$15." />
+            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Crack Spray Add-On" desc="Keep walkways weed-free — available as an add-on, +$25+." />
           </div>
         </div>
 
@@ -1758,7 +1867,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
           <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Biweekly maintenance starting at $65 per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. We confirm the exact price once we see the property in person.
+            Every-2-weeks maintenance starting at $65+ per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. Weekly, monthly, and one-time cuts are also available (see the quote form). We confirm the exact price once we see the property in person.
           </p>
           <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1769,7 +1878,7 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
                     <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
                   </div>
                   <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
-                    {opt.key === "small" ? "$65" : opt.key === "medium" ? "$75" : opt.key === "large" ? "$85" : "Custom"}
+                    {MOW_PRICES.Biweekly[opt.key] == null ? "Custom" : `$${MOW_PRICES.Biweekly[opt.key]}+`}
                   </div>
                 </div>
               ))}
@@ -2117,7 +2226,7 @@ export default function MowProLanding() {
           <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Mowing & Edging" desc="Clean, consistent cuts with sharp, well-maintained equipment." />
           <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Weed Eating" desc="Fence lines, mailboxes, and obstacles — fully trimmed, every time." />
           <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Blow-Off Cleanup" desc="Driveways and walkways left spotless when we're done." />
-          <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Sidewalk & Driveway Crack Spray" desc="Keep walkways weed-free — available as an add-on, +$15." />
+          <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Sidewalk & Driveway Crack Spray" desc="Keep walkways weed-free — available as an add-on, +$25+." />
         </div>
       </div>
 
@@ -2218,7 +2327,7 @@ export default function MowProLanding() {
         <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 8 }}>per visit</div>
         <div style={{ color: "#8FBC6A", fontSize: 14.5, fontWeight: 700, marginBottom: 30 }}>Mowing, edging & cleanup included. No hidden fees.</div>
         <div style={{ display: "inline-flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 34 }}>
-          {["Mowing, edging & weed eating — all included", "Clippings blown off walkways & driveway — included", "Leaf season (Oct–Dec): recurring clients add leaf cleanup at a discounted $45/hr, only when leaves are down. One-time cleanups use Fall Cleanup pricing", "No contracts — cancel anytime", "First-cut & edge-restoration fees apply if overgrown — see quote form for details"].map((f) => (
+          {["Mowing, edging & weed eating — all included", "Clippings blown off walkways & driveway — included", "Leaf season (Oct–Dec): recurring clients add leaf cleanup at a discounted $45/hr, only when leaves are down. One-time cleanups use Fall Cleanup pricing", "No contracts — cancel anytime", "Weekly from $55+, monthly from $130+, one-time cuts from $105+ per visit", "One-time $25+ first-cut fee for new customers; overgrown and edge-restoration pricing in the quote form", "Brush & overgrowth clearing from $75+"].map((f) => (
             <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14.5, color: "#D8DED2" }}>
               <CheckCircle2 size={17} color="#8FBC6A" /> {f}
             </div>
