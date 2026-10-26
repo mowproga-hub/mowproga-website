@@ -280,7 +280,13 @@ const FALL_CLEANUP_JSON_LD = {
     { "@type": "City", name: "Powder Springs, GA" },
     { "@type": "AdministrativeArea", name: "Douglas County, GA" },
   ],
-  priceRange: "$5-$8 per bag",
+  priceRange: "$130+",
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "USD",
+    priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" },
+    description: "Leaf removal starts at $130 for small yards ($260 medium, $400 large). Bagging and haul-away adds $5-8 per bag.",
+  },
   provider: {
     "@type": "LocalBusiness",
     "@id": "https://mowproga.com/#business",
