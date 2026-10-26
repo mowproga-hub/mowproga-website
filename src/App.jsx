@@ -1,4 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import {
+  NEIGHBORHOODS, getNeighborhood, placeLabel, titleLabel, neighborhoodTitle, neighborhoodDescription, leafRuleText, leafServiceText,
+  LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
+  FALL_CLEANUP_SEO,
+} from "./siteData.js";
 import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink } from "lucide-react";
 
 // g.page/r/{id}/review is Google's write-a-review shortlink — it drops
@@ -166,12 +171,7 @@ const DEFAULT_SEO = {
 // crawlers/direct loads, this applies the same values on the client for
 // in-app SPA navigation (which never hits the middleware, since it's a
 // pushState navigation, not a new request).
-const FALL_CLEANUP_SEO = {
-  title: "Leaf Removal & Fall Cleanup in Douglasville, GA | Mow Pro",
-  description: "Fall yard cleanup in Douglasville, GA — leaf removal, bed cleanout, and debris haul-away. Call 404-669-6945 or request a free fall cleanup quote today.",
-  url: "https://mowproga.com/fall-cleanup",
-  image: "https://mowproga.com/images/after-fall.webp",
-};
+// FALL_CLEANUP_SEO comes from siteData.js (shared with middleware.js).
 
 const FALL_CLEANUP_FAQ_JSONLD = {
   "@context": "https://schema.org",
@@ -250,6 +250,34 @@ const FALL_CLEANUP_JSONLD = {
 // a deliberately thin, stripped-down duplicate of content that already lives
 // on the homepage and /fall-cleanup for SEO purposes. So unlike those pages,
 // it's marked noindex in middleware.js: its job is conversion, not ranking.
+const LEAF_REMOVAL_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Leaf Removal",
+  name: "Leaf Removal Service",
+  url: LEAF_REMOVAL_SEO.url,
+  description: LEAF_REMOVAL_SEO.description,
+  areaServed: [
+    { "@type": "City", name: "Douglasville, GA" },
+    { "@type": "City", name: "Villa Rica, GA" },
+    { "@type": "City", name: "Lithia Springs, GA" },
+    { "@type": "AdministrativeArea", name: "Douglas County, GA" },
+  ],
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "USD",
+    priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" },
+    description: "Leaf removal starts at $130 for small yards ($260 medium, $400 large). Leaves piled on-site at no charge, or bagged and hauled away for $5-8 per bag.",
+  },
+  provider: { "@id": "https://mowproga.com/#business" },
+};
+
+const LEAF_REMOVAL_FAQ_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: LEAF_REMOVAL_FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+};
+
 const QUOTE_SEO = {
   title: "Get a Free Lawn Care Quote | Mow Pro GA — Douglasville",
   description: "Fast, free quotes for lawn mowing and fall cleanup in Douglasville, GA. 5-star rated, no contracts. Get your price in under a minute.",
@@ -300,18 +328,9 @@ function applyPageSEO(seo) {
 // mirrored by hand in middleware.js's NEIGHBORHOODS constant, since
 // middleware and this Vite/React bundle are built and run separately and
 // can't share a module. Keep both in sync when adding or editing one.
-const NEIGHBORHOODS = [
-  { slug: "stewarts-mill", name: "Stewarts Mill", city: "Douglasville" },
-  { slug: "shallowford-heights", name: "Shallowford Heights", city: "Douglasville" },
-  { slug: "springwood-village", name: "Springwood Village", city: "Douglasville" },
-  { slug: "big-a", name: "the Big A / Highway 166 area", short: "Big A / Hwy 166", city: "Douglasville" },
-  { slug: "lithia-springs", name: "Lithia Springs", city: "Lithia Springs" },
-  { slug: "villa-rica", name: "Villa Rica", city: "Villa Rica" },
-];
+// NEIGHBORHOODS comes from siteData.js (shared with middleware.js).
 
-function getNeighborhood(slug) {
-  return NEIGHBORHOODS.find((n) => n.slug === slug) || null;
-}
+
 
 // Real before/after photos of actual completed jobs — not staged per
 // neighborhood (there's no photo library tagged by neighborhood), so rather
@@ -335,21 +354,14 @@ function neighborhoodPhotos(n) {
 // navigation, not a new request).
 // Avoids the redundant "Villa Rica, Villa Rica GA" for the two entries where
 // the neighborhood itself is the whole city, not a district within one.
-function placeLabel(n) {
-  return n.name === n.city ? `${n.name}, GA` : `${n.name}, ${n.city}, GA`;
-}
 
 // Shorter label for <title> tags only, so titles stay under ~60 characters
 // (Google truncates longer ones). Uses n.short when a name is long.
-function titleLabel(n) {
-  const name = n.short || n.name;
-  return n.name === n.city ? `${name}, GA` : `${name}, ${n.city} GA`;
-}
 
 function neighborhoodSEO(n) {
   return {
-    title: `Lawn Care in ${titleLabel(n)} | Mow Pro`,
-    description: `Biweekly lawn mowing, edging, and cleanup for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`,
+    title: neighborhoodTitle(n),
+    description: neighborhoodDescription(n),
     url: `https://mowproga.com/lawn-care/${n.slug}`,
     image: `https://mowproga.com${neighborhoodPhotos(n).after}`,
   };
@@ -364,30 +376,24 @@ function neighborhoodJsonLd(n) {
     name: `Lawn Care in ${n.name}`,
     url: seo.url,
     description: seo.description,
-    areaServed: { "@type": n.slug === "lithia-springs" || n.slug === "villa-rica" ? "City" : "Neighborhood", name: placeLabel(n) },
-    provider: {
-      "@type": "LocalBusiness",
-      "@id": "https://mowproga.com/#business",
-      name: "Mow Pro Lawn Care LLC",
-      telephone: "+14046696945",
-      url: seo.url,
-      image: seo.image,
-      priceRange: "$$",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "1695 Hampton Pass",
-        addressLocality: "Douglasville",
-        addressRegion: "GA",
-        postalCode: "30134",
-        addressCountry: "US",
-      },
+    areaServed: { "@type": n.name === n.city ? "City" : "Neighborhood", name: placeLabel(n) },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `Lawn care and leaf removal in ${n.name}`,
+      itemListElement: [
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 65, priceCurrency: "USD" }, itemOffered: { "@type": "Service", name: "Biweekly Lawn Mowing & Edging" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" }, url: "https://mowproga.com/leaf-removal", itemOffered: { "@type": "Service", name: "Leaf Removal", serviceType: "Leaf Removal" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" }, url: "https://mowproga.com/fall-cleanup", itemOffered: { "@type": "Service", name: "Fall Yard Cleanup", serviceType: "Fall Cleanup" } },
+      ],
     },
+    provider: { "@id": "https://mowproga.com/#business" },
   };
 }
 
 function pathToRoute(path) {
   if (path === "/about") return "about";
   if (path === "/fall-cleanup") return "fall-cleanup";
+  if (path === "/leaf-removal") return "leaf-removal";
   if (path === "/quote") return "quote";
   if (path.startsWith("/lawn-care/")) {
     const slug = path.slice("/lawn-care/".length);
@@ -1508,6 +1514,9 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
           <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
             Fall Cleanup
           </a>
+          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+            Leaf Removal
+          </a>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
             <Phone size={14} color="#8FBC6A" />
             {content.phone}
@@ -1597,6 +1606,9 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
           <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
             Fall Cleanup
+          </a>
+          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+            Leaf Removal
           </a>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
             <Phone size={14} color="#8FBC6A" />
@@ -1727,6 +1739,10 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
               <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{item.a}</div>
             </div>
           ))}
+          <p style={{ textAlign: "center", color: "#B9C4B2", fontSize: 14.5, marginTop: 22 }}>
+            Just need the leaves cleared? See our{" "}
+            <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ color: "#8FBC6A", fontWeight: 700, textDecoration: "none" }}>leaf removal service</a>.
+          </p>
         </div>
       </main>
 
@@ -1763,6 +1779,181 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
   );
 }
 
+// ─── Leaf Removal service page ──────────────────────────────────────────────
+// Copy lives in siteData.js so the crawler version (middleware.js) matches.
+function LeafRemovalPage({ content, navigate, setShowQuote, showQuote }) {
+  const card = { border: "1px solid #24331F", borderRadius: 12, padding: "16px 18px", background: "#152016", textAlign: "left" };
+  return (
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
+      {/* NAV */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 10, padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
+        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18, background: "none", border: "none", color: "#F5F3EE", cursor: "pointer", padding: 0, textDecoration: "none" }}>
+          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
+          Mow Pro GA
+        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
+          <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+            Fall Cleanup
+          </a>
+          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
+            <Phone size={14} color="#8FBC6A" />
+            {content.phone}
+          </a>
+          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
+            Get Quote
+          </button>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "20px 24px 0" }}>
+        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#8FBC6A", fontWeight: 700, fontSize: 13.5, textDecoration: "none" }}>
+          ← Back to home
+        </a>
+      </div>
+
+      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0", textAlign: "center" }}>
+        <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Leaf Removal</div>
+        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 16px" }}>
+          Leaf Removal Service in Douglasville, GA
+        </h1>
+        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>{LEAF_REMOVAL_INTRO}</p>
+
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 20 }}>
+          <button
+            onClick={() => { trackEvent("quote_opened", { location: "leaf_removal_hero" }); setShowQuote(true); }}
+            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            Get My Free Leaf Removal Quote <ArrowRight size={18} />
+          </button>
+          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 10, padding: "16px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Phone size={16} /> Call Now
+          </a>
+        </div>
+        <a
+          href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer"
+          aria-label={`${content.ratingLine} — opens in a new tab`}
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", marginBottom: 46 }}
+        >
+          <div style={{ display: "flex", gap: 2 }}>
+            {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={13} fill="#8FBC6A" color="#8FBC6A" />)}
+          </div>
+          {content.ratingLine}
+          <ExternalLink size={12} />
+        </a>
+
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>A real Mow Pro leaf job, before and after</p>
+          <div style={{ maxWidth: 560, margin: "0 auto" }}>
+            <BeforeAfterSlider before="/images/before-fall.webp" after="/images/after-fall.webp" />
+            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 10px" }}>Why Clear the Leaves</h2>
+          <p style={{ color: "#B9C4B2", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>{LEAF_REMOVAL_WHY}</p>
+        </div>
+
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 20px" }}>How Our Leaf Removal Works</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
+            {LEAF_REMOVAL_OPTIONS.map(([t, d]) => (
+              <div key={t} style={card}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 15.5, marginBottom: 6 }}><Wind size={18} color="#8FBC6A" />{t}</div>
+                <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal Pricing</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>Priced by yard size. Regular mowing customers get a discounted leaf rate. We confirm the exact price once we see the property in person.</p>
+          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left", display: "flex", flexDirection: "column", gap: 10 }}>
+            {[...LEAF_PRICE_ROWS, ["Bag & haul away (optional, default is piled on-site)", "$5–8/bag"]].map(([label, price]) => (
+              <div key={label} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "#152016" }}>
+                <div style={{ fontWeight: 700, fontSize: 14.5 }}>{label}</div>
+                <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15, whiteSpace: "nowrap" }}>{price}</div>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => { trackEvent("quote_opened", { location: "leaf_removal_pricing" }); setShowQuote(true); }}
+            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, marginTop: 24 }}
+          >
+            Get My Free Leaf Removal Quote <ArrowRight size={18} />
+          </button>
+        </div>
+
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>What to Do With the Leaves in Douglas County</h2>
+          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>Leaf pickup rules depend on where you live. Here's how it works around here:</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {LEAF_LOCAL_RULES.map(([t, d]) => (
+              <div key={t} style={card}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 15, marginBottom: 6 }}><MapPin size={16} color="#8FBC6A" />{t}</div>
+                <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal by Neighborhood</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10, marginTop: 16 }}>
+            {NEIGHBORHOODS.map((n) => (
+              <a key={n.slug} href={`/lawn-care/${n.slug}`} onClick={(e) => { e.preventDefault(); navigate(`/lawn-care/${n.slug}`); }}
+                style={{ display: "flex", alignItems: "center", gap: 6, background: "#152016", border: "1px solid #24331F", borderRadius: 999, padding: "8px 16px", fontSize: 13.5, fontWeight: 700, color: "#F5F3EE", textDecoration: "none" }}>
+                <MapPin size={14} color="#8FBC6A" />{n.short || n.name.replace(/^the /, "")}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 20, textAlign: "left" }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>Leaf Removal Questions</h2>
+          {LEAF_REMOVAL_FAQ.map(([q, a]) => (
+            <div key={q} style={{ borderBottom: "1px solid #24331F", padding: "18px 0" }}>
+              <div style={{ fontWeight: 700, fontSize: 15.5, color: "#F5F3EE", marginBottom: 6 }}>{q}</div>
+              <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{a}</div>
+            </div>
+          ))}
+          <p style={{ textAlign: "center", color: "#B9C4B2", fontSize: 14.5, marginTop: 22 }}>
+            Want the full end-of-season package? See our{" "}
+            <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ color: "#8FBC6A", fontWeight: 700, textDecoration: "none" }}>fall yard cleanup</a>.
+          </p>
+        </div>
+      </main>
+
+      <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center", marginTop: 30 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaves piling up?</h2>
+        <p style={{ margin: "0 0 20px", opacity: 0.85 }}>Text, call, or request a quote — most yards confirmed same day.</p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => { trackEvent("quote_opened", { location: "leaf_removal_footer" }); setShowQuote(true); }} style={{ background: "#0F1A10", color: "#F5F3EE", border: "none", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            Get My Free Instant Quote
+          </button>
+          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#0F1A10", border: "1.5px solid #0F1A10", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Phone size={16} /> Call Mow Pro Now
+          </a>
+        </div>
+      </div>
+
+      <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} initialServiceType="leaf" />
+      <ChatWidget />
+
+      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
+        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
+          <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" style={{ maxWidth: 160, width: "100%", height: "auto" }} />
+        </a>
+      </div>
+      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
+        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
+      </div>
+    </div>
+  );
+}
+
 // Same pricing tiers shown on the homepage and /fall-cleanup, reused here so
 // a neighborhood page's numbers can't drift out of sync with the real prices.
 const NEIGHBORHOOD_NEARBY_LIST = (currentSlug) =>
@@ -1782,6 +1973,9 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
           <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
             Fall Cleanup
+          </a>
+          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+            Leaf Removal
           </a>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
             <Phone size={14} color="#8FBC6A" />
@@ -1808,6 +2002,9 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
         <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>
           Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in {n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.
         </p>
+        {n.intro && (
+          <p style={{ fontSize: 15, color: "#B9C4B2", lineHeight: 1.7, margin: "-10px auto 26px", maxWidth: 560 }}>{n.intro}</p>
+        )}
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 20 }}>
           <button
@@ -1890,6 +2087,25 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
           >
             Get My Free Instant Quote <ArrowRight size={18} />
           </button>
+        </div>
+
+        {/* LEAF REMOVAL & FALL CLEANUP — local leaf-disposal rules for this area */}
+        <div style={{ marginBottom: 50 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 12px" }}>Leaf Removal & Fall Cleanup in {n.name}</h2>
+          <p style={{ color: "#B9C4B2", lineHeight: 1.7, maxWidth: 560, margin: "0 auto 12px" }}>{leafRuleText(n)}</p>
+          <p style={{ color: "#B9C4B2", lineHeight: 1.7, maxWidth: 560, margin: "0 auto 18px" }}>{leafServiceText(n)}</p>
+          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left", display: "flex", flexDirection: "column", gap: 10 }}>
+            {LEAF_PRICE_ROWS.map(([label, price]) => (
+              <div key={label} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "#152016" }}>
+                <div style={{ fontWeight: 700, fontSize: 14.5 }}>{label}</div>
+                <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15, whiteSpace: "nowrap" }}>{price}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 16 }}>
+            <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ color: "#8FBC6A", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Leaf removal service →</a>
+            <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ color: "#8FBC6A", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Fall yard cleanup →</a>
+          </div>
         </div>
 
         {/* NEARBY */}
@@ -2084,6 +2300,9 @@ export default function MowProLanding() {
     if (route === "fall-cleanup") {
       applyPageSEO(FALL_CLEANUP_SEO);
       setPageJsonLd([FALL_CLEANUP_JSONLD, FALL_CLEANUP_FAQ_JSONLD]);
+    } else if (route === "leaf-removal") {
+      applyPageSEO(LEAF_REMOVAL_SEO);
+      setPageJsonLd([LEAF_REMOVAL_JSONLD, LEAF_REMOVAL_FAQ_JSONLD]);
     } else if (route === "about") {
       applyPageSEO(ABOUT_SEO);
       setPageJsonLd([ABOUT_JSONLD]);
@@ -2125,6 +2344,10 @@ export default function MowProLanding() {
     return <FallCleanupPage content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
   }
 
+  if (route === "leaf-removal") {
+    return <LeafRemovalPage content={content} navigate={navigate} setShowQuote={setShowQuote} showQuote={showQuote} />;
+  }
+
   if (route.startsWith("neighborhood:")) {
     const n = getNeighborhood(route.slice("neighborhood:".length));
     if (n) {
@@ -2155,6 +2378,9 @@ export default function MowProLanding() {
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
           <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
             Fall Cleanup
+          </a>
+          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
+            Leaf Removal
           </a>
           <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
             <Phone size={14} color="#8FBC6A" />

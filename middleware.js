@@ -18,9 +18,17 @@
 // #root the instant it runs, so a JS-enabled visitor never sees this markup
 // — they get the real interactive page. Only non-JS clients (AI crawlers,
 // curl, "view source") ever actually read it.
+import {
+  NEIGHBORHOODS, placeLabel, neighborhoodTitle, neighborhoodDescription, leafRuleText, leafServiceText,
+  LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS,
+  LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ, FALL_CLEANUP_SEO,
+} from "./src/siteData.js";
+
 export const config = {
   matcher: [
     "/fall-cleanup",
+    "/leaf-removal",
+    "/lawn-care/winston",
     "/about",
     "/quote",
     "/lawn-care/stewarts-mill",
@@ -32,31 +40,7 @@ export const config = {
   ],
 };
 
-// Non-gated residential neighborhoods within the actual service area —
-// mirrored by hand in src/App.jsx's NEIGHBORHOODS constant, since middleware
-// and the Vite/React bundle are built and run separately and can't share a
-// module. Keep both in sync when adding or editing a neighborhood.
-const NEIGHBORHOODS = [
-  { slug: "stewarts-mill", name: "Stewarts Mill", city: "Douglasville", zip: "30134" },
-  { slug: "shallowford-heights", name: "Shallowford Heights", city: "Douglasville", zip: "30134" },
-  { slug: "springwood-village", name: "Springwood Village", city: "Douglasville", zip: "30135" },
-  { slug: "big-a", name: "the Big A / Highway 166 area", short: "Big A / Hwy 166", city: "Douglasville", zip: "30134" },
-  { slug: "lithia-springs", name: "Lithia Springs", city: "Lithia Springs", zip: "30122" },
-  { slug: "villa-rica", name: "Villa Rica", city: "Villa Rica", zip: "30180" },
-];
-
-// Avoids the redundant "Villa Rica, Villa Rica GA" for the two entries where
-// the neighborhood itself is the whole city, not a district within one.
-function placeLabel(n) {
-  return n.name === n.city ? `${n.name}, GA` : `${n.name}, ${n.city}, GA`;
-}
-
-// Shorter label for <title> tags only, so titles stay under ~60 characters
-// (Google truncates longer ones). Uses n.short when a name is long.
-function titleLabel(n) {
-  const name = n.short || n.name;
-  return n.name === n.city ? `${name}, GA` : `${name}, ${n.city} GA`;
-}
+// NEIGHBORHOODS, placeLabel() etc. come from src/siteData.js (shared with the React app).
 
 // Real before/after photos of actual completed jobs — mirrored from
 // src/App.jsx's NEIGHBORHOOD_PHOTO_PAIRS/neighborhoodPhotos(). There's no
@@ -86,8 +70,8 @@ function neighborhoodPricingList() {
 }
 
 function neighborhoodPage(n) {
-  const title = `Lawn Care in ${titleLabel(n)} | Mow Pro`;
-  const description = `Biweekly lawn mowing, edging, leaf cleanup, and hedge trimming for homeowners in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`;
+  const title = neighborhoodTitle(n);
+  const description = neighborhoodDescription(n);
   const url = `https://mowproga.com/lawn-care/${n.slug}`;
   const photos = neighborhoodPhotos(n);
   const image = `https://mowproga.com${photos.after}`;
@@ -100,6 +84,7 @@ function neighborhoodPage(n) {
       <main>
         <h1>Lawn Care in ${placeLabel(n)}</h1>
         <p>Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in ${n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.</p>
+        ${n.intro ? `<p>${n.intro}</p>` : ""}
         <p>Call or text <a href="tel:4046696945">404-669-6945</a>, or request a free instant quote online.</p>
         <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134" target="_blank" rel="noopener noreferrer">5.0 stars, 63 reviews on Google</a></p>
 
@@ -121,10 +106,51 @@ function neighborhoodPage(n) {
         ${neighborhoodPricingList()}
         <p>No contracts — cancel anytime. We confirm the exact price once we see the property in person.</p>
 
+        <h2>Leaf Removal &amp; Fall Cleanup in ${n.name}</h2>
+        <p>${leafRuleText(n)}</p>
+        <p>${leafServiceText(n)}</p>
+        <ul>${LEAF_PRICE_ROWS.map(([k, v]) => `<li>${k}: ${v}</li>`).join("")}</ul>
+        <p><a href="/leaf-removal">Leaf removal service</a> · <a href="/fall-cleanup">Fall yard cleanup</a></p>
+
         <h2>Also Serving Nearby</h2>
         <p>Mow Pro GA also serves ${NEIGHBORHOODS.filter((x) => x.slug !== n.slug).map((x) => x.name).join(", ")}, plus Douglasville and Douglas County, GA generally.</p>
 
-        <p><a href="/">Mow Pro GA home</a> · <a href="/fall-cleanup">Fall Cleanup Services</a> · <a href="/about">About Mow Pro GA</a></p>
+        <p><a href="/">Mow Pro GA home</a> · <a href="/leaf-removal">Leaf Removal</a> · <a href="/fall-cleanup">Fall Cleanup Services</a> · <a href="/about">About Mow Pro GA</a></p>
+        <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
+      </main>
+    `,
+  };
+}
+
+function leafRemovalPage() {
+  return {
+    ...LEAF_REMOVAL_SEO,
+    content: `
+      <main>
+        <h1>Leaf Removal Service in Douglasville, GA</h1>
+        <p>${LEAF_REMOVAL_INTRO}</p>
+        <p>Call or text <a href="tel:4046696945">404-669-6945</a>, or request a free instant leaf removal quote online.</p>
+
+        <h2>Why Clear the Leaves</h2>
+        <p>${LEAF_REMOVAL_WHY}</p>
+
+        <h2>How Our Leaf Removal Works</h2>
+        <ul>${LEAF_REMOVAL_OPTIONS.map(([t, d]) => `<li><strong>${t}</strong> — ${d}</li>`).join("")}</ul>
+
+        <h2>Leaf Removal Pricing</h2>
+        <ul>${LEAF_PRICE_ROWS.map(([k, v]) => `<li>${k}: ${v}</li>`).join("")}<li>Bag &amp; haul away (optional, default is piled on-site): $5–8/bag</li></ul>
+        <p>Regular mowing customers get a discounted leaf rate. We confirm the exact price once we see the property in person.</p>
+
+        <h2>What to Do With the Leaves in Douglas County</h2>
+        <ul>${LEAF_LOCAL_RULES.map(([t, d]) => `<li><strong>${t}:</strong> ${d}</li>`).join("")}</ul>
+
+        <h2>Leaf Removal by Neighborhood</h2>
+        <p>${NEIGHBORHOODS.map((n) => `<a href="/lawn-care/${n.slug}">${n.name.replace(/^the /, "")}</a>`).join(" · ")}</p>
+
+        <h2>Leaf Removal Questions</h2>
+        <dl>${LEAF_REMOVAL_FAQ.map(([q, a]) => `<dt>${q}</dt><dd>${a}</dd>`).join("")}</dl>
+
+        <p><a href="/">Mow Pro GA home</a> · <a href="/fall-cleanup">Fall Yard Cleanup</a> · <a href="/about">About Mow Pro GA</a></p>
         <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
       </main>
     `,
@@ -133,10 +159,7 @@ function neighborhoodPage(n) {
 
 const PAGES = {
   "/fall-cleanup": {
-    title: "Leaf Removal & Fall Cleanup in Douglasville, GA | Mow Pro",
-    description: "Fall yard cleanup in Douglasville, GA — leaf removal, bed cleanout, and debris haul-away. Call 404-669-6945 or request a free fall cleanup quote today.",
-    url: "https://mowproga.com/fall-cleanup",
-    image: "https://mowproga.com/images/after-fall.webp",
+    ...FALL_CLEANUP_SEO,
     content: `
       <main>
         <h1>Fall Yard Cleanup in Douglasville, GA</h1>
@@ -178,6 +201,7 @@ const PAGES = {
           <dd>Yes - a fall cleanup covers leaf removal from the lawn and beds, a final mow and edge, and clearing debris out of flower beds and borders, with driveways and walkways blown off clean.</dd>
         </dl>
 
+        <p>Just need the leaves cleared? See our <a href="/leaf-removal">leaf removal service</a>.</p>
         <p><a href="/">Mow Pro GA home</a> · <a href="/about">About Mow Pro GA</a></p>
         <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
       </main>
@@ -226,6 +250,7 @@ const PAGES = {
 for (const n of NEIGHBORHOODS) {
   PAGES[`/lawn-care/${n.slug}`] = neighborhoodPage(n);
 }
+PAGES["/leaf-removal"] = leafRemovalPage();
 
 const FALL_CLEANUP_FAQ_JSON_LD = {
   "@context": "https://schema.org",
@@ -287,23 +312,7 @@ const FALL_CLEANUP_JSON_LD = {
     priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" },
     description: "Leaf removal starts at $130 for small yards ($260 medium, $400 large). Bagging and haul-away adds $5-8 per bag.",
   },
-  provider: {
-    "@type": "LocalBusiness",
-    "@id": "https://mowproga.com/#business",
-    name: "Mow Pro Lawn Care LLC",
-    telephone: "+14046696945",
-    url: PAGES["/fall-cleanup"].url,
-    image: PAGES["/fall-cleanup"].image,
-    priceRange: "$$",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "1695 Hampton Pass",
-      addressLocality: "Douglasville",
-      addressRegion: "GA",
-      postalCode: "30134",
-      addressCountry: "US",
-    },
-  },
+  provider: { "@id": "https://mowproga.com/#business" },
 };
 
 // Lightweight and honest rather than fabricated: this page is a founder
@@ -327,29 +336,51 @@ function neighborhoodJsonLd(n) {
     name: `Lawn Care in ${n.name}`,
     url: page.url,
     description: page.description,
-    areaServed: { "@type": n.slug === "lithia-springs" || n.slug === "villa-rica" ? "City" : "Neighborhood", name: placeLabel(n) },
-    provider: {
-      "@type": "LocalBusiness",
-      "@id": "https://mowproga.com/#business",
-      name: "Mow Pro Lawn Care LLC",
-      telephone: "+14046696945",
-      url: page.url,
-      image: page.image,
-      priceRange: "$$",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "1695 Hampton Pass",
-        addressLocality: "Douglasville",
-        addressRegion: "GA",
-        postalCode: "30134",
-        addressCountry: "US",
-      },
+    areaServed: { "@type": n.name === n.city ? "City" : "Neighborhood", name: placeLabel(n) },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `Lawn care and leaf removal in ${n.name}`,
+      itemListElement: [
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 65, priceCurrency: "USD" }, itemOffered: { "@type": "Service", name: "Biweekly Lawn Mowing & Edging" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" }, url: "https://mowproga.com/leaf-removal", itemOffered: { "@type": "Service", name: "Leaf Removal", serviceType: "Leaf Removal" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" }, url: "https://mowproga.com/fall-cleanup", itemOffered: { "@type": "Service", name: "Fall Yard Cleanup", serviceType: "Fall Cleanup" } },
+      ],
     },
+    provider: { "@id": "https://mowproga.com/#business" },
   };
 }
 
+const LEAF_REMOVAL_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Leaf Removal",
+  name: "Leaf Removal Service",
+  url: LEAF_REMOVAL_SEO.url,
+  description: LEAF_REMOVAL_SEO.description,
+  areaServed: [
+    { "@type": "City", name: "Douglasville, GA" },
+    { "@type": "City", name: "Villa Rica, GA" },
+    { "@type": "City", name: "Lithia Springs, GA" },
+    { "@type": "AdministrativeArea", name: "Douglas County, GA" },
+  ],
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "USD",
+    priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" },
+    description: "Leaf removal starts at $130 for small yards ($260 medium, $400 large). Leaves piled on-site at no charge, or bagged and hauled away for $5-8 per bag.",
+  },
+  provider: { "@id": "https://mowproga.com/#business" },
+};
+
+const LEAF_REMOVAL_FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: LEAF_REMOVAL_FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+};
+
 const JSON_LD_BY_PATH = {
   "/fall-cleanup": [FALL_CLEANUP_JSON_LD, FALL_CLEANUP_FAQ_JSON_LD],
+  "/leaf-removal": [LEAF_REMOVAL_JSON_LD, LEAF_REMOVAL_FAQ_JSON_LD],
   "/about": [ABOUT_JSON_LD],
 };
 
@@ -364,6 +395,19 @@ for (const n of NEIGHBORHOODS) {
 // no special-pattern interpretation, however many "$" it contains.
 function replaceLiteral(html, pattern, replacement) {
   return html.replace(pattern, () => replacement);
+}
+
+// The LocalBusiness node from the homepage's own JSON-LD in index.html.
+function homepageBusiness(html) {
+  try {
+    const m = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+    if (!m) return null;
+    const data = JSON.parse(m[1]);
+    const list = Array.isArray(data) ? data : [data];
+    return list.find((x) => x && x["@type"] === "LocalBusiness") || null;
+  } catch {
+    return null;
+  }
 }
 
 export function rewriteHead(html, pathname) {
@@ -382,7 +426,12 @@ export function rewriteHead(html, pathname) {
   out = replaceLiteral(out, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${page.title}" />`);
   out = replaceLiteral(out, /<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${page.description}" />`);
   out = replaceLiteral(out, /<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${page.image}" />`);
-  out = replaceLiteral(out, /<script type="application\/ld\+json">[\s\S]*?<\/script>/, `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`);
+  // Every page keeps the full business entity from index.html (its offer
+  // catalog lists mowing, leaf removal, fall cleanup, hedges…) and adds its
+  // own page-specific schema after it.
+  const business = homepageBusiness(html);
+  const pageLd = business ? [business, ...jsonLd] : jsonLd;
+  out = replaceLiteral(out, /<script type="application\/ld\+json">[\s\S]*?<\/script>/, `<script type="application/ld+json">${JSON.stringify(pageLd)}</script>`);
   // Swaps out whatever's sitting in <div id="root"> — the homepage's own
   // static content, baked into index.html for home's benefit — for this
   // page's real content instead. React fully replaces this via
