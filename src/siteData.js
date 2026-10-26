@@ -59,7 +59,7 @@ export const LEAF_REMOVAL_SEO = {
   title: "Leaf Removal Service in Douglasville, GA | Mow Pro",
   description: "Leaf removal in Douglasville, GA: leaves cleared off your lawn, beds, and driveway, piled on-site or bagged and hauled away. From $130. Call 404-669-6945.",
   url: "https://mowproga.com/leaf-removal",
-  image: "https://mowproga.com/images/after-fall.webp",
+  image: "https://mowproga.com/images/leaf-cleanup-ba.webp",
 };
 
 export const LEAF_REMOVAL_INTRO =
@@ -94,7 +94,7 @@ export const FALL_CLEANUP_SEO = {
   title: "Fall Yard Cleanup in Douglasville, GA | Mow Pro",
   description: "Fall yard cleanup in Douglasville, GA: leaves cleared, flower beds cleaned out, a final mow and edge, and debris hauled away. From $130. Call 404-669-6945.",
   url: "https://mowproga.com/fall-cleanup",
-  image: "https://mowproga.com/images/after-fall.webp",
+  image: "https://mowproga.com/images/leaf-cleanup-ba.webp",
 };
 
 // Real Mow Pro job photos (before & after combined in one image).
@@ -103,7 +103,7 @@ export const JOB_PHOTOS = {
   leafDriveway: { src: "/images/leaf-driveway-ba.webp", w: 900, h: 675, alt: "Before and after leaf removal along a driveway: leaves covering the lawn edge, then a clean, edged lawn", caption: "Leaves cleared along the driveway" },
   overgrown: { src: "/images/yard-cleanup-ba.webp", w: 900, h: 672, alt: "Before and after an overgrown front yard cleanup in Douglasville, GA: vines and weeds cut back, leaves cleared", caption: "Overgrown front yard cleanup" },
 };
-export const LEAF_PAGE_PHOTOS = [JOB_PHOTOS.leafLawn, JOB_PHOTOS.leafDriveway];
+export const LEAF_PAGE_PHOTOS = [JOB_PHOTOS.leafLawn, JOB_PHOTOS.overgrown];
 export const FALL_PAGE_PHOTOS = [JOB_PHOTOS.overgrown, JOB_PHOTOS.leafLawn];
 export const jobPhotosHtml = (list) =>
   `<h2>More Real Mow Pro Jobs</h2>${list.map((p) => `<figure><img src="${p.src}" alt="${p.alt}" width="${p.w}" height="${p.h}" loading="lazy" /><figcaption>${p.caption}</figcaption></figure>`).join("")}`;

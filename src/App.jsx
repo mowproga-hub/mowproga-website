@@ -445,7 +445,7 @@ function JobPhotos({ photos }) {
   );
 }
 
-function BeforeAfterSlider({ before, after }) {
+function BeforeAfterSlider({ before, after, aspect = "4/3" }) {
   const [pct, setPct] = useState(50);
   const [interacted, setInteracted] = useState(false);
   const wrapRef = useRef(null);
@@ -488,7 +488,7 @@ function BeforeAfterSlider({ before, after }) {
       onMouseDown={(e) => startDrag(e.clientX)}
       onTouchStart={(e) => startDrag(e.touches[0].clientX)}
       style={{
-        position: "relative", width: "100%", aspectRatio: "4/3", borderRadius: 14, overflow: "hidden",
+        position: "relative", width: "100%", aspectRatio: aspect, borderRadius: 14, overflow: "hidden",
         userSelect: "none", touchAction: "pan-y", cursor: "ew-resize",
         boxShadow: "0 12px 30px -14px rgba(0,0,0,0.5)",
       }}
@@ -1669,9 +1669,9 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         {/* BEFORE / AFTER */}
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Real fall cleanups — Douglasville, GA and nearby</p>
-          <div style={{ maxWidth: 560, margin: "0 auto" }}>
-            <BeforeAfterSlider before="/images/before-fall.webp" after="/images/after-fall.webp" />
+          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>A real Mow Pro fall cleanup — Douglasville, GA</p>
+          <div style={{ maxWidth: 400, margin: "0 auto" }}>
+            <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="3/4" />
             <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
           </div>
         </div>
@@ -1862,8 +1862,8 @@ function LeafRemovalPage({ content, navigate, setShowQuote, showQuote }) {
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
           <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>A real Mow Pro leaf job, before and after</p>
-          <div style={{ maxWidth: 560, margin: "0 auto" }}>
-            <BeforeAfterSlider before="/images/before-fall.webp" after="/images/after-fall.webp" />
+          <div style={{ maxWidth: 400, margin: "0 auto" }}>
+            <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="3/4" />
             <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
           </div>
         </div>
