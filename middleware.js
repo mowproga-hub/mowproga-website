@@ -21,7 +21,7 @@
 import {
   NEIGHBORHOODS, placeLabel, neighborhoodTitle, neighborhoodDescription, leafRuleText, leafServiceText,
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS,
-  LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ, FALL_CLEANUP_SEO,
+  LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ, FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS, jobPhotosHtml,
 } from "./src/siteData.js";
 
 export const config = {
@@ -131,6 +131,8 @@ function leafRemovalPage() {
         <p>${LEAF_REMOVAL_INTRO}</p>
         <p>Call or text <a href="tel:4046696945">404-669-6945</a>, or request a free instant leaf removal quote online.</p>
 
+        ${jobPhotosHtml(LEAF_PAGE_PHOTOS)}
+
         <h2>Why Clear the Leaves</h2>
         <p>${LEAF_REMOVAL_WHY}</p>
 
@@ -174,6 +176,8 @@ const PAGES = {
           <li><strong>Bed Cleanout</strong> — Leaves and debris cleared out of flower beds and borders.</li>
           <li><strong>Bag &amp; Haul Away</strong> — Leaves bagged and removed from the property instead of piled on-site — $5–8/bag.</li>
         </ul>
+
+        ${jobPhotosHtml(FALL_PAGE_PHOTOS)}
 
         <h2>Fall Cleanup Pricing</h2>
         <p>Leaf removal is priced by yard size, same as our other services:</p>

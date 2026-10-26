@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   NEIGHBORHOODS, getNeighborhood, placeLabel, titleLabel, neighborhoodTitle, neighborhoodDescription, leafRuleText, leafServiceText,
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
-  FALL_CLEANUP_SEO,
+  FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS,
 } from "./siteData.js";
 import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink } from "lucide-react";
 
@@ -426,6 +426,22 @@ function EditableText({ value, onChange, editing, style, as = "span", multiline 
     <textarea value={value} onChange={(e) => onChange(e.target.value)} style={{ ...commonStyle, resize: "vertical", minHeight: 60 }} />
   ) : (
     <input value={value} onChange={(e) => onChange(e.target.value)} style={commonStyle} />
+  );
+}
+
+function JobPhotos({ photos }) {
+  return (
+    <div style={{ marginBottom: 50 }}>
+      <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 20px" }}>More Real Mow Pro Jobs</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, maxWidth: 760, margin: "0 auto" }}>
+        {photos.map((p) => (
+          <figure key={p.src} style={{ margin: 0 }}>
+            <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" style={{ width: "100%", height: "auto", display: "block", borderRadius: 14, boxShadow: "0 12px 30px -14px rgba(0,0,0,0.5)" }} />
+            <figcaption style={{ fontSize: 13, color: "#7C8A78", marginTop: 8, textAlign: "center" }}>{p.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -1660,6 +1676,8 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
           </div>
         </div>
 
+        <JobPhotos photos={FALL_PAGE_PHOTOS} />
+
         {/* LEAF REMOVAL & FALL CLEANUP SERVICES */}
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal & Fall Yard Cleanup</h2>
@@ -1849,6 +1867,8 @@ function LeafRemovalPage({ content, navigate, setShowQuote, showQuote }) {
             <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
           </div>
         </div>
+
+        <JobPhotos photos={LEAF_PAGE_PHOTOS} />
 
         <div style={{ marginBottom: 50 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 10px" }}>Why Clear the Leaves</h2>
