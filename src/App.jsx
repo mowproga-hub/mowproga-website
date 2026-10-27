@@ -1253,6 +1253,9 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                 <button disabled={!form.name.trim() || !form.phone.trim() || submitting} onClick={submit} style={{ ...modalBtn, opacity: form.name.trim() && form.phone.trim() ? 1 : 0.5, marginTop: 16 }}>
                   {submitting ? "Sending…" : "Request This Quote"}
                 </button>
+                <div style={{ fontSize: 11.5, color: "#9AAE94", lineHeight: 1.5, marginTop: 10, textAlign: "center" }}>
+                  By requesting a quote, you agree to get texts from Mow Pro Lawn Care LLC about your quote, scheduling and service. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. <a href="/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Terms</a> · <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Privacy</a>
+                </div>
               </>
             )}
           </>
