@@ -112,6 +112,9 @@ function neighborhoodPage(n) {
         <ul>${LEAF_PRICE_ROWS.map(([k, v]) => `<li>${k}: ${v}</li>`).join("")}</ul>
         <p><a href="/leaf-removal">Leaf removal service</a> · <a href="/fall-cleanup">Fall yard cleanup</a></p>
 
+        ${n.faq ? `<h2>${n.name} Lawn Care Questions</h2>
+        <dl>${n.faq.map(([q, a]) => `<dt>${q}</dt><dd>${a}</dd>`).join("")}</dl>` : ""}
+
         <h2>Also Serving Nearby</h2>
         <p>Mow Pro GA also serves ${NEIGHBORHOODS.filter((x) => x.slug !== n.slug).map((x) => x.name).join(", ")}, plus Douglasville and Douglas County, GA generally.</p>
 
@@ -389,7 +392,13 @@ const JSON_LD_BY_PATH = {
 };
 
 for (const n of NEIGHBORHOODS) {
-  JSON_LD_BY_PATH[`/lawn-care/${n.slug}`] = [neighborhoodJsonLd(n)];
+  JSON_LD_BY_PATH[`/lawn-care/${n.slug}`] = n.faq
+    ? [neighborhoodJsonLd(n), {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: n.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+      }]
+    : [neighborhoodJsonLd(n)];
 }
 
 // String.replace() treats "$" specially in a *string* replacement (e.g. "$$"

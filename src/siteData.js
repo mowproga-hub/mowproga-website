@@ -13,7 +13,14 @@ export const NEIGHBORHOODS = [
   { slug: "springwood-village", name: "Springwood Village", city: "Douglasville", zip: "30135", rules: "douglasville" },
   { slug: "big-a", name: "the Big A / Highway 166 area", short: "Big A / Hwy 166", city: "Douglasville", zip: "30134", rules: "douglasville" },
   { slug: "lithia-springs", name: "Lithia Springs", city: "Lithia Springs", zip: "30122", rules: "county" },
-  { slug: "villa-rica", name: "Villa Rica", city: "Villa Rica", zip: "30180", rules: "villaRica" },
+  { slug: "villa-rica", name: "Villa Rica", city: "Villa Rica", zip: "30180", rules: "villaRica",
+    intro: "Villa Rica is a short drive west on I-20 from our home base in the Winston area of Douglas County, so it's a regular stop on our route. We've already worked on yards off Corkscrew Way, and we serve homes on both the Douglas County and Carroll County sides of town, from Downtown Villa Rica and the Conners Road area to the non-gated streets around Mirror Lake.",
+    faq: [
+      ["Do you serve my part of Villa Rica?", "Yes. We serve residential homes across Villa Rica, GA (30180), on both the Douglas County and Carroll County sides of town, including Downtown Villa Rica, the Conners Road area, and the non-gated streets around Mirror Lake. We don't currently service gated communities."],
+      ["How much does lawn mowing cost in Villa Rica?", "Every-2-weeks mowing starts at $65 for small yards, $75 for medium yards, and $85 for large yards, with edging, weed eating, and blow-off included on every visit. Weekly, monthly, and one-time cuts are also available. Get an instant estimate online, and we confirm the final price once we see the yard."],
+      ["Do you do leaf removal in Villa Rica?", "Yes. Leaf removal starts at $130 for small yards. We pile leaves on your property at no extra charge, or bag and haul them away for $5-8 a bag. Villa Rica city crews don't pick up yard waste that a contractor removed, so you're never left with bags the city won't take."],
+      ["How do I get a quote in Villa Rica?", "Request a free instant quote online, or call or text 404-669-6945. There are no contracts, and you can cancel anytime."],
+    ] },
 ];
 
 export const getNeighborhood = (slug) => NEIGHBORHOODS.find((n) => n.slug === slug) || null;

@@ -2131,6 +2131,19 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
           </div>
         </div>
 
+        {/* LOCAL FAQ — only for neighborhoods with page-specific questions */}
+        {n.faq && (
+          <div style={{ marginBottom: 50, textAlign: "left", maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>{n.name} Lawn Care Questions</h2>
+            {n.faq.map(([q, a]) => (
+              <div key={q} style={{ borderBottom: "1px solid #24331F", padding: "18px 0" }}>
+                <div style={{ fontWeight: 700, fontSize: 15.5, color: "#F5F3EE", marginBottom: 6 }}>{q}</div>
+                <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{a}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* NEARBY */}
         <div style={{ marginBottom: 20 }}>
           <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 10px" }}>Also Serving Nearby</h2>
@@ -2336,7 +2349,9 @@ export default function MowProLanding() {
       const n = getNeighborhood(route.slice("neighborhood:".length));
       if (n) {
         applyPageSEO(neighborhoodSEO(n));
-        setPageJsonLd([neighborhoodJsonLd(n)]);
+        setPageJsonLd(n.faq
+          ? [neighborhoodJsonLd(n), { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: n.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) }]
+          : [neighborhoodJsonLd(n)]);
       }
     } else {
       applyPageSEO(DEFAULT_SEO);
