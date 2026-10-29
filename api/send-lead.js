@@ -4,7 +4,7 @@
 
 // Pure function, kept separate from the handler so the email content can be
 // unit-tested without needing a live RESEND_API_KEY or network access.
-export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source, frequency, regularPrice, brushHaul }) {
+export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source, frequency, regularPrice, brushHaul, textConsent }) {
   // form.overgrownLevel is "none" | "mild" | "severe" — "none" is a
   // non-empty string, so a plain `overgrown ? "Yes" : "No"` check always
   // printed "Yes" regardless of what was actually selected.
@@ -31,6 +31,7 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
     <p><b>Source:</b> ${sourceLabel}</p>
     <p><b>Name:</b> ${name}</p>
     <p><b>Phone:</b> ${phone}</p>
+    <p><b>Agreed to texts:</b> ${textConsent === true ? "YES - OK to text" : textConsent === false ? "NO - call only, do not text" : "Not asked"}</p>
     <p><b>Address:</b> ${address}</p>
     ${service ? `<p><b>Service:</b> ${service}</p>` : ""}
     <p><b>${isHedge ? "Shrubs" : isBrush ? "Area" : "Yard size"}:</b> ${size}</p>

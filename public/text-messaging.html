@@ -32,7 +32,7 @@
     <p>Mow Pro GA is operated by Mow Pro Lawn Care LLC, Douglasville, GA. This page explains how our text messages work.</p>
 
     <h2>How you opt in</h2>
-    <p>On our website quote form (mowproga.com, "Request This Quote"), you enter your name, address and mobile phone number. You can also sign up for texts right here. On both this page and our quote form, there is an unchecked checkbox that you must tick before anything is sent.</p>
+    <p>On our website quote form (mowproga.com, "Request This Quote"), you enter your name, address and mobile phone number. You can also sign up for texts right here. On this page, and on our quote form, there is an unchecked checkbox that you tick to agree to texts. On the quote form it is optional: you can request a quote without ticking it, and we will not text you unless you do.</p>
     <form id="optin" autocomplete="on">
       <label class="f" for="nm">Your name</label>
       <input class="t" id="nm" name="name" type="text" placeholder="Full name" required />
@@ -54,7 +54,7 @@
         fetch('/api/send-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
           name: document.getElementById('nm').value, phone: document.getElementById('ph').value,
           address: '(not given - text sign-up page)', size: 'Text sign-up (agreed to texts)', price: 'n/a',
-          crackSpray: false, overgrown: 'none', edgeRestore: false, source: 'Text sign-up page' }) })
+          crackSpray: false, overgrown: 'none', edgeRestore: false, textConsent: true, source: 'Text sign-up page' }) })
           .then(function (r) { if (!r.ok) throw new Error(); m.style.color = '#8FBC6A'; m.textContent = 'Thanks! You are signed up. We will text you soon.'; })
           .catch(function () { m.style.color = '#FF8A80'; m.textContent = 'Something went wrong. Please call or try again.'; });
       });
