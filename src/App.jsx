@@ -2687,6 +2687,7 @@ export default function MowProLanding() {
         <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
           <a href="/privacy.html" style={{ color: "#7C8A78", textDecoration: "underline" }}>Privacy Policy</a>
           <a href="/terms.html" style={{ color: "#7C8A78", textDecoration: "underline" }}>Terms of Service</a>
+          <a href="/text-messaging.html" style={{ color: "#7C8A78", textDecoration: "underline" }}>Text Message Terms</a>
         </div>
       </div>
 
