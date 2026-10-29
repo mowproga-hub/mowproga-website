@@ -719,6 +719,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false });
   const [submitting, setSubmitting] = useState(false);
+  const [textOk, setTextOk] = useState(false);
   const [done, setDone] = useState(false);
 
   if (!open) return null;
@@ -802,7 +803,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
 
   const close = () => {
     onClose();
-    setTimeout(() => { setStep(1); setDone(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false }); }, 300);
+    setTimeout(() => { setStep(1); setDone(false); setTextOk(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false }); }, 300);
   };
 
   return (
@@ -1250,12 +1251,13 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                 <label style={{ ...miniLabel, marginTop: 10 }}>Phone number</label>
                 <input style={miniInput} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(404) 000-0000" />
 
-                <button disabled={!form.name.trim() || !form.phone.trim() || submitting} onClick={submit} style={{ ...modalBtn, opacity: form.name.trim() && form.phone.trim() ? 1 : 0.5, marginTop: 16 }}>
+                <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 12, color: "#B9C4B2", lineHeight: 1.5, marginTop: 16, cursor: "pointer" }}>
+                  <input type="checkbox" checked={textOk} onChange={(e) => setTextOk(e.target.checked)} style={{ width: 20, height: 20, marginTop: 1, flexShrink: 0, accentColor: "#8FBC6A" }} />
+                  <span>I agree to get texts from Mow Pro Lawn Care LLC about my quote, scheduling and service. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. <a href="/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Terms</a> · <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Privacy</a></span>
+                </label>
+                <button disabled={!form.name.trim() || !form.phone.trim() || !textOk || submitting} onClick={submit} style={{ ...modalBtn, opacity: form.name.trim() && form.phone.trim() && textOk ? 1 : 0.5, marginTop: 12 }}>
                   {submitting ? "Sending…" : "Request This Quote"}
                 </button>
-                <div style={{ fontSize: 11.5, color: "#9AAE94", lineHeight: 1.5, marginTop: 10, textAlign: "center" }}>
-                  By requesting a quote, you agree to get texts from Mow Pro Lawn Care LLC about your quote, scheduling and service. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. <a href="/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Terms</a> · <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Privacy</a>
-                </div>
               </>
             )}
           </>
