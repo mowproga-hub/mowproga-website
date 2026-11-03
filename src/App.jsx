@@ -4,7 +4,7 @@ import {
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
   FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS,
 } from "./siteData.js";
-import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Truck, Image as ImageIcon } from "lucide-react";
+import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Truck, Users, Calculator, Image as ImageIcon } from "lucide-react";
 
 // g.page/r/{id}/review is Google's write-a-review shortlink — it drops
 // visitors straight into a blank star-rating form, not a reviews list. It's
@@ -715,14 +715,14 @@ function AddressAutocompleteInput({ value, onChange, placeholder, style }) {
   );
 }
 
-function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" }) {
+function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing", inline = false, onSubmitted }) {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false });
   const [submitting, setSubmitting] = useState(false);
   const [textOk, setTextOk] = useState(false);
   const [done, setDone] = useState(false);
 
-  if (!open) return null;
+  if (!open && !inline) return null;
 
   const isLeaf = form.serviceType === "leaf";
   const isHedge = form.serviceType === "hedge";
@@ -800,6 +800,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
     }
     setSubmitting(false);
     setDone(true);
+    if (onSubmitted) onSubmitted({ price, needsCustomQuote, isFirstVisitPrice, normalCutPrice });
   };
 
   const close = () => {
@@ -807,44 +808,21 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
     setTimeout(() => { setStep(1); setDone(false); setTextOk(false); setForm({ address: "", size: "medium", name: "", phone: "", crackSpray: false, overgrownLevel: "none", edgeRestore: false, serviceType: initialServiceType, heavyTrees: false, bagHaul: false, hedgeSize: "h1", tallCount: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, frequency: "Biweekly", brushSize: "b1", brushHaul: false }); }, 300);
   };
 
-  return (
-    <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 18, padding: 26, width: "100%", maxWidth: 420, color: "#F5F3EE", position: "relative", maxHeight: "calc(100vh - 32px)", overflowY: "auto", WebkitOverflowScrolling: "touch", margin: "auto" }}>
-        <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={20} /></button>
-
-        {done ? (
-          <div style={{ textAlign: "center", padding: "20px 0" }}>
-            <CheckCircle2 size={40} color="#8FBC6A" style={{ marginBottom: 12 }} />
-            <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Quote request sent!</div>
-            <div style={{ fontSize: 14, color: "#B9C4B2" }}>
-              Our team will text or call you shortly
-              {needsCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price}+ estimate.`}
-            </div>
-          </div>
-        ) : (
-          <>
-            <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
-              {[1, 2].map((s) => <div key={s} style={{ flex: 1, height: 4, borderRadius: 999, background: s <= step ? "#8FBC6A" : "#2A3A28" }} />)}
-            </div>
-
-            {step === 1 && (
-              <>
-                <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Get your instant quote</div>
-                <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 14 }}>{isHedge ? "Enter your address and how many shrubs need trimming." : isBrush ? "Enter your address and how big the overgrown area is." : "Enter your address and yard size for an estimated price."} All prices are starting prices; slopes or uneven ground can add a little.</div>
-
-                <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                  {[{ key: "mowing", label: "Mowing" }, { key: "leaf", label: "Leaves" }, { key: "hedge", label: "Hedges" }, { key: "brush", label: "Brush" }].map((s) => (
+  const serviceFields = (
+    <>
+                <div style={{ display: "grid", gridTemplateColumns: inline ? "1fr 1fr" : "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
+                  {[{ key: "mowing", label: "Mowing", Icon: Tractor }, { key: "leaf", label: "Leaves", Icon: Leaf }, { key: "hedge", label: "Hedges", Icon: Scissors }, { key: "brush", label: "Brush", Icon: Trees }].map((s) => (
                     <button
                       key={s.key}
                       onClick={() => setForm({ ...form, serviceType: s.key })}
                       style={{
-                        flex: 1, padding: "10px 4px", borderRadius: 10, fontSize: 13.5, fontWeight: 700, cursor: "pointer",
-                        border: `1.5px solid ${form.serviceType === s.key ? "#8FBC6A" : "#2A3A28"}`,
-                        background: form.serviceType === s.key ? "#8FBC6A" : "transparent",
+                        padding: inline ? "12px 10px" : "10px 4px", borderRadius: 10, fontSize: inline ? 14.5 : 13.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                        border: `1.5px solid ${form.serviceType === s.key ? "#A6E35A" : "#2A3A28"}`,
+                        background: form.serviceType === s.key ? "#A6E35A" : "transparent",
                         color: form.serviceType === s.key ? "#0F1A10" : "#F5F3EE",
                       }}
                     >
-                      {s.label}
+                      {inline && <s.Icon size={17} />}{s.label}
                     </button>
                   ))}
                 </div>
@@ -863,7 +841,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                       {MOW_FREQUENCIES.map((f) => (
                         <button key={f.key} onClick={() => setForm({ ...form, frequency: f.key })} style={{
                           flex: 1, padding: "9px 2px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, cursor: "pointer",
-                          border: `1.5px solid ${freq === f.key ? "#8FBC6A" : "#2A3A28"}`, background: freq === f.key ? "#1C2B1B" : "transparent", color: "#F5F3EE",
+                          border: `1.5px solid ${freq === f.key ? "#A6E35A" : "#2A3A28"}`, background: freq === f.key ? "#1C2B1B" : "transparent", color: "#F5F3EE",
                         }}>{f.label}</button>
                       ))}
                     </div>
@@ -877,7 +855,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     key={opt.key}
                     onClick={() => setForm({ ...form, size: opt.key })}
                     style={{
-                      border: `1.5px solid ${form.size === opt.key ? "#8FBC6A" : "#2A3A28"}`,
+                      border: `1.5px solid ${form.size === opt.key ? "#A6E35A" : "#2A3A28"}`,
                       background: form.size === opt.key ? "#1C2B1B" : "transparent",
                       borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                       display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -887,7 +865,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                       <div style={{ fontWeight: 700, fontSize: 13.5 }}>{opt.label}</div>
                       <div style={{ fontSize: 11.5, color: "#7C8A78" }}>{opt.sub}</div>
                     </div>
-                    <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>
+                    <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>
                       {isLeaf
                         ? (LEAF_PRICES[opt.key] === null ? "Custom" : `$${LEAF_PRICES[opt.key]}+`)
                         : (MOW_PRICES[freq][opt.key] === null ? "Custom" : `$${MOW_PRICES[freq][opt.key]}+`)}
@@ -903,7 +881,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   <div
                     onClick={() => setForm({ ...form, crackSpray: !form.crackSpray })}
                     style={{
-                      border: `1.5px solid ${form.crackSpray ? "#8FBC6A" : "#2A3A28"}`,
+                      border: `1.5px solid ${form.crackSpray ? "#A6E35A" : "#2A3A28"}`,
                       background: form.crackSpray ? "#1C2B1B" : "transparent",
                       borderRadius: 10, padding: "10px 14px", marginTop: 14, cursor: "pointer",
                       display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -911,8 +889,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <div style={{
-                        width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.crackSpray ? "#8FBC6A" : "#5C6B57"}`,
-                        background: form.crackSpray ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.crackSpray ? "#A6E35A" : "#5C6B57"}`,
+                        background: form.crackSpray ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                       }}>
                         {form.crackSpray && <CheckCircle2 size={14} color="#0F1A10" />}
                       </div>
@@ -921,7 +899,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Weed-free walkways and driveway edges</div>
                       </div>
                     </div>
-                    <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${CRACK_SPRAY_PRICE}+</div>
+                    <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>+${CRACK_SPRAY_PRICE}+</div>
                   </div>
                 )}
 
@@ -931,7 +909,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     {freq !== "Monthly" && <div
                       onClick={() => setForm({ ...form, overgrownLevel: form.overgrownLevel === "mild" ? "none" : "mild" })}
                       style={{
-                        border: `1.5px solid ${form.overgrownLevel === "mild" ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.overgrownLevel === "mild" ? "#A6E35A" : "#2A3A28"}`,
                         background: form.overgrownLevel === "mild" ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -939,8 +917,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrownLevel === "mild" ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.overgrownLevel === "mild" ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrownLevel === "mild" ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.overgrownLevel === "mild" ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.overgrownLevel === "mild" && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -950,7 +928,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         </div>
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>${overgrownPrice}+</div>
+                        <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>${overgrownPrice}+</div>
                         <div style={{ fontSize: 10.5, color: "#7C8A78" }}>{freq === "One-time" ? "overgrown price" : "2× first cut"}</div>
                       </div>
                     </div>}
@@ -958,7 +936,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <div
                       onClick={() => setForm({ ...form, overgrownLevel: form.overgrownLevel === "severe" ? "none" : "severe" })}
                       style={{
-                        border: `1.5px solid ${form.overgrownLevel === "severe" ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.overgrownLevel === "severe" ? "#A6E35A" : "#2A3A28"}`,
                         background: form.overgrownLevel === "severe" ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -966,8 +944,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrownLevel === "severe" ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.overgrownLevel === "severe" ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.overgrownLevel === "severe" ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.overgrownLevel === "severe" ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.overgrownLevel === "severe" && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -976,7 +954,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Grass over 12 inches tall</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                      <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>Custom</div>
                     </div>
                   </>
                 )}
@@ -985,7 +963,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   <div
                     onClick={() => setForm({ ...form, edgeRestore: !form.edgeRestore })}
                     style={{
-                      border: `1.5px solid ${form.edgeRestore ? "#8FBC6A" : "#2A3A28"}`,
+                      border: `1.5px solid ${form.edgeRestore ? "#A6E35A" : "#2A3A28"}`,
                       background: form.edgeRestore ? "#1C2B1B" : "transparent",
                       borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                       display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -993,8 +971,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <div style={{
-                        width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.edgeRestore ? "#8FBC6A" : "#5C6B57"}`,
-                        background: form.edgeRestore ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.edgeRestore ? "#A6E35A" : "#5C6B57"}`,
+                        background: form.edgeRestore ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                       }}>
                         {form.edgeRestore && <CheckCircle2 size={14} color="#0F1A10" />}
                       </div>
@@ -1003,7 +981,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Grass grown fully over the sidewalk/driveway edge</div>
                       </div>
                     </div>
-                    <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${EDGE_RESTORE_PRICE}+</div>
+                    <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>+${EDGE_RESTORE_PRICE}+</div>
                   </div>
                 )}
 
@@ -1012,7 +990,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <div
                       onClick={() => setForm({ ...form, heavyTrees: !form.heavyTrees })}
                       style={{
-                        border: `1.5px solid ${form.heavyTrees ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.heavyTrees ? "#A6E35A" : "#2A3A28"}`,
                         background: form.heavyTrees ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 14, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -1020,8 +998,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.heavyTrees ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.heavyTrees ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.heavyTrees ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.heavyTrees ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.heavyTrees && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -1030,13 +1008,13 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Lots of mature trees — needs an on-site look</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                      <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>Custom</div>
                     </div>
 
                     <div
                       onClick={() => setForm({ ...form, bagHaul: !form.bagHaul })}
                       style={{
-                        border: `1.5px solid ${form.bagHaul ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.bagHaul ? "#A6E35A" : "#2A3A28"}`,
                         background: form.bagHaul ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -1044,8 +1022,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.bagHaul ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.bagHaul ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.bagHaul ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.bagHaul ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.bagHaul && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -1054,7 +1032,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Leaves bagged and removed from the property (default is piled on-site)</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>$5–8/bag</div>
+                      <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>$5–8/bag</div>
                     </div>
                   </>
                 )}
@@ -1067,7 +1045,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                         key={opt.key}
                         onClick={() => setForm({ ...form, hedgeSize: opt.key })}
                         style={{
-                          border: `1.5px solid ${form.hedgeSize === opt.key ? "#8FBC6A" : "#2A3A28"}`,
+                          border: `1.5px solid ${form.hedgeSize === opt.key ? "#A6E35A" : "#2A3A28"}`,
                           background: form.hedgeSize === opt.key ? "#1C2B1B" : "transparent",
                           borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                           display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -1077,7 +1055,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontWeight: 700, fontSize: 13.5 }}>{opt.label}</div>
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>{opt.sub}</div>
                         </div>
-                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>{opt.price === null ? "Custom" : `$${opt.price}+`}</div>
+                        <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>{opt.price === null ? "Custom" : `$${opt.price}+`}</div>
                       </div>
                     ))}
                   </>
@@ -1108,7 +1086,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <div
                       onClick={() => setForm({ ...form, hedgeOver10: !form.hedgeOver10 })}
                       style={{
-                        border: `1.5px solid ${form.hedgeOver10 ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.hedgeOver10 ? "#A6E35A" : "#2A3A28"}`,
                         background: form.hedgeOver10 ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -1116,8 +1094,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeOver10 ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.hedgeOver10 ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeOver10 ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.hedgeOver10 ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.hedgeOver10 && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -1126,12 +1104,12 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Closer to tree work — needs an on-site look</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                      <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>Custom</div>
                     </div>
                     <div
                       onClick={() => setForm({ ...form, hedgeOvergrown: !form.hedgeOvergrown })}
                       style={{
-                        border: `1.5px solid ${form.hedgeOvergrown ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.hedgeOvergrown ? "#A6E35A" : "#2A3A28"}`,
                         background: form.hedgeOvergrown ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -1139,8 +1117,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeOvergrown ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.hedgeOvergrown ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeOvergrown ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.hedgeOvergrown ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.hedgeOvergrown && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -1149,12 +1127,12 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Hasn't been trimmed in a year or more</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>Custom</div>
+                      <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>Custom</div>
                     </div>
                     <div
                       onClick={() => setForm({ ...form, hedgeHaul: !form.hedgeHaul })}
                       style={{
-                        border: `1.5px solid ${form.hedgeHaul ? "#8FBC6A" : "#2A3A28"}`,
+                        border: `1.5px solid ${form.hedgeHaul ? "#A6E35A" : "#2A3A28"}`,
                         background: form.hedgeHaul ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -1162,8 +1140,8 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
-                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeHaul ? "#8FBC6A" : "#5C6B57"}`,
-                          background: form.hedgeHaul ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.hedgeHaul ? "#A6E35A" : "#5C6B57"}`,
+                          background: form.hedgeHaul ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {form.hedgeHaul && <CheckCircle2 size={14} color="#0F1A10" />}
                         </div>
@@ -1172,7 +1150,7 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Bagged and removed (default is piled on-site)</div>
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${HEDGE_HAUL_FEE}+</div>
+                      <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>+${HEDGE_HAUL_FEE}+</div>
                     </div>
                   </>
                 )}
@@ -1186,23 +1164,23 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                     <label style={{ ...miniLabel, marginTop: 12 }}>How big is the area?</label>
                     {BRUSH_OPTIONS.map((opt) => (
                       <div key={opt.key} onClick={() => setForm({ ...form, brushSize: opt.key })} style={{
-                        border: `1.5px solid ${form.brushSize === opt.key ? "#8FBC6A" : "#2A3A28"}`, background: form.brushSize === opt.key ? "#1C2B1B" : "transparent",
+                        border: `1.5px solid ${form.brushSize === opt.key ? "#A6E35A" : "#2A3A28"}`, background: form.brushSize === opt.key ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 8, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10,
                       }}>
                         <div>
                           <div style={{ fontWeight: 700, fontSize: 13.5 }}>{opt.label}</div>
                           <div style={{ fontSize: 11.5, color: "#7C8A78" }}>{opt.sub}</div>
                         </div>
-                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5, whiteSpace: "nowrap" }}>{opt.price === null ? "Custom" : `$${opt.price}+`}</div>
+                        <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5, whiteSpace: "nowrap" }}>{opt.price === null ? "Custom" : `$${opt.price}+`}</div>
                       </div>
                     ))}
                     {brushOption.price !== null && (
                       <div onClick={() => setForm({ ...form, brushHaul: !form.brushHaul })} style={{
-                        border: `1.5px solid ${form.brushHaul ? "#8FBC6A" : "#2A3A28"}`, background: form.brushHaul ? "#1C2B1B" : "transparent",
+                        border: `1.5px solid ${form.brushHaul ? "#A6E35A" : "#2A3A28"}`, background: form.brushHaul ? "#1C2B1B" : "transparent",
                         borderRadius: 10, padding: "10px 14px", marginTop: 14, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center",
                       }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <div style={{ width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.brushHaul ? "#8FBC6A" : "#5C6B57"}`, background: form.brushHaul ? "#8FBC6A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <div style={{ width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${form.brushHaul ? "#A6E35A" : "#5C6B57"}`, background: form.brushHaul ? "#A6E35A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                             {form.brushHaul && <CheckCircle2 size={14} color="#0F1A10" />}
                           </div>
                           <div>
@@ -1210,11 +1188,88 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                             <div style={{ fontSize: 11.5, color: "#7C8A78" }}>Cut brush loaded up and removed (default is piled on-site)</div>
                           </div>
                         </div>
-                        <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 13.5 }}>+${BRUSH_HAUL_FEE}+</div>
+                        <div style={{ fontWeight: 800, color: "#A6E35A", fontSize: 13.5 }}>+${BRUSH_HAUL_FEE}+</div>
                       </div>
                     )}
                   </>
                 )}
+    </>
+  );
+  const priceBox = (
+                <div style={{ background: "#0F1A10", borderRadius: 12, padding: 16, textAlign: "center" }}>
+                  {needsCustomQuote ? (
+                    <>
+                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isHedge ? "Your hedges" : "Property size"}</div>
+                      <div style={{ fontSize: 17, fontWeight: 800, color: "#A6E35A", lineHeight: 1.4 }}>Custom Quote Needed</div>
+                      <div style={{ fontSize: 12, color: "#B9C4B2", marginTop: 4 }}>Our team will assess your property and follow up with pricing</div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isFirstVisitPrice ? "First visit" : "Estimated price"}</div>
+                      <div style={{ fontSize: 30, fontWeight: 800, color: "#A6E35A" }}>${price}{showPlus && "+"}</div>
+                      {isFirstVisitPrice && (
+                        <div style={{ fontSize: 12.5, color: "#F5F3EE", marginTop: 2 }}>Then ${normalCutPrice}+ per visit ({freq === "Weekly" ? `about $${normalCutPrice * 4}+` : freq === "Biweekly" ? `about $${normalCutPrice * 2}+` : `$${normalCutPrice}+`} a month)</div>
+                      )}
+                      <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once we see the property</div>
+                    </>
+                  )}
+                </div>
+  );
+  const contactFields = (
+    <>
+                <div style={{ fontSize: 13, color: "#B9C4B2", margin: "18px 0 12px" }}>Where should we send the confirmation?</div>
+                <label style={miniLabel}>Your name</label>
+                <input style={miniInput} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Full name" />
+                <label style={{ ...miniLabel, marginTop: 10 }}>Phone number</label>
+                <input style={miniInput} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(404) 000-0000" />
+
+                <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 12, color: "#B9C4B2", lineHeight: 1.5, marginTop: 16, cursor: "pointer", }}>
+                  <input type="checkbox" checked={textOk} onChange={(e) => setTextOk(e.target.checked)} style={{ width: 20, height: 20, marginTop: 1, flexShrink: 0, accentColor: "#A6E35A" }} />
+                  <span>I agree to get texts from Mow Pro GA about my quote and service. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. <a href="/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "#A6E35A" }}>Terms</a> · <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "#A6E35A" }}>Privacy</a></span>
+                </label>
+    </>
+  );
+
+  if (inline) {
+    const ready = form.address.trim() && form.name.trim() && form.phone.trim();
+    return (
+      <div className="mp-qform">
+        {serviceFields}
+        <div className="mp-qprice-wrap">{priceBox}</div>
+        {contactFields}
+        <button disabled={!ready || submitting} onClick={submit} className="mp-btn mp-btn-lg mp-full mp-qsubmit" style={{ opacity: ready ? 1 : 0.55 }}>
+          {submitting ? "Sending…" : <>Get My Quote <ArrowRight size={19} /></>}
+        </button>
+        <p className="mp-qprivacy"><ShieldCheck size={20} /> Your information is only used to provide your quote.</p>
+      </div>
+    );
+  }
+  return (
+    <div onClick={close} style={{ position: "fixed", inset: 0, background: "rgba(6,10,7,0.75)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 18, padding: 26, width: "100%", maxWidth: 420, color: "#F5F3EE", position: "relative", maxHeight: "calc(100vh - 32px)", overflowY: "auto", WebkitOverflowScrolling: "touch", margin: "auto" }}>
+        <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "#7C8A78", cursor: "pointer" }}><X size={20} /></button>
+
+        {done ? (
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <CheckCircle2 size={40} color="#A6E35A" style={{ marginBottom: 12 }} />
+            <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 6 }}>Quote request sent!</div>
+            <div style={{ fontSize: 14, color: "#B9C4B2" }}>
+              Our team will text or call you shortly
+              {needsCustomQuote ? " with custom pricing for your property." : ` to confirm your $${price}+ estimate.`}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
+              {[1, 2].map((s) => <div key={s} style={{ flex: 1, height: 4, borderRadius: 999, background: s <= step ? "#A6E35A" : "#2A3A28" }} />)}
+            </div>
+
+            {step === 1 && (
+              <>
+                <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Get your instant quote</div>
+                <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 14 }}>{isHedge ? "Enter your address and how many shrubs need trimming." : isBrush ? "Enter your address and how big the overgrown area is." : "Enter your address and yard size for an estimated price."} All prices are starting prices; slopes or uneven ground can add a little.</div>
+
+                {serviceFields}
 
                 <button disabled={!form.address.trim()} onClick={() => setStep(2)} style={{ ...modalBtn, opacity: form.address.trim() ? 1 : 0.5, marginTop: 18 }}>
                   Continue <ArrowRight size={15} />
@@ -1227,35 +1282,9 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
                 <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Almost done</div>
                 <div style={{ fontSize: 13, color: "#B9C4B2", marginBottom: 16 }}>Here's your estimate for this property.</div>
 
-                <div style={{ background: "#0F1A10", borderRadius: 12, padding: 16, textAlign: "center" }}>
-                  {needsCustomQuote ? (
-                    <>
-                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isHedge ? "Your hedges" : "Property size"}</div>
-                      <div style={{ fontSize: 17, fontWeight: 800, color: "#8FBC6A", lineHeight: 1.4 }}>Custom Quote Needed</div>
-                      <div style={{ fontSize: 12, color: "#B9C4B2", marginTop: 4 }}>Our team will assess your property and follow up with pricing</div>
-                    </>
-                  ) : (
-                    <>
-                      <div style={{ fontSize: 11.5, color: "#7C8A78", textTransform: "uppercase" }}>{isFirstVisitPrice ? "First visit" : "Estimated price"}</div>
-                      <div style={{ fontSize: 30, fontWeight: 800, color: "#8FBC6A" }}>${price}{showPlus && "+"}</div>
-                      {isFirstVisitPrice && (
-                        <div style={{ fontSize: 12.5, color: "#F5F3EE", marginTop: 2 }}>Then ${normalCutPrice}+ per visit ({freq === "Weekly" ? `about $${normalCutPrice * 4}+` : freq === "Biweekly" ? `about $${normalCutPrice * 2}+` : `$${normalCutPrice}+`} a month)</div>
-                      )}
-                      <div style={{ fontSize: 11.5, color: "#B9C4B2", marginTop: 2 }}>Final price confirmed once we see the property</div>
-                    </>
-                  )}
-                </div>
+                {priceBox}
 
-                <div style={{ fontSize: 13, color: "#B9C4B2", margin: "18px 0 12px" }}>Where should we send the confirmation?</div>
-                <label style={miniLabel}>Your name</label>
-                <input style={miniInput} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Full name" />
-                <label style={{ ...miniLabel, marginTop: 10 }}>Phone number</label>
-                <input style={miniInput} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(404) 000-0000" />
-
-                <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 12, color: "#B9C4B2", lineHeight: 1.5, marginTop: 16, cursor: "pointer", }}>
-                  <input type="checkbox" checked={textOk} onChange={(e) => setTextOk(e.target.checked)} style={{ width: 20, height: 20, marginTop: 1, flexShrink: 0, accentColor: "#8FBC6A" }} />
-                  <span>I agree to get texts from Mow Pro GA about my quote and service. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. <a href="/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Terms</a> · <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "#8FBC6A" }}>Privacy</a></span>
-                </label>
+                {contactFields}
                 <button disabled={!form.name.trim() || !form.phone.trim() || submitting} onClick={submit} style={{ ...modalBtn, opacity: form.name.trim() && form.phone.trim() ? 1 : 0.5, marginTop: 12 }}>
                   {submitting ? "Sending…" : "Request This Quote"}
                 </button>
@@ -1268,9 +1297,9 @@ function QuoteModal({ open, onClose, basePrice, initialServiceType = "mowing" })
   );
 }
 
-const miniLabel = { display: "block", fontSize: 11.5, fontWeight: 700, color: "#9AAE94", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.03em" };
+const miniLabel = { display: "block", fontSize: 11.5, fontWeight: 700, color: "#A6E35A", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.03em" };
 const miniInput = { width: "100%", padding: "10px 12px", borderRadius: 9, border: "1px solid #2A3A28", background: "#0F1A10", color: "#F5F3EE", fontSize: 14, boxSizing: "border-box" };
-const modalBtn = { width: "100%", background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "13px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 };
+const modalBtn = { width: "100%", background: "linear-gradient(180deg,#B9F26A,#8ED24A)", color: "#0A160B", border: "none", borderRadius: 10, padding: "13px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 };
 
 const BUSINESS_CONTEXT = `You are the friendly virtual assistant for Mow Pro Lawn Care LLC, a locally owned, family-run lawn care company in Douglasville, Georgia. Answer visitor questions helpfully and naturally, then work toward collecting their name, phone number, address, and what service they need so the Mow Pro team can follow up with a real quote.
 
@@ -2172,117 +2201,133 @@ function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQ
 //     the fold.
 //   - A sticky click-to-call bar runs alongside the quote-form path, since
 //     some mobile visitors will always prefer calling over typing.
-function QuoteLandingPage({ content, showQuote, setShowQuote, quoteServiceType, setQuoteServiceType }) {
-  const openQuote = (serviceType, location) => {
-    trackEvent("quote_opened", { location });
-    setQuoteServiceType(serviceType);
-    setShowQuote(true);
+const QUOTE_SERVICES = [
+  { key: "leaf", title: "Fall Cleanup & Leaf Removal", desc: "Leaf removal, bed cleanup, and haul-away.", Icon: Leaf, featured: true },
+  { key: "mowing", title: "Lawn Mowing", desc: "Mowing, edging, weed eating — all included.", Icon: Sprout },
+  { key: "hedge", title: "Hedge Trimming", desc: "Hedge and shrub trimming for a clean look.", Icon: Shrub },
+  { key: "brush", title: "Brush & Overgrowth Clearing", desc: "Clear out overgrown areas, small trees, and brush.", Icon: Trees },
+];
+
+// /quote — the landing page for Google Business Profile, ads and texted links.
+// Three screens on one URL: pick a service → tell us about the yard (the real
+// quote form, inline, with a live price) → confirmation.
+function QuoteLandingPage({ content }) {
+  const [screen, setScreen] = useState("pick");
+  const [service, setService] = useState("leaf");
+  const [result, setResult] = useState(null);
+  const [formKey, setFormKey] = useState(0);
+  const phoneDisplay = formatPhone(content.phone);
+  const svc = QUOTE_SERVICES.find((s) => s.key === service) || QUOTE_SERVICES[0];
+  const go = (next) => { setScreen(next); window.scrollTo(0, 0); };
+  const pick = (key) => {
+    trackEvent("quote_opened", { location: `quote_page_${key}` });
+    setService(key);
+    setFormKey((k) => k + 1);
+    go("form");
   };
+  const callBtn = (
+    <a href={`tel:${content.phone}`} onClick={() => trackEvent("call_click", { location: `quote_page_${screen}` })} className="mp-btn mp-btn-lg mp-full mp-qcall">
+      <Phone size={21} /> Call {phoneDisplay}
+    </a>
+  );
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh", paddingBottom: 84 }}>
-      {/* Minimal header — logo only, no nav links, nothing to click except
-          the two paths to a quote below */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "18px 24px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 17 }}>
-          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 36, height: 36, borderRadius: "50%", display: "block" }} />
-          Mow Pro GA
+    <div className="mp mp-q" style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0A130B", color: "#F5F3EE", minHeight: "100vh" }}>
+      {/* Minimal header — logo only, no menu, so the only paths are a quote or a call */}
+      <header className="mp-q-head">
+        <div className="mp-brand">
+          <img src="/images/logo.png" alt="Mow Pro GA logo" width="46" height="46" />
+          <span><span className="mp-brand-name">Mow Pro GA</span><span className="mp-brand-sub">Lawn Care • Douglasville, GA</span></span>
         </div>
-      </div>
+      </header>
 
-      <main style={{ maxWidth: 480, margin: "0 auto", padding: "8px 20px 0", textAlign: "center" }}>
-        {/* HEADLINE — message-matches the Nextdoor ad exactly */}
-        <h1 style={{ fontSize: "clamp(24px, 6vw, 32px)", fontWeight: 800, lineHeight: 1.2, margin: "0 0 10px" }}>
-          Professional Lawn Care <span style={{ color: "#8FBC6A" }}>•</span> Douglasville <span style={{ color: "#8FBC6A" }}>•</span> Trusted by Neighbors
-        </h1>
+      <main className="mp-q-main">
+        {screen === "pick" && (
+          <>
+            <section className="mp-q-hero">
+              <span className="mp-pill"><Zap size={13} /> GET A FAST, FREE QUOTE</span>
+              <h1>Get Your Lawn Care Quote in Seconds</h1>
+              <p>Select a service, tell us about your yard, and get a real price — no contracts, no hassle.</p>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("reviews_link_click", { location: "quote_page_hero" })} className="mp-rating mp-q-rating">
+                <GoogleG size={22} />
+                <strong>5.0</strong>
+                <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={16} fill="#FBBC04" color="#FBBC04" />)}</span>
+                <span className="mp-rating-sep" />
+                <span className="mp-u">65 Google Reviews</span>
+              </a>
+            </section>
+            <div className="mp-q-photo">
+              <img src={content.equipmentPhoto} alt="Mow Pro GA's Ferris mower and equipment" width="1402" height="713" fetchPriority="high" />
+            </div>
+            <div className="mp-q-trust">
+              {[[<CalendarDays key="i" />, "Same-Day Quotes"], [<ShieldCheck key="i" />, "Fully Insured"], [<Users key="i" />, "Local & Family-Run"]].map(([icon, t]) => (
+                <div key={t}>{icon}<span>{t}</span></div>
+              ))}
+            </div>
+            <div className="mp-q-services">
+              {QUOTE_SERVICES.map(({ key, title, desc, Icon, featured }) => (
+                <button key={key} onClick={() => pick(key)} className={`mp-q-svc${featured ? " is-featured" : ""}`}>
+                  <Icon className="mp-q-svc-icon" />
+                  <span className="mp-q-svc-txt"><strong>{title}</strong><span>{desc}</span></span>
+                  <ArrowRight className="mp-q-svc-arrow" />
+                </button>
+              ))}
+            </div>
+            <ul className="mp-q-checks">
+              {["No contracts", "Free estimate", "Most quotes confirmed same day."].map((t) => (
+                <li key={t}><CheckCircle2 size={19} /> {t}</li>
+              ))}
+            </ul>
+            <div className="mp-q-bottom">{callBtn}</div>
+          </>
+        )}
 
-        {/* TRUST BAR — right under the headline, not buried below the fold.
-            Links to the real Google review page so the claim is verifiable
-            instead of just text; opens in a new tab specifically because
-            this is reference material a visitor checks mid-task (deciding
-            whether to trust us enough to fill out the quote form below),
-            not a general nav link — the quote page stays open behind it. */}
-        <a
-          href={GOOGLE_REVIEWS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${content.ratingLine} — opens in a new tab`}
-          onClick={() => trackEvent("reviews_link_click", { location: "quote_page_trust_bar" })}
-          style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#1C2B1B", border: "1px solid #2A3A28", color: "#F5F3EE", fontSize: 13.5, fontWeight: 700, padding: "8px 16px", borderRadius: 999, margin: "0 0 20px", textDecoration: "underline", textUnderlineOffset: 2, cursor: "pointer" }}
-        >
-          <div style={{ display: "flex", gap: 1 }}>
-            {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#8FBC6A" color="#8FBC6A" />)}
-          </div>
-          {content.ratingLine}
-          <ExternalLink size={12} style={{ opacity: 0.7, flexShrink: 0 }} />
-        </a>
+        {screen === "form" && (
+          <>
+            <section className="mp-q-hero mp-q-hero-sm">
+              <button onClick={() => go("pick")} className="mp-back mp-q-back">← Back</button>
+              <span className="mp-pill"><svc.Icon size={15} /> {svc.title}</span>
+              <h1>Tell Us About Your Yard</h1>
+              <p>A few quick details and we'll give you a real, no-obligation quote.</p>
+            </section>
+            <div className="mp-q-card">
+              <QuoteModal
+                key={`${service}-${formKey}`}
+                inline
+                basePrice={content.price}
+                initialServiceType={service}
+                onSubmitted={(r) => { setResult(r); go("done"); }}
+              />
+            </div>
+            <div className="mp-q-bottom">{callBtn}</div>
+          </>
+        )}
 
-        {/* REAL PHOTO — proof of actual work, no stock imagery */}
-        <div style={{ marginBottom: 24 }}>
-          <BeforeAfterSlider before="/images/before-lawn.webp" after="/images/after-lawn.webp" />
-        </div>
-
-        <p style={{ fontSize: 15.5, color: "#D8DED2", lineHeight: 1.6, margin: "0 0 28px" }}>
-          Mowing, edging, weed eating — all included. Fall cleanup & leaf removal now available. Book now before peak season.
-        </p>
-
-        {/* THE ONE DECISION ON THIS PAGE: pick a service, land straight in the quote form */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
-          <button
-            onClick={() => openQuote("leaf", "quote_page_fall")}
-            style={{
-              background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 14,
-              padding: "20px 22px", cursor: "pointer", textAlign: "left",
-              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
-            }}
-          >
-            <span>
-              <span style={{ display: "block", fontSize: 17, fontWeight: 800 }}>Fall Cleanup & Leaf Removal</span>
-              <span style={{ display: "block", fontSize: 13, fontWeight: 600, opacity: 0.85, marginTop: 2 }}>Leaves bagged or piled — you choose</span>
-            </span>
-            <ArrowRight size={22} style={{ flexShrink: 0 }} />
-          </button>
-
-          <button
-            onClick={() => openQuote("mowing", "quote_page_mowing")}
-            style={{
-              background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 14,
-              padding: "20px 22px", cursor: "pointer", textAlign: "left",
-              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
-            }}
-          >
-            <span>
-              <span style={{ display: "block", fontSize: 17, fontWeight: 800 }}>Lawn Mowing</span>
-              <span style={{ display: "block", fontSize: 13, fontWeight: 600, opacity: 0.75, marginTop: 2 }}>Mowing, edging, weed eating — all included</span>
-            </span>
-            <ArrowRight size={22} style={{ flexShrink: 0 }} />
-          </button>
-        </div>
-
-        <div style={{ fontSize: 12.5, color: "#7C8A78", marginBottom: 20 }}>
-          No contracts. Free estimate. Most quotes confirmed same day.
-        </div>
+        {screen === "done" && (
+          <>
+            <section className="mp-q-hero mp-q-done">
+              <div className="mp-q-check"><CheckCircle2 size={84} strokeWidth={1.6} /></div>
+              <h1>Quote Request Received!</h1>
+              <p>Thanks! We'll review your details and reach out shortly with your quote — usually the same day.</p>
+              {result && !result.needsCustomQuote && result.price != null && (
+                <p className="mp-q-est">Your estimate: <strong>${result.price}+</strong>{result.isFirstVisitPrice ? ` first visit, then $${result.normalCutPrice}+ per visit` : ""}. Final price is confirmed once we see the property.</p>
+              )}
+            </section>
+            <div className="mp-q-card mp-q-next">
+              <h2>What Happens Next?</h2>
+              {[[<Phone key="i" />, "We'll confirm your property details."], [<Calculator key="i" />, "You'll receive a real, no-obligation quote."], [<CalendarDays key="i" />, "Once you approve, we'll get you on the schedule."]].map(([icon, t]) => (
+                <div key={t} className="mp-q-step"><span>{icon}</span><p>{t}</p></div>
+              ))}
+            </div>
+            <div className="mp-q-done-btns">
+              {callBtn}
+              <button onClick={() => { setResult(null); go("pick"); }} className="mp-btn-outline mp-btn-lg mp-full">Request Another Quote</button>
+            </div>
+            <div className="mp-q-rake" aria-hidden="true"><img src="/images/fall-hero-900.webp" alt="" width="900" height="507" loading="lazy" /></div>
+          </>
+        )}
       </main>
-
-      {/* Keyed by service type so switching between the two buttons above
-          resets the modal to the right service instead of reusing whatever
-          the form's internal state happened to be from a previous open. */}
-      <QuoteModal key={quoteServiceType} open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} initialServiceType={quoteServiceType} />
-
-      {/* STICKY CALL BAR — thumb-reachable parallel path to the form, always
-          visible since this traffic is ~100% mobile app users */}
-      <a
-        href={`tel:${content.phone}`}
-        onClick={() => trackEvent("call_click", { location: "quote_page_sticky" })}
-        style={{
-          position: "fixed", bottom: 0, left: 0, right: 0, background: "#0F1A10",
-          borderTop: "1px solid #24331F", padding: "14px 20px", display: "flex",
-          alignItems: "center", justifyContent: "center", gap: 8, textDecoration: "none",
-          color: "#F5F3EE", fontWeight: 800, fontSize: 15.5, zIndex: 150,
-        }}
-      >
-        <Phone size={18} color="#8FBC6A" /> Call {content.phone} for a Free Estimate
-      </a>
+      <style>{HOME_CSS}</style>
     </div>
   );
 }
@@ -3114,6 +3159,67 @@ const HOME_CSS = `
   .mp-chips-row .mp-chip svg{width:11px;height:11px}
   .mp-fprice .mp-price-size{font-size:10.5px}
   .mp-farea-head svg{width:24px;height:24px}
+}
+
+/* quote landing page */
+.mp-q-head{display:flex;justify-content:center;padding:14px 20px;border-bottom:1px solid rgba(166,227,90,.14)}
+.mp-q-main{max-width:520px;margin:0 auto;padding:0 18px 24px}
+.mp-q-hero{text-align:center;padding:22px 0 6px;display:flex;flex-direction:column;align-items:center}
+.mp-q-hero h1{font-size:clamp(30px,8vw,40px);font-weight:900;line-height:1.08;letter-spacing:-.025em;margin:14px 0 10px}
+.mp-q-hero>p{color:#DCE3D6;font-size:15.5px;line-height:1.5;margin:0 0 12px;max-width:400px}
+.mp-q-hero .mp-pill{margin:0;font-size:12px}
+.mp-q-rating{font-size:14.5px}
+.mp-q-photo{margin:14px -18px 0;height:210px;position:relative;overflow:hidden}
+.mp-q-photo img{width:100%;height:100%;object-fit:cover;object-position:30% 70%;display:block}
+.mp-q-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0A130B 0%,rgba(10,19,11,0) 30%,rgba(10,19,11,0) 65%,#0A130B 100%)}
+.mp-q-trust{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 0 18px}
+.mp-q-trust>div{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:13px;font-weight:700;border-left:1px solid #2A4A22;padding:2px 6px}
+.mp-q-trust>div:first-child{border-left:none}
+.mp-q-trust svg{color:#A6E35A;width:30px;height:30px;stroke-width:1.8}
+.mp-q-services{display:flex;flex-direction:column;gap:12px}
+.mp-q-svc{display:flex;align-items:center;gap:16px;text-align:left;padding:18px 18px;border-radius:14px;border:1px solid #2A4A22;background:linear-gradient(180deg,#132414,#0E1B0F);color:#F5F3EE;cursor:pointer;font-family:inherit}
+.mp-q-svc.is-featured{background:linear-gradient(180deg,#B9F26A,#8ED24A);border-color:#B9F26A;color:#0A160B;box-shadow:0 0 26px rgba(142,210,74,.3)}
+.mp-q-svc-icon{width:40px;height:40px;flex-shrink:0;color:#A6E35A;stroke-width:1.7}
+.mp-q-svc.is-featured .mp-q-svc-icon{color:#0A160B}
+.mp-q-svc-txt{flex:1}
+.mp-q-svc-txt strong{display:block;font-size:18px;font-weight:900;line-height:1.15}
+.mp-q-svc-txt span{display:block;font-size:13.5px;margin-top:4px;color:#C9D3C2;line-height:1.35}
+.mp-q-svc.is-featured .mp-q-svc-txt span{color:#1E3A12}
+.mp-q-svc-arrow{width:22px;height:22px;flex-shrink:0}
+.mp-q-checks{list-style:none;padding:0;margin:18px 0 6px 18px;display:flex;flex-direction:column;gap:9px;font-size:14.5px}
+.mp-q-checks li{display:flex;align-items:center;gap:10px}
+.mp-q-checks svg{color:#A6E35A;flex-shrink:0}
+.mp-q-bottom{position:sticky;bottom:0;padding:14px 0 16px;background:linear-gradient(180deg,rgba(10,19,11,0),#0A130B 35%);margin-top:10px;z-index:20}
+.mp-q-call{font-size:19px;padding:16px 20px}
+.mp-q-back{align-self:flex-start;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;margin-bottom:12px}
+.mp-q-hero-sm h1{margin-top:12px}
+.mp-q-hero-sm .mp-pill{font-size:13.5px;padding:8px 16px}
+.mp-q-card{background:linear-gradient(180deg,#132414,#0E1B0F);border:1px solid #2A4A22;border-radius:16px;padding:18px 16px;margin-top:10px}
+.mp-qform .mp-qprice-wrap{margin-top:18px}
+.mp-qform .mp-qprice-wrap>div{background:#0A130B !important;border:1.5px solid #A6E35A;box-shadow:0 0 22px rgba(166,227,90,.15)}
+.mp-qsubmit{margin-top:16px;font-size:19px;padding:16px}
+.mp-qprivacy{display:flex;align-items:center;justify-content:center;gap:10px;font-size:13.5px;color:#C9D3C2;margin:14px 0 2px;text-align:left}
+.mp-qprivacy svg{color:#A6E35A;flex-shrink:0}
+.mp-q-done{padding-top:34px}
+.mp-q-check{color:#A6E35A;filter:drop-shadow(0 0 18px rgba(166,227,90,.35))}
+.mp-q-done h1{font-size:clamp(32px,9vw,42px)}
+.mp-q-est{background:#132414;border:1px solid #2A4A22;border-radius:12px;padding:10px 14px;font-size:14px !important;margin-top:4px !important}
+.mp-q-est strong{color:#A6E35A}
+.mp-q-next{padding:20px 18px}
+.mp-q-next h2{font-size:22px;font-weight:900;margin:0 0 10px}
+.mp-q-step{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid #1E331C}
+.mp-q-step:first-of-type{border-top:none}
+.mp-q-step span{width:40px;height:40px;border-radius:50%;background:#1A311A;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mp-q-step svg{color:#A6E35A;width:22px;height:22px}
+.mp-q-step p{margin:0;font-size:15px;color:#E6EBE0;line-height:1.4}
+.mp-q-done-btns{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.mp-q-rake{margin:20px -18px -24px;height:230px;position:relative;overflow:hidden}
+.mp-q-rake img{width:100%;height:100%;object-fit:cover;object-position:78% center;display:block}
+.mp-q-rake::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0A130B 0%,rgba(10,19,11,0) 45%)}
+@media (min-width:761px){
+  .mp-q-main{padding-bottom:40px}
+  .mp-q-photo{margin:14px 0 0;border-radius:16px;height:260px}
+  .mp-q-rake{margin:24px 0 0;border-radius:16px}
 }
 
 `;
