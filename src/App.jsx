@@ -4,7 +4,7 @@ import {
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
   FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS,
 } from "./siteData.js";
-import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Image as ImageIcon } from "lucide-react";
+import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Truck, Image as ImageIcon } from "lucide-react";
 
 // g.page/r/{id}/review is Google's write-a-review shortlink — it drops
 // visitors straight into a blank star-rating form, not a reviews list. It's
@@ -1636,18 +1636,16 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
       ctaText="Text, call, or request a quote — most yards confirmed same day."
     >
       <main>
-      {/* HERO */}
-      <section className="mp-hero mp-hero-fall">
-        <div className="mp-hero-img">
-          <img src="/images/before-leaf-driveway.webp" alt="Fallen leaves covering a Douglasville lawn before a Mow Pro GA fall cleanup" width="592" height="800" fetchPriority="high" style={{ objectPosition: "center 60%" }} />
-        </div>
-        <div className="mp-hero-text">
-          <a href="/" onClick={goTo("/")} className="mp-back">← Back to home</a>
-          <div className="mp-pill mp-pill-fall"><Leaf size={13} /> FALL CLEANUP SERVICES</div>
+      {/* HERO — real leaf photo as a full-bleed background */}
+      <section className="mp-fhero">
+        <img className="mp-fhero-bg" src="/images/before-leaf-driveway.webp" alt="Fallen leaves covering a Douglasville lawn before a Mow Pro GA fall cleanup" width="592" height="800" fetchPriority="high" />
+        <div className="mp-fhero-in">
+          <a href="/" onClick={goTo("/")} className="mp-back">← Back to Home</a>
+          <div className="mp-fhero-pillrow"><span className="mp-pill mp-pill-fall"><Leaf size={13} /> FALL CLEANUP SERVICES</span></div>
           <h1>Fall Yard Cleanup in Douglasville, GA</h1>
-          <p className="mp-hero-services mp-orange">Leaf Removal • Bed Cleanout • Final Mow • Haul-Away</p>
-          <p className="mp-hero-sub">Leaves piling up faster than you can rake them? We handle fall yard cleanup — leaf removal, bed cleanout, and debris haul-away — for homeowners throughout Douglasville and Douglas County, so your lawn goes into winter looking as good as it did in spring.</p>
-          <div className="mp-hero-btns">
+          <p className="mp-hero-services">Leaf Removal • Bed Cleanout • Final Mow • Haul-Away</p>
+          <p className="mp-hero-sub">Leaves piling up faster than you can rake them? We handle fall yard cleanup — leaf removal, bed cleanout, and debris haul-away — for homeowners throughout Douglas County.</p>
+          <div className="mp-fhero-btns">
             <button onClick={() => openQuote("hero")} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Free Fall Cleanup Quote <ArrowRight size={18} /></button>
             <a href={`tel:${content.phone}`} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
           </div>
@@ -1661,104 +1659,98 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         </div>
       </section>
 
-      <div className="mp-wrap"><TrustBar /></div>
+      <div className="mp-wrap mp-fwrap"><TrustBar /></div>
 
       {/* WHAT'S INCLUDED */}
-      <section className="mp-wrap mp-sec">
-        <div className="mp-eyebrow mp-orange">WHAT'S INCLUDED</div>
+      <section className="mp-wrap mp-fwrap mp-sec">
+        <div className="mp-eyebrow">WHAT'S INCLUDED</div>
         <h2 className="mp-h2">Leaf Removal &amp; Fall Yard Cleanup</h2>
-        <p className="mp-lead mp-lead-wide">Fall service covers everything a Douglasville-area yard needs before winter: clearing fallen leaves off the lawn and beds, a final mow and edge, and blowing off driveways and walkways. Leaves are blown into a pile at the wood line or a spot you choose at no extra charge by default, or bagged and hauled away if you'd rather have them gone completely.</p>
-        <div className="mp-svc-grid mp-svc-grid-4">
+        <p className="mp-lead">A complete fall cleanup to keep your yard clean, healthy, and ready for winter.</p>
+        <div className="mp-fsvc-grid">
           {[
             [<Wind key="i" />, "Leaf Removal", "Full-yard leaf clearing from the lawn, beds, and hardscapes."],
             [<Tractor key="i" />, "Fall Mow & Edge", "One last clean cut and edge before the grass goes dormant."],
             [<Sprout key="i" />, "Bed Cleanout", "Leaves and debris cleared out of flower beds and borders."],
             [<Trash2 key="i" />, "Bag & Haul Away", "Leaves bagged and removed from the property instead of piled on-site — $5–8/bag."],
           ].map(([icon, t, d]) => (
-            <div key={t} className="mp-card mp-svc">
-              <div className="mp-svc-icon mp-svc-icon-fall">{icon}</div>
-              <h3>{t}</h3>
-              <p>{d}</p>
+            <div key={t} className="mp-card mp-fsvc">
+              <div className="mp-fsvc-icon">{icon}</div>
+              <div><h3>{t}</h3><p>{d}</p></div>
             </div>
           ))}
         </div>
       </section>
 
       {/* BEFORE / AFTER */}
-      <section className="mp-wrap mp-sec mp-ba">
-        <div className="mp-ba-text">
-          <div className="mp-eyebrow">REAL RESULTS</div>
-          <h2 className="mp-h2">See the Difference</h2>
-          <p className="mp-lead">A real Mow Pro fall cleanup — Douglasville, GA.</p>
-          <button onClick={() => openQuote("results")} className="mp-btn-outline mp-hide-sm">Get a Quote Like This <ArrowRight size={16} /></button>
-        </div>
-        <div className="mp-ba-slides mp-ba-fall">
-          <div className="mp-ba-frame">
-            <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="4/3" />
-          </div>
-        </div>
-      </section>
-      <section className="mp-wrap mp-sec-sm">
-        <h2 className="mp-h3">More Real Mow Pro Jobs</h2>
-        <div className="mp-jobs">
-          {FALL_PAGE_PHOTOS.map((p) => (
-            <figure key={p.src} className="mp-card mp-job">
-              <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
-              <figcaption>{p.caption}</figcaption>
-            </figure>
-          ))}
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-eyebrow">REAL RESULTS</div>
+        <h2 className="mp-h2">See the Difference</h2>
+        <p className="mp-lead">A real Mow Pro fall cleanup — Douglasville, GA.</p>
+        <div className="mp-ba-frame mp-fba">
+          <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="5/2" />
         </div>
       </section>
 
       {/* PRICING */}
-      <section id="fall-pricing" className="mp-wrap mp-sec">
-        <h2 className="mp-h2">Fall Cleanup Pricing</h2>
-        <p className="mp-lead">Leaf removal is priced by yard size, same as our other services — we confirm the exact price once we see the property in person.</p>
-        <div className="mp-price-grid">
-          {sizes.map((s, i) => (
-            <button key={s.key} className={`mp-card mp-price${i === 0 ? " is-featured" : ""}`} onClick={() => openQuote(`pricing_${s.key}`)}>
-              <Leaf size={20} className="mp-price-icon mp-orange" />
-              <div className="mp-price-name">{["Small Yards", "Medium Yards", "Large Yards"][i]}</div>
-              <div className="mp-price-amt">${LEAF_PRICES[s.key]}+</div>
-              <div className="mp-price-per">starting price</div>
-              <div className="mp-price-size">{s.sub}</div>
-            </button>
-          ))}
+      <section id="fall-pricing" className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-fprice">
+          <div className="mp-fprice-head">
+            <Leaf size={34} className="mp-fprice-leaf" />
+            <div>
+              <h2 className="mp-h2">Fall Cleanup Pricing</h2>
+              <p className="mp-lead">Leaf removal is priced by yard size. We confirm the exact price once we see the property in person.</p>
+            </div>
+          </div>
+          <div className="mp-price-grid">
+            {sizes.map((s, i) => (
+              <button key={s.key} className={`mp-card mp-price${i === 0 ? " is-featured" : ""}`} onClick={() => openQuote(`pricing_${s.key}`)}>
+                <Leaf size={20} className="mp-price-icon mp-orange" />
+                <div className="mp-price-name">{["Small Yards", "Medium Yards", "Large Yards"][i]}</div>
+                <div className="mp-price-amt">${LEAF_PRICES[s.key]}+</div>
+                <div className="mp-price-per">Starting price</div>
+                <div className="mp-price-size">{s.sub}</div>
+              </button>
+            ))}
+          </div>
+          <div className="mp-card mp-fhaul">
+            <Truck size={34} className="mp-fhaul-icon" />
+            <div className="mp-fhaul-txt"><strong>Bag &amp; haul away</strong><span>Optional add-on</span><span className="mp-dim">(default is piled on-site)</span></div>
+            <b>$5–8/bag</b>
+          </div>
+          <p className="mp-price-note"><CheckCircle2 size={19} color="#A6E35A" /> Reference pricing — your exact price is confirmed in person before any work starts.</p>
         </div>
-        <div className="mp-price-extras">
-          <div className="mp-card mp-extra"><div><strong>Bag &amp; haul away</strong><span>Optional add-on — default is piled on-site</span></div><b>$5–8/bag</b></div>
-          <div className="mp-card mp-extra"><div><strong>Extra large / acreage</strong><span>Over 20,000 sq ft</span></div><b>Custom quote</b></div>
-        </div>
-        <p className="mp-price-note"><CheckCircle2 size={19} color="#A6E35A" /> Reference pricing — your exact price is confirmed in person before any work starts.</p>
       </section>
 
-      {/* REVIEWS */}
-      <section className="mp-wrap mp-sec">
-        <div className="mp-rev-head">
-          <div>
-            <h2 className="mp-h2">What Neighbors Are Saying</h2>
-            <p className="mp-lead">Real reviews from local customers on Google.</p>
-          </div>
-          <div className="mp-rev-actions">
-            <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge">
-              <GoogleG size={22} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
-            </a>
-          </div>
+      {/* REVIEWS — real review, quoted word for word */}
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <h2 className="mp-h2">What Neighbors Are Saying</h2>
+        <p className="mp-lead mp-lead-tight">Real reviews from local customers on Google.</p>
+        <div className="mp-frev-bar">
+          <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge mp-rev-badge-plain">
+            <GoogleG size={24} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
+          </a>
+          <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-btn-outline mp-btn-sm">Read All Reviews <ArrowRight size={15} /></a>
         </div>
-        <div className="mp-rev-grid">
-          {content.reviews.slice(0, 3).map((r, i) => (
-            <div key={i} className="mp-card mp-rev">
-              <img src={r.screenshot} alt={`Google review from ${r.name}`} width={r.w || 800} height={r.h || 500} loading="lazy" />
-            </div>
-          ))}
+        <div className="mp-card mp-frev">
+          <div className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={19} fill="#FBBC04" color="#FBBC04" />)}</div>
+          <p>“On time, grass looks great! Does a great job edging the yard which really makes it look good. 10/10 service.”</p>
+          <div className="mp-frev-who">
+            <span className="mp-frev-av">J</span>
+            <div><strong>Jimmy T.</strong><span>Google review</span></div>
+          </div>
         </div>
       </section>
 
       {/* SERVICE AREAS */}
-      <section className="mp-wrap mp-sec-sm mp-center">
-        <h2 className="mp-h2">Fall Cleanup Service Areas</h2>
-        <p className="mp-lead">Proudly serving Douglasville and Douglas County, GA, including:</p>
-        <div className="mp-chips">
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-farea-head">
+          <MapPin size={28} color="#A6E35A" />
+          <div>
+            <h2 className="mp-h2">Fall Cleanup Service Areas</h2>
+            <p className="mp-lead mp-lead-tight">Proudly serving Douglasville and Douglas County, GA, including:</p>
+          </div>
+        </div>
+        <div className="mp-chips mp-chips-row">
           {SERVICE_AREAS.map((area) => (
             <span key={area} className="mp-chip"><MapPin size={14} color="#A6E35A" /> {area}</span>
           ))}
@@ -1766,16 +1758,15 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
       </section>
 
       {/* FAQ */}
-      <section className="mp-wrap mp-sec-sm mp-faq">
+      <section className="mp-wrap mp-fwrap mp-sec-sm mp-faq">
         <h2 className="mp-h2">Fall Cleanup Questions</h2>
-        <p className="mp-lead">Quick answers to common questions.</p>
+        <p className="mp-lead mp-lead-tight">Quick answers to common questions.</p>
         {FALL_FAQ.map((item, i) => (
           <details key={i} className="mp-faq-item">
             <summary>{item.q}<Plus size={18} className="mp-faq-plus" /></summary>
             <p>{item.a}</p>
           </details>
         ))}
-        <p className="mp-faq-more">Just need the leaves cleared? See our <a href="/leaf-removal" onClick={goTo("/leaf-removal")} className="mp-link">leaf removal service <ArrowRight size={14} /></a></p>
       </section>
       </main>
     </SiteShell>
@@ -3052,6 +3043,79 @@ const HOME_CSS = `
   .mp-price-extras{grid-template-columns:1fr;gap:9px}
   .mp-lead-wide{font-size:13.5px}
 }
+/* fall cleanup page (v2 mockup) */
+.mp-fwrap{max-width:980px}
+.mp-fhero{position:relative;overflow:hidden;max-width:1240px;margin:0 auto;min-height:470px;display:flex;align-items:center}
+.mp-fhero-bg{position:absolute;top:0;bottom:0;right:0;left:auto;width:58%;height:100%;object-fit:cover;object-position:center 65%;filter:saturate(1.15) brightness(.9)}
+.mp-fhero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0A130B 0%,#0A130B 42%,rgba(10,19,11,.55) 56%,rgba(10,19,11,.1) 80%,rgba(10,19,11,0) 100%),linear-gradient(180deg,rgba(10,19,11,.0) 70%,#0A130B 100%)}
+.mp-fhero-in{position:relative;z-index:2;padding:22px 20px 56px;max-width:640px;display:flex;flex-direction:column}
+.mp-fhero-pillrow{display:flex;justify-content:center;max-width:460px}
+.mp-fhero h1{font-size:clamp(32px,4.6vw,46px);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin:0 0 10px}
+.mp-fhero .mp-hero-sub{max-width:520px}
+.mp-fhero-btns{display:flex;flex-direction:column;gap:10px;max-width:460px;margin-bottom:16px}
+.mp-fhero-btns>*{width:100%}
+.mp-fhero .mp-pill{align-self:auto}
+.mp-fsvc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.mp-fsvc{display:flex;gap:16px;align-items:flex-start;padding:16px 18px}
+.mp-fsvc-icon{width:48px;height:48px;border-radius:10px;background:linear-gradient(180deg,#8ED24A,#5FA82E);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mp-fsvc-icon svg{color:#0A160B;width:28px;height:28px}
+.mp-fsvc h3{font-size:16.5px;font-weight:800;margin:0 0 4px}
+.mp-fsvc p{font-size:13.5px;color:#C9D3C2;line-height:1.45;margin:0}
+.mp-fba{margin-top:4px;max-width:760px}
+.mp-fprice{border:1.5px solid #8ED24A;border-radius:18px;padding:22px 20px 16px;background:linear-gradient(180deg,#132A12,#0C1A0D);box-shadow:0 0 30px rgba(142,210,74,.12)}
+.mp-fprice-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:6px}
+.mp-fprice-leaf{color:#A6E35A;flex-shrink:0;margin-top:2px}
+.mp-fhaul{display:flex;align-items:center;gap:18px;padding:12px 20px;margin-top:12px}
+.mp-fhaul-icon{color:#A6E35A;flex-shrink:0;margin-left:14px}
+.mp-fhaul-txt{flex:1}
+.mp-fhaul-txt strong{display:block;font-size:15px}
+.mp-fhaul-txt span{display:block;font-size:13.5px;color:#C9D3C2}
+.mp-fhaul-txt .mp-dim{color:#93A08D;font-size:12.5px}
+.mp-fhaul b{color:#A6E35A;font-size:20px;font-weight:900;padding-left:28px;border-left:1px solid #2A4A22;white-space:nowrap}
+.mp-lead-tight{margin-bottom:12px}
+.mp-frev-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.mp-rev-badge-plain{border:none !important;padding:0 !important;font-size:16px !important}
+.mp-frev{padding:18px 20px}
+.mp-frev p{font-size:15px;margin:10px 0 14px;line-height:1.5}
+.mp-frev-who{display:flex;align-items:center;gap:10px}
+.mp-frev-who .mp-frev-av{display:flex;width:36px;height:36px;border-radius:50%;background:#D9DDD6;color:#5B6358;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:17px}
+.mp-frev-who strong{display:block;font-size:14px}
+.mp-frev-who span{display:block;font-size:12.5px;color:#C9D3C2}
+.mp-farea-head{display:flex;gap:12px;align-items:flex-start}
+.mp-farea-head svg{flex-shrink:0;margin-top:4px}
+.mp-chips-row{justify-content:flex-start;padding-left:40px}
+@media (max-width:760px){
+  .mp-fhero{min-height:0}
+  .mp-fhero-bg{width:100%;object-position:70% 60%}
+  .mp-fhero::after{background:linear-gradient(90deg,rgba(10,19,11,.93) 0%,rgba(10,19,11,.8) 55%,rgba(10,19,11,.25) 100%),linear-gradient(180deg,rgba(10,19,11,.55) 0%,rgba(10,19,11,0) 30%,rgba(10,19,11,0) 75%,#0A130B 100%)}
+  .mp-fhero-in{padding:14px 20px 48px;text-align:left}
+  .mp-fhero .mp-back{align-self:flex-start;margin-bottom:8px}
+  .mp-fhero-pillrow{max-width:none;margin-bottom:2px}
+  .mp-fhero .mp-pill{align-self:auto;margin-bottom:10px}
+  .mp-fhero h1{font-size:clamp(30px,8.6vw,40px)}
+  .mp-fhero .mp-hero-services{font-size:15.5px}
+  .mp-fhero .mp-hero-sub{font-size:14.5px;margin:0 0 14px}
+  .mp-fhero .mp-rating{font-size:14.5px}
+  .mp-fsvc-grid{gap:9px}
+  .mp-fsvc{flex-direction:row;gap:10px;padding:12px 10px}
+  .mp-fsvc-icon{width:38px;height:38px}
+  .mp-fsvc-icon svg{width:22px;height:22px}
+  .mp-fsvc h3{font-size:14px}
+  .mp-fsvc p{font-size:12px}
+  .mp-fprice{padding:16px 12px 12px}
+  .mp-fprice-head{gap:12px}
+  .mp-fprice-leaf{width:28px;height:28px}
+  .mp-fhaul{gap:12px;padding:10px 14px}
+  .mp-fhaul-icon{margin-left:0;width:30px;height:30px}
+  .mp-fhaul b{font-size:17px;padding-left:14px}
+  .mp-frev-bar .mp-btn-sm{font-size:12.5px;padding:7px 12px}
+  .mp-chips-row{padding-left:0;justify-content:center;gap:8px}
+  .mp-chips-row .mp-chip{font-size:12px;padding:6px 11px;gap:5px;white-space:nowrap}
+  .mp-chips-row .mp-chip svg{width:11px;height:11px}
+  .mp-fprice .mp-price-size{font-size:10.5px}
+  .mp-farea-head svg{width:24px;height:24px}
+}
+
 `;
 
 function ServiceCard({ icon, title, desc }) {
