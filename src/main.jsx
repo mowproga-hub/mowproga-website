@@ -16,3 +16,7 @@ ReactDOM.createRoot(rootEl).render(
 // This is the one line that turns the real, interactive site back on the
 // instant React has mounted.
 rootEl.style.visibility = "";
+// The crawler-fallback styles in index.html (700px column, 24px padding, link
+// colors) are scoped to #root:not(.is-app), so they stop applying once the
+// real app has mounted and the page can use the full screen width.
+rootEl.classList.add("is-app");

@@ -4,7 +4,7 @@ import {
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
   FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS,
 } from "./siteData.js";
-import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink } from "lucide-react";
+import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Image as ImageIcon } from "lucide-react";
 
 // g.page/r/{id}/review is Google's write-a-review shortlink — it drops
 // visitors straight into a blank star-rating form, not a reviews list. It's
@@ -2322,6 +2322,9 @@ export default function MowProLanding() {
   const editing = false; // Public site — editing happens by updating the code directly, not in-browser.
   const [showQuote, setShowQuote] = useState(false);
   const [quoteServiceType, setQuoteServiceType] = useState("mowing");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [showMorePairs, setShowMorePairs] = useState(false);
   const [route, setRoute] = useState(() => pathToRoute(typeof window !== "undefined" ? window.location.pathname : "/"));
 
   useEffect(() => {
@@ -2408,330 +2411,604 @@ export default function MowProLanding() {
     );
   }
 
+  const openQuote = (location) => { trackEvent("quote_opened", { location }); setShowQuote(true); };
+  const goTo = (path) => (e) => { e.preventDefault(); setMenuOpen(false); navigate(path); };
+  const jump = (id) => (e) => { e.preventDefault(); setMenuOpen(false); const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const phoneDisplay = content.phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  const visibleReviews = showAllReviews ? content.reviews : content.reviews.slice(0, 3);
+  const visiblePairs = showMorePairs ? content.beforeAfterPairs : content.beforeAfterPairs.slice(0, 1);
+
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE" }}>
+    <div className="mp" style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0A130B", color: "#F5F3EE" }}>
       {/* NAV */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 10, padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18 }}>
-          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
-          Mow Pro GA
+      <header className="mp-nav">
+        <div className="mp-nav-in">
+          <a href="/" onClick={goTo("/")} className="mp-brand">
+            <img src="/images/logo.png" alt="Mow Pro GA logo" width="44" height="44" />
+            <span>
+              <span className="mp-brand-name">Mow Pro GA</span>
+              <span className="mp-brand-sub">Lawn Care • Douglasville, GA</span>
+            </span>
+          </a>
+          <nav className="mp-links" aria-label="Main">
+            <a href="/" onClick={goTo("/")} className="is-active">Home</a>
+            <div className="mp-drop">
+              <a href="#services" onClick={jump("services")}>Services <ChevronDown size={14} /></a>
+              <div className="mp-drop-menu">
+                <a href="#services" onClick={jump("services")}>Lawn Mowing &amp; Edging</a>
+                <a href="/fall-cleanup" onClick={goTo("/fall-cleanup")}>Fall Cleanup</a>
+                <a href="/leaf-removal" onClick={goTo("/leaf-removal")}>Leaf Removal</a>
+              </div>
+            </div>
+            <a href="#pricing" onClick={jump("pricing")}>Pricing</a>
+            <a href="/about" onClick={goTo("/about")}>About</a>
+            <a href="#reviews" onClick={jump("reviews")}>Reviews</a>
+            <a href="#faq" onClick={jump("faq")}>FAQ</a>
+          </nav>
+          <div className="mp-nav-cta">
+            <a href={`tel:${content.phone}`} className="mp-btn-outline mp-hide-sm"><Phone size={16} /> {phoneDisplay}</a>
+            <button onClick={() => openQuote("nav")} className="mp-btn mp-hide-sm">Get Free Quote</button>
+            <a href={`tel:${content.phone}`} className="mp-icon-btn mp-show-sm" aria-label={`Call ${phoneDisplay}`}><Phone size={20} /></a>
+            <button className="mp-menu-btn mp-show-sm" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>
+              {menuOpen ? <X size={26} /> : <Menu size={26} />}
+            </button>
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
-          <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Fall Cleanup
-          </a>
-          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Leaf Removal
-          </a>
-          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
-            <Phone size={14} color="#8FBC6A" />
-            <EditableText editing={editing} value={content.phone} onChange={(v) => update("phone", v)} style={{ fontSize: 13, color: "#F5F3EE", maxWidth: 140 }} />
-          </a>
-          <button onClick={() => { trackEvent("quote_opened", { location: "nav" }); setShowQuote(true); }} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
-            Get Quote
-          </button>
-        </div>
-      </div>
+        {menuOpen && (
+          <nav className="mp-mobile-menu" aria-label="Mobile">
+            <a href="#services" onClick={jump("services")}>Services</a>
+            <a href="/fall-cleanup" onClick={goTo("/fall-cleanup")}>Fall Cleanup</a>
+            <a href="/leaf-removal" onClick={goTo("/leaf-removal")}>Leaf Removal</a>
+            <a href="#pricing" onClick={jump("pricing")}>Pricing</a>
+            <a href="/about" onClick={goTo("/about")}>About</a>
+            <a href="#reviews" onClick={jump("reviews")}>Reviews</a>
+            <a href="#faq" onClick={jump("faq")}>FAQ</a>
+            <button onClick={() => { setMenuOpen(false); openQuote("mobile_menu"); }} className="mp-btn mp-full">Get My Free Instant Quote <ArrowRight size={18} /></button>
+          </nav>
+        )}
+      </header>
 
       <main>
       {/* HERO */}
-      <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 50px", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1C2B1B", color: "#8FBC6A", fontSize: 12.5, fontWeight: 700, padding: "6px 14px", borderRadius: 999, marginBottom: 22, maxWidth: 420 }}>
-          <MapPin size={12} style={{ flexShrink: 0 }} />
-          <EditableText editing={editing} value={content.serviceArea} onChange={(v) => update("serviceArea", v)} style={{ fontSize: 12.5, color: "#8FBC6A" }} />
+      <section className="mp-hero">
+        <div className="mp-hero-img">
+          <img src={content.equipmentPhoto} alt="Mow Pro GA's Ferris mower, trimmers and blower in front of the company trailer" width="1402" height="713" fetchPriority="high" />
         </div>
-        <EditableText
-          editing={editing}
-          multiline
-          value={content.headline}
-          onChange={(v) => update("headline", v)}
-          as="h1"
-          style={{ fontSize: "clamp(28px, 6vw, 48px)", fontWeight: 800, lineHeight: 1.12, margin: "0 0 20px", letterSpacing: "-0.02em", display: "block" }}
-        />
-        <EditableText
-          editing={editing}
-          multiline
-          value={content.subheading}
-          onChange={(v) => update("subheading", v)}
-          as="p"
-          style={{ fontSize: 17, color: "#B9C4B2", maxWidth: 520, margin: "0 auto 32px", lineHeight: 1.6, display: "block" }}
-        />
-        <button onClick={() => { trackEvent("quote_opened", { location: "hero" }); setShowQuote(true); }} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
-          Get My Free Instant Quote <ArrowRight size={18} />
-        </button>
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "center", alignItems: "center", gap: 4 }}>
-          {[1, 2, 3, 4, 5].map((i) => <Star key={i} size={16} fill="#8FBC6A" color="#8FBC6A" />)}
-          {editing ? (
-            <EditableText editing={editing} value={content.ratingLine} onChange={(v) => update("ratingLine", v)} style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2" }} />
-          ) : (
-            <a
-              href={GOOGLE_REVIEWS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${content.ratingLine} — opens in a new tab`}
-              style={{ marginLeft: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", textUnderlineOffset: 2, display: "inline-flex", alignItems: "center", gap: 4 }}
-            >
-              {content.ratingLine}
-              <ExternalLink size={11} style={{ opacity: 0.7, flexShrink: 0 }} />
-            </a>
-          )}
-        </div>
-
-        {content.equipmentPhoto && (
-          <div style={{ marginTop: 32, maxWidth: 720, marginLeft: "auto", marginRight: "auto" }}>
-            <img src={content.equipmentPhoto} alt="Mow Pro Lawn Care equipment" width="1402" height="713" fetchPriority="high" style={{ width: "100%", height: "auto", borderRadius: 14, border: "1px solid #24331F", display: "block" }} />
-            <div style={{ fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Real gear, real crew — not stock photos</div>
+        <div className="mp-hero-text">
+          <div className="mp-pill"><MapPin size={13} /> {content.serviceArea}</div>
+          <h1>Reliable Lawn Care in Douglasville, GA</h1>
+          <p className="mp-hero-services">Mowing • Edging • Trimming • Cleanup</p>
+          <p className="mp-hero-sub">Locally owned, family-run lawn care. Clean, consistent results, on-time service, fully insured, and no contracts.</p>
+          <div className="mp-hero-btns">
+            <button onClick={() => openQuote("hero")} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Free Instant Quote <ArrowRight size={18} /></button>
+            <a href={`tel:${content.phone}`} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
           </div>
-        )}
-      </div>
-
-      {/* SERVICES */}
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px" }}>
-        <h2 style={{ textAlign: "center", fontSize: 28, fontWeight: 800, margin: "0 0 8px" }}>What's Included, Every Visit</h2>
-        <p style={{ textAlign: "center", color: "#B9C4B2", margin: "0 0 36px" }}>No surprises. No upsells. Just a clean yard.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-          <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Mowing & Edging" desc="Clean, consistent cuts with sharp, well-maintained equipment." />
-          <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Weed Eating" desc="Fence lines, mailboxes, and obstacles — fully trimmed, every time." />
-          <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Blow-Off Cleanup" desc="Driveways and walkways left spotless when we're done." />
-          <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Sidewalk & Driveway Crack Spray" desc="Keep walkways weed-free — available as an add-on, +$25+." />
+          <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rating">
+            <GoogleG size={24} />
+            <strong>5.0</strong>
+            <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={17} fill="#FBBC04" color="#FBBC04" />)}</span>
+            <span className="mp-rating-sep" />
+            <span className="mp-u">65 Google Reviews</span>
+          </a>
         </div>
-      </div>
+      </section>
 
-      {/* BEFORE / AFTER */}
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "20px 24px 60px" }}>
-        <h2 style={{ textAlign: "center", fontSize: 28, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
-        <p style={{ textAlign: "center", color: "#B9C4B2", margin: "0 0 30px" }}>Real yards, real results — Douglasville, GA</p>
-        {content.beforeAfterPairs.map((pair, i) => (
-          <div key={i} style={{ marginBottom: i < content.beforeAfterPairs.length - 1 ? 30 : 0, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
-            <BeforeAfterSlider before={pair.before} after={pair.after} />
-            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
-          </div>
-        ))}
-        {editing && (
-          <button
-            onClick={() => update("beforeAfterPairs", [...content.beforeAfterPairs, { before: "", after: "" }])}
-            style={{ border: "1px dashed #3A4A38", borderRadius: 14, padding: 16, background: "none", color: "#8FBC6A", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 13.5, fontWeight: 700, width: "100%", marginTop: 20 }}
-          >
-            <Plus size={15} /> Add another before/after pair
-          </button>
-        )}
-      </div>
-
-      {/* TESTIMONIALS */}
-      <div style={{ background: "#152016", padding: "60px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ textAlign: "center", fontSize: 28, fontWeight: 800, margin: "0 0 8px" }}>What Neighbors Are Saying</h2>
-          <p style={{ textAlign: "center", color: "#7C8A78", fontSize: 12.5, margin: "0 0 30px" }}>Real screenshots, straight from Google</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, alignItems: "start" }}>
-            {content.reviews.map((r, i) => (
-              <div key={i} style={{ background: "#0F1A10", border: "1px solid #24331F", borderRadius: 14, overflow: "hidden", position: "relative" }}>
-                {r.screenshot ? (
-                  <img src={r.screenshot} alt={`Review from ${r.name}`} width={r.w || 800} height={r.h || 500} loading="lazy" style={{ width: "100%", height: "auto", display: "block" }} />
-                ) : (
-                  <div style={{ padding: 20 }}>
-                    <div style={{ display: "flex", gap: 2, marginBottom: 10 }}>
-                      {Array.from({ length: r.stars }).map((_, si) => <Star key={si} size={14} fill="#8FBC6A" color="#8FBC6A" />)}
-                    </div>
-                    <EditableText editing={editing} multiline value={r.text} onChange={(v) => updateReview(i, "text", v)} as="p" style={{ fontSize: 14, color: "#D8DED2", lineHeight: 1.55, margin: "0 0 14px", display: "block" }} />
-                    <EditableText editing={editing} value={r.name} onChange={(v) => updateReview(i, "name", v)} style={{ fontSize: 13, fontWeight: 700, color: "#8FBC6A" }} />
-                  </div>
-                )}
-                {editing && (
-                  <button onClick={() => removeReview(i)} aria-label="Remove review" style={{ position: "absolute", top: 10, right: 10, background: "rgba(15,26,16,0.85)", border: "none", borderRadius: 6, color: "#B3441E", cursor: "pointer", padding: 5 }}>
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </div>
-            ))}
-            {editing && (
-              <button onClick={addReview} style={{ border: "1px dashed #3A4A38", borderRadius: 14, padding: 20, background: "none", color: "#8FBC6A", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 13.5, fontWeight: 700 }}>
-                <Plus size={15} /> Add review
-              </button>
-            )}
-          </div>
-          <div style={{ textAlign: "center", marginTop: 30 }}>
-            <a
-              href="https://g.page/r/Ce4jwGMDfTNvEAE/review"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent("leave_review_clicked", {})}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 12,
-                background: "#FFFFFF", color: "#3C4043", border: "1px solid #DADCE0",
-                borderRadius: 10, padding: "14px 26px", fontSize: 15, fontWeight: 600,
-                textDecoration: "none", boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-                fontFamily: "'Google Sans', Roboto, Arial, sans-serif",
-              }}
-            >
-              <svg width="22" height="22" viewBox="0 0 48 48">
-                <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-4z"/>
-                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 16.3 3 9.7 7.3 6.3 14.7z"/>
-                <path fill="#4CAF50" d="M24 45c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.3 36.5 26.8 37 24 37c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.6 40.5 16.3 45 24 45z"/>
-                <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.3 5.3C40.9 36.6 44 30.9 44 24c0-1.4-.1-2.7-.4-3.5z"/>
-              </svg>
-              <span>
-                <div style={{ fontWeight: 700 }}>Leave Us a Review</div>
-                <div style={{ fontSize: 11.5, color: "#5F6368", display: "flex", alignItems: "center", gap: 3 }}>
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={11} fill="#FBBC04" color="#FBBC04" />)}
-                  <span style={{ marginLeft: 3 }}>on Google</span>
-                </div>
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* PRICING */}
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "60px 24px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 800, margin: "0 0 8px" }}>Simple, Honest Pricing</h2>
-        <p style={{ color: "#B9C4B2", margin: "0 0 30px" }}>Biweekly maintenance starting at</p>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "baseline", gap: 4 }}>
-          <span style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A" }}>$</span>
-          {editing
-            ? <EditableText editing={editing} value={content.price} onChange={(v) => update("price", v)} style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A", width: 90 }} />
-            : <span style={{ fontSize: 56, fontWeight: 800, color: "#8FBC6A" }}>{parseInt(content.price, 10) + SIZE_OPTIONS[0].addOn}</span>}
-        </div>
-        <div style={{ color: "#B9C4B2", fontSize: 14, marginBottom: 8 }}>per visit</div>
-        <div style={{ color: "#8FBC6A", fontSize: 14.5, fontWeight: 700, marginBottom: 30 }}>Mowing, edging & cleanup included. No hidden fees.</div>
-        <div style={{ display: "inline-flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 34 }}>
-          {["Mowing, edging & weed eating — all included", "Clippings blown off walkways & driveway — included", "Leaf season (Oct–Dec): recurring clients add leaf cleanup at a discounted $45/hr, only when leaves are down. One-time cleanups use Fall Cleanup pricing", "No contracts — cancel anytime", "Weekly from $55+, monthly from $130+, one-time cuts from $105+ per visit", "One-time $25+ first-cut fee for new customers; overgrown and edge-restoration pricing in the quote form", "Brush & overgrowth clearing from $75+"].map((f) => (
-            <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14.5, color: "#D8DED2" }}>
-              <CheckCircle2 size={17} color="#8FBC6A" /> {f}
+      {/* TRUST BAR */}
+      <div className="mp-wrap">
+        <div className="mp-trust">
+          {[
+            [<Leaf key="i" />, "Local & Family-Run", "Proudly serving Douglasville"],
+            [<ShieldCheck key="i" />, "Fully Insured", "Your property is protected"],
+            [<CalendarCheck key="i" />, "No Contracts", "Cancel anytime"],
+            [<Zap key="i" />, "Fast, Same-Day Quotes", "Know your price quickly"],
+          ].map(([icon, t, s]) => (
+            <div key={t} className="mp-trust-item">
+              <div className="mp-trust-icon">{icon}</div>
+              <div><div className="mp-trust-t">{t}</div><div className="mp-trust-s">{s}</div></div>
             </div>
           ))}
         </div>
-        <div>
-          <button onClick={() => { trackEvent("quote_opened", { location: "pricing" }); setShowQuote(true); }} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 36px", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>
-            Get My Free Instant Quote
-          </button>
+
+        {/* FALL BANNER */}
+        <div className="mp-fall">
+          <div className="mp-fall-leaves" aria-hidden="true">
+            <Leaf size={46} /><Leaf size={34} /><Leaf size={28} />
+          </div>
+          <img src="/images/before-leaf-driveway.webp" alt="" className="mp-fall-img" loading="lazy" />
+          <div className="mp-fall-body">
+            <div className="mp-fall-text">
+              <span className="mp-fall-tag"><Leaf size={12} /> FALL SEASON SERVICE</span>
+              <h2>Fall Cleanup &amp; Leaf Removal</h2>
+              <p>Leaf removal, bed cleanup, and seasonal yard prep.</p>
+            </div>
+            <a href="/fall-cleanup" onClick={goTo("/fall-cleanup")} className="mp-btn">Get a Fall Cleanup Quote <ArrowRight size={17} /></a>
+          </div>
         </div>
       </div>
 
-      {/* FOUNDER STORY */}
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "10px 24px 50px" }}>
-        <div style={{ background: "#152016", border: "1px solid #24331F", borderRadius: 16, padding: 28 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 10 }}>Who We Are</div>
-          <p style={{ fontSize: 15, color: "#D8DED2", lineHeight: 1.7, margin: 0 }}>
-            Mow Pro GA is a locally owned, family-run, fully insured lawn care company in Douglasville, GA. Every job is quoted in person, every visit is held to the same standard, and every finished yard gets a photo-confirmed invoice. Your property is handled by our trusted, experienced team — familiar faces, not a rotating crew. This isn't a side project — the whole family is part of it, down to the kids handing out door hangers around the neighborhood and watching the results land in real time. One afternoon, right after hanger number 97, a client called. When you book with Mow Pro, you're not booking a call center; you're booking a family that's building something real, one yard at a time.
-          </p>
-          <a href="/about" onClick={(e) => { e.preventDefault(); navigate("/about"); }} style={{ background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 14, marginTop: 14, cursor: "pointer", padding: 0, display: "inline-flex", alignItems: "center", gap: 5, textDecoration: "none" }}>
-            Read our full story <ArrowRight size={14} />
-          </a>
+      {/* SERVICES */}
+      <section id="services" className="mp-wrap mp-sec">
+        <div className="mp-eyebrow">OUR SERVICES</div>
+        <h2 className="mp-h2">What's Included, Every Visit</h2>
+        <p className="mp-lead">A clean, well-maintained yard — every time.</p>
+        <div className="mp-svc-grid">
+          {[
+            [<Tractor key="i" />, "Mowing & Edging", "Clean, consistent cuts with sharp, well-maintained equipment."],
+            [<Sprout key="i" />, "Weed Eating", "Fence lines, mailboxes, and obstacles fully trimmed."],
+            [<Wind key="i" />, "Blow-Off Cleanup", "Driveways and walkways left spotless when we're done."],
+          ].map(([icon, t, d]) => (
+            <div key={t} className="mp-card mp-svc">
+              <div className="mp-svc-icon">{icon}</div>
+              <h3>{t}</h3>
+              <p>{d}</p>
+            </div>
+          ))}
+          <div className="mp-card mp-svc mp-addons mp-hide-sm">
+            <div className="mp-addons-icon"><Plus size={22} /></div>
+            <h3>Optional Add-Ons</h3>
+            <ul>
+              <li><a href="/leaf-removal" onClick={goTo("/leaf-removal")}><CheckIcon /> Leaf Removal</a></li>
+              <li><CheckIcon /> Hedge &amp; Shrub Trimming</li>
+              <li><CheckIcon /> Crack / Weed Spray</li>
+              <li><CheckIcon /> Overgrown Cleanup</li>
+            </ul>
+          </div>
         </div>
-      </div>
+        <div className="mp-show-sm">
+          <div className="mp-eyebrow mp-eyebrow-sm">POPULAR ADD-ONS</div>
+          <div className="mp-addon-row">
+            {[[<SprayCan key="i" />, "Crack & Weed Spray"], [<Shrub key="i" />, "Hedge & Shrub Trimming"], [<Trees key="i" />, "Overgrowth Clearing"]].map(([icon, t]) => (
+              <div key={t} className="mp-card mp-addon-chip">{icon}<span>{t}</span></div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* SERVICE AREAS — real links to each neighborhood page, so visitors
-          and crawlers alike can discover them from the homepage instead of
-          relying on the sitemap alone. */}
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "10px 24px 50px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Neighborhoods We Serve</h2>
-        <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>Proudly serving Douglasville, GA and nearby, including:</p>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+      {/* BEFORE / AFTER */}
+      <section className="mp-wrap mp-sec mp-ba">
+        <div className="mp-ba-text">
+          <div className="mp-eyebrow mp-hide-sm">REAL RESULTS</div>
+          <h2 className="mp-h2">See the Difference</h2>
+          <p className="mp-lead">Real yards, real results in Douglasville, GA.</p>
+          {content.beforeAfterPairs.length > 1 && (
+            <button className="mp-btn-outline mp-hide-sm" onClick={() => setShowMorePairs((v) => !v)}>
+              <ImageIcon size={17} /> {showMorePairs ? "Show Less" : "View More Results"}
+            </button>
+          )}
+        </div>
+        <div className="mp-ba-slides">
+          {visiblePairs.map((pair, i) => (
+            <div key={i} className="mp-ba-frame">
+              <BeforeAfterSlider before={pair.before} after={pair.after} aspect="16/9" />
+            </div>
+          ))}
+          {content.beforeAfterPairs.length > 1 && (
+            <button className="mp-btn-outline mp-show-sm mp-full" onClick={() => setShowMorePairs((v) => !v)}>
+              <ImageIcon size={17} /> {showMorePairs ? "Show Less" : "View More Results"}
+            </button>
+          )}
+        </div>
+      </section>
+
+      {/* REVIEWS — real Google review screenshots */}
+      <section id="reviews" className="mp-wrap mp-sec">
+        <div className="mp-rev-head">
+          <div>
+            <div className="mp-eyebrow mp-hide-sm"><Star size={13} fill="#A6E35A" color="#A6E35A" /> CUSTOMER REVIEWS</div>
+            <h2 className="mp-h2">What Neighbors Are Saying</h2>
+            <p className="mp-lead">Real reviews from local customers on Google.</p>
+          </div>
+          <div className="mp-rev-actions">
+            <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge">
+              <GoogleG size={22} /> <strong>5.0</strong><span className="mp-hide-sm">&nbsp;Rating</span> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
+            </a>
+            <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-btn-outline mp-btn-sm mp-hide-sm">Read All Reviews <ArrowRight size={15} /></a>
+          </div>
+        </div>
+        <div className="mp-rev-grid">
+          {visibleReviews.map((r, i) => (
+            <div key={i} className="mp-card mp-rev">
+              <img src={r.screenshot} alt={`Google review from ${r.name}`} width={r.w || 800} height={r.h || 500} loading="lazy" />
+            </div>
+          ))}
+        </div>
+        {content.reviews.length > 3 && (
+          <div className="mp-center">
+            <button className="mp-btn-outline" onClick={() => setShowAllReviews((v) => !v)}>
+              {showAllReviews ? "Show Fewer Reviews" : `See ${content.reviews.length - 3} More Reviews`}
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* PRICING */}
+      <section id="pricing" className="mp-wrap mp-sec">
+        <h2 className="mp-h2">Simple, Honest Pricing</h2>
+        <p className="mp-lead">Biweekly lawn maintenance with clear, upfront rates.</p>
+        <div className="mp-price-grid">
+          {SIZE_OPTIONS.filter((s) => s.addOn !== null && s.addOn !== undefined).slice(0, 3).map((s, i) => (
+            <button key={s.key} className={`mp-card mp-price${i === 0 ? " is-featured" : ""}`} onClick={() => openQuote(`pricing_${i}`)}>
+              <Sprout size={20} className="mp-price-icon" />
+              <div className="mp-price-name">{["Small Yards", "Medium Yards", "Large Yards"][i]}</div>
+              <div className="mp-price-amt">${parseInt(content.price, 10) + s.addOn}+</div>
+              <div className="mp-price-per">per visit</div>
+              <div className="mp-price-size">{s.sub}</div>
+            </button>
+          ))}
+        </div>
+        <p className="mp-price-note"><CheckCircle2 size={19} color="#A6E35A" /> Estimates are starting prices and are confirmed in person based on property size, condition, and services needed.</p>
+        <p className="mp-price-more">Weekly from $55+, monthly from $130+, one-time cuts from $105+. Over 20,000 sq ft gets a custom quote. New recurring customers have a one-time $25+ first-cut fee. Leaf season (Oct–Dec): recurring clients add leaf cleanup at a discounted $45/hr. Brush &amp; overgrowth clearing from $75+. No contracts — cancel anytime.</p>
+      </section>
+
+      {/* WHO WE ARE */}
+      <section className="mp-wrap mp-sec-sm">
+        <div className="mp-card mp-who">
+          <div className="mp-who-img">
+            <img src="/images/our-story.webp" alt="Joseph, owner of Mow Pro GA, on the company's Ferris mower" width="700" height="1516" loading="lazy" />
+          </div>
+          <div className="mp-who-body">
+            <div className="mp-eyebrow">WHO WE ARE</div>
+            <h2>A Local, Family-Run Business</h2>
+            <p>Mow Pro GA is a locally owned, family-run, fully insured lawn care company in Douglasville, GA. Every job is quoted in person, every visit is held to the same standard, and every finished yard gets a photo-confirmed invoice. Your property is handled by our trusted, experienced team — familiar faces, not a rotating crew. The whole family is part of it, down to the kids handing out door hangers around the neighborhood. When you book with Mow Pro, you're booking a family that's building something real, one yard at a time.</p>
+            <a href="/about" onClick={goTo("/about")} className="mp-link">Read Our Full Story <ArrowRight size={15} /></a>
+          </div>
+        </div>
+      </section>
+
+      {/* NEIGHBORHOODS — real links to each neighborhood page for visitors and crawlers */}
+      <section className="mp-wrap mp-sec-sm mp-center">
+        <h2 className="mp-h2">Neighborhoods We Serve</h2>
+        <p className="mp-lead">Proudly serving Douglasville, GA and nearby areas, including:</p>
+        <div className="mp-chips">
           {NEIGHBORHOODS.map((n) => (
-            <a
-              key={n.slug}
-              href={`/lawn-care/${n.slug}`}
-              onClick={(e) => { e.preventDefault(); navigate(`/lawn-care/${n.slug}`); }}
-              style={{ display: "flex", alignItems: "center", gap: 6, background: "#152016", border: "1px solid #24331F", borderRadius: 999, padding: "8px 16px", fontSize: 13.5, fontWeight: 700, color: "#F5F3EE", textDecoration: "none" }}
-            >
-              <MapPin size={14} color="#8FBC6A" />
-              {n.name}
+            <a key={n.slug} href={`/lawn-care/${n.slug}`} onClick={goTo(`/lawn-care/${n.slug}`)} className="mp-chip">
+              <MapPin size={14} color="#A6E35A" /> {n.name}
             </a>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* FAQ */}
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "10px 24px 60px" }}>
-        <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 30px" }}>Before You Reach Out</h2>
+      {/* FAQ — <details> keeps every answer in the page for Google */}
+      <section id="faq" className="mp-wrap mp-sec-sm mp-faq">
+        <h2 className="mp-h2">Frequently Asked Questions</h2>
+        <p className="mp-lead">Quick answers to common questions.</p>
         {HOME_FAQ.map((item, i) => (
-          <div key={i} style={{ borderBottom: "1px solid #24331F", padding: "18px 0" }}>
-            <div style={{ fontWeight: 700, fontSize: 15.5, color: "#F5F3EE", marginBottom: 6 }}>{item.q}</div>
-            <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{item.a}</div>
-          </div>
+          <details key={i} className="mp-faq-item">
+            <summary>{item.q}<Plus size={18} className="mp-faq-plus" /></summary>
+            <p>{item.a}</p>
+          </details>
         ))}
-      </div>
-
+      </section>
       </main>
 
-      {/* FOOTER CTA */}
-      <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Ready for a yard you don't have to think about?</h2>
-        <p style={{ margin: "0 0 20px", opacity: 0.85 }}>Text, call, or request a quote — most yards confirmed same day.</p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => { trackEvent("quote_opened", { location: "footer" }); setShowQuote(true); }} style={{ background: "#0F1A10", color: "#F5F3EE", border: "none", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            Get My Free Instant Quote
-          </button>
-          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#0F1A10", border: "1.5px solid #0F1A10", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            <Phone size={16} /> Call Mow Pro Now
-          </a>
+      {/* CTA BAND */}
+      <div className="mp-wrap">
+        <div className="mp-cta">
+          <div className="mp-cta-left">
+            <CalendarDays size={52} className="mp-cta-icon" />
+            <div>
+              <h2>Ready for a Yard You Don't Have to Think About?</h2>
+              <p>Get a free quote today and see why Douglasville homeowners trust Mow Pro GA.</p>
+            </div>
+          </div>
+          <div className="mp-cta-btns">
+            <button onClick={() => openQuote("footer")} className="mp-btn mp-btn-lg">Get My Free Instant Quote <ArrowRight size={18} /></button>
+            <a href={`tel:${content.phone}`} className="mp-btn-outline mp-btn-lg mp-btn-dark"><Phone size={17} /> Call {phoneDisplay}</a>
+          </div>
         </div>
       </div>
+
+      {/* FOOTER */}
+      <footer className="mp-wrap mp-footer">
+        <div className="mp-foot-top">
+          <a href="/" onClick={goTo("/")} className="mp-brand">
+            <img src="/images/logo.png" alt="Mow Pro GA logo" width="40" height="40" loading="lazy" />
+            <span><span className="mp-brand-name">Mow Pro GA</span><span className="mp-brand-sub">Lawn Care • Douglasville, GA</span></span>
+          </a>
+          <nav className="mp-foot-links" aria-label="Footer">
+            <a href="/" onClick={goTo("/")}>Home</a>
+            <a href="#services" onClick={jump("services")}>Services</a>
+            <a href="#pricing" onClick={jump("pricing")}>Pricing</a>
+            <a href="/about" onClick={goTo("/about")}>About</a>
+            <a href="#reviews" onClick={jump("reviews")}>Reviews</a>
+            <a href="#faq" onClick={jump("faq")}>FAQ</a>
+          </nav>
+          <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge">
+            <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" loading="lazy" />
+          </a>
+        </div>
+        <div className="mp-foot-bottom">
+          <span>© {new Date().getFullYear()} Mow Pro Lawn Care LLC. All rights reserved.</span>
+          <span className="mp-foot-legal">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Service</a>
+            <a href="/text-messaging.html">Text Message Terms</a>
+          </span>
+        </div>
+      </footer>
 
       <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
       <ChatWidget />
 
-      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
-        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
-          <img
-            src="/images/urban-ag-council-badge.webp"
-            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
-            style={{ maxWidth: 160, width: "100%", height: "auto" }}
-          />
-        </a>
-      </div>
-      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78", paddingBottom: 90 }}>
-        <div style={{ marginBottom: 10 }}>
-          Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
-        </div>
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-          <a href="/privacy.html" style={{ color: "#7C8A78", textDecoration: "underline" }}>Privacy Policy</a>
-          <a href="/terms.html" style={{ color: "#7C8A78", textDecoration: "underline" }}>Terms of Service</a>
-          <a href="/text-messaging.html" style={{ color: "#7C8A78", textDecoration: "underline" }}>Text Message Terms</a>
-        </div>
-      </div>
-
       {/* STICKY MOBILE ACTION BAR */}
-      <div
-        className="mp-sticky-bar"
-        style={{
-          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 150,
-          display: "none", gap: 8, padding: "10px 14px",
-          background: "#0F1A10", borderTop: "1px solid #24331F",
-          boxShadow: "0 -4px 16px rgba(0,0,0,0.35)",
-        }}
-      >
-        <a
-          href={`tel:${content.phone}`}
-          style={{
-            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-            background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38",
-            borderRadius: 10, padding: "13px", fontSize: 14.5, fontWeight: 800, textDecoration: "none",
-          }}
-        >
-          <Phone size={16} /> Call
-        </a>
-        <button
-          onClick={() => { trackEvent("quote_opened", { location: "sticky_bar" }); setShowQuote(true); }}
-          style={{
-            flex: 2, background: "#8FBC6A", color: "#0F1A10", border: "none",
-            borderRadius: 10, padding: "13px", fontSize: 14.5, fontWeight: 800, cursor: "pointer",
-          }}
-        >
-          Get My Free Instant Quote
-        </button>
+      <div className="mp-sticky-bar">
+        <a href={`tel:${content.phone}`} className="mp-btn-outline"><Phone size={16} /> Call</a>
+        <button onClick={() => openQuote("sticky_bar")} className="mp-btn">Get My Free Instant Quote</button>
       </div>
-      <style>{`
-        @media (max-width: 640px) {
-          .mp-sticky-bar { display: flex !important; }
-          .mp-chat-bubble { bottom: 84px !important; }
-          .mp-chat-window { bottom: 152px !important; }
-          .mp-chat-nudge { bottom: 152px !important; }
-        }
-      `}</style>
+      <style>{HOME_CSS}</style>
     </div>
   );
 }
+
+function GoogleG({ size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-4z"/>
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 16.3 3 9.7 7.3 6.3 14.7z"/>
+      <path fill="#4CAF50" d="M24 45c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.3 36.5 26.8 37 24 37c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.6 40.5 16.3 45 24 45z"/>
+      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.3 5.3C40.9 36.6 44 30.9 44 24c0-1.4-.1-2.7-.4-3.5z"/>
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return <CheckCircle2 size={16} color="#A6E35A" style={{ flexShrink: 0 }} />;
+}
+
+const HOME_CSS = `
+.mp *{box-sizing:border-box}
+.mp a{color:inherit}
+.mp .mp-btn{color:#0A160B}
+.mp .mp-btn-outline{color:#F5F3EE}
+.mp-wrap{max-width:1100px;margin:0 auto;padding-left:20px;padding-right:20px}
+.mp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#B9F26A 0%,#8ED24A 100%);color:#0A160B;border:none;border-radius:10px;padding:11px 18px;font-size:14.5px;font-weight:800;cursor:pointer;text-decoration:none;box-shadow:0 0 0 1px rgba(185,242,106,.25),0 6px 22px rgba(142,210,74,.25);font-family:inherit}
+.mp-btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(10,19,11,.55);color:#F5F3EE;border:1.5px solid #A6E35A;border-radius:10px;padding:10px 18px;font-size:14.5px;font-weight:800;cursor:pointer;text-decoration:none;font-family:inherit}
+.mp-btn-lg{padding:15px 24px;font-size:16px}
+.mp-btn-sm{padding:9px 14px;font-size:13.5px}
+.mp-btn-dark{background:rgba(5,12,6,.35);border-color:#0A160B;color:#F5F3EE}
+.mp-full{width:100%}
+.mp-u{text-decoration:underline;text-underline-offset:3px}
+.mp-center{text-align:center}
+.mp-icon-btn{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1.5px solid #A6E35A;border-radius:10px;color:#A6E35A !important}
+.mp-menu-btn{background:none;border:none;color:#F5F3EE;cursor:pointer;padding:6px;display:flex}
+.mp-show-sm{display:none !important}
+
+/* nav */
+.mp-nav{position:relative;z-index:40;border-bottom:1px solid rgba(166,227,90,.14);background:#0A130B}
+.mp-nav-in{max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mp-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mp-brand img{border-radius:50%;display:block}
+.mp-brand-name{display:block;font-weight:900;font-size:21px;letter-spacing:-.01em;line-height:1.1}
+.mp-brand-sub{display:block;font-size:11.5px;color:#C9D3C2;font-weight:500}
+.mp-links{display:flex;align-items:center;gap:26px;font-size:14px;font-weight:600}
+.mp-links>a,.mp-drop>a{text-decoration:none;color:#E6EBE0;display:inline-flex;align-items:center;gap:3px;padding:6px 0;border-bottom:2px solid transparent}
+.mp-links a.is-active{border-bottom-color:#A6E35A}
+.mp-links a:hover{color:#A6E35A}
+.mp-drop{position:relative}
+.mp-drop-menu{display:none;position:absolute;top:100%;left:-12px;background:#102012;border:1px solid #2A4A22;border-radius:10px;padding:8px;min-width:210px;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.mp-drop:hover .mp-drop-menu,.mp-drop:focus-within .mp-drop-menu{display:block}
+.mp-drop-menu a{display:block;padding:9px 10px;border-radius:7px;text-decoration:none;font-size:14px}
+.mp-drop-menu a:hover{background:#1A311A}
+.mp-nav-cta{display:flex;align-items:center;gap:12px}
+.mp-mobile-menu{display:flex;flex-direction:column;padding:6px 20px 18px;border-top:1px solid #1E331C;background:#0A130B}
+.mp-mobile-menu a{padding:13px 4px;border-bottom:1px solid #18291A;text-decoration:none;font-weight:700;font-size:16px}
+.mp-mobile-menu .mp-btn{margin-top:14px;padding:15px}
+
+/* hero */
+.mp-hero{position:relative;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.05fr 1fr;min-height:430px;overflow:hidden}
+.mp-hero-img{grid-column:2;grid-row:1;position:relative;clip-path:polygon(18% 0,100% 0,100% 100%,0 100%)}
+.mp-hero-img::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(10,19,11,.35),transparent 40%)}
+.mp-hero-img::after{content:"";position:absolute;left:0;top:0;bottom:0;width:18%;z-index:2;background:linear-gradient(to bottom right,transparent calc(50% - 2px),#8ED24A calc(50% - 2px),#8ED24A calc(50% + 2px),transparent calc(50% + 2px))}
+.mp-hero-img{overflow:hidden}
+.mp-hero-img img{width:100%;height:100%;object-fit:cover;object-position:30% center;display:block;transform:scale(1.14);transform-origin:20% 20%}
+.mp-hero-text{grid-column:1;grid-row:1;padding:30px 28px 44px 20px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3}
+.mp-pill{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;background:#173418;border:1px solid #2E5A25;color:#E6F5D8;font-size:12px;font-weight:800;letter-spacing:.02em;padding:6px 13px;border-radius:999px;margin-bottom:16px}
+.mp-pill svg{color:#A6E35A}
+.mp-hero h1{font-size:clamp(32px,4.6vw,48px);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin:0 0 12px}
+.mp-hero-services{color:#A6E35A;font-weight:800;font-size:clamp(17px,2vw,21px);margin:0 0 12px}
+.mp-hero-sub{color:#DCE3D6;font-size:15.5px;line-height:1.55;margin:0 0 22px;max-width:470px}
+.mp-hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.mp-rating{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:15px;color:#F5F3EE}
+.mp-stars{display:inline-flex;gap:1px}
+.mp-rating-sep{display:inline-block;width:1px;height:16px;background:#5A6C55;margin:0 4px}
+
+/* trust bar */
+.mp-trust{display:grid;grid-template-columns:repeat(4,1fr);background:linear-gradient(180deg,#132414,#0E1B0F);border:1px solid #2A4A22;border-radius:14px;padding:14px 8px;position:relative;z-index:4;margin-top:-6px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.mp-trust-item{display:flex;align-items:center;gap:12px;padding:4px 16px;border-left:1px solid #2A4A22}
+.mp-trust-item:first-child{border-left:none}
+.mp-trust-icon svg{width:32px;height:32px;color:#A6E35A;stroke-width:1.8}
+.mp-trust-t{font-weight:800;font-size:14px}
+.mp-trust-s{font-size:11.5px;color:#B9C4B2;margin-top:2px}
+
+/* fall banner */
+.mp-fall{position:relative;margin-top:22px;border:1.5px solid #E08A2E;border-radius:14px;overflow:hidden;background:linear-gradient(90deg,#2A1606 0%,#1A2410 30%,#132013 60%,#2A1606 100%)}
+.mp-fall-img{position:absolute;right:0;top:0;height:100%;width:34%;object-fit:cover;opacity:.75;-webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%)}
+.mp-fall-leaves{position:absolute;left:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;color:#E8892A;opacity:.95}
+.mp-fall-leaves svg:nth-child(1){transform:rotate(-25deg);color:#F2A33A}
+.mp-fall-leaves svg:nth-child(2){transform:rotate(30deg) translateX(18px);color:#D9531E}
+.mp-fall-leaves svg:nth-child(3){transform:rotate(-10deg);color:#E9B23C}
+.mp-fall-body{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 36% 18px 200px}
+.mp-fall-body .mp-btn{white-space:nowrap}
+.mp-fall-tag{display:inline-flex;align-items:center;gap:5px;background:#5B8E2A;color:#F5FBEF;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
+.mp-fall h2{font-size:clamp(21px,2.6vw,27px);font-weight:900;margin:6px 0 4px;letter-spacing:-.01em}
+.mp-fall p{margin:0;color:#E6E1D6;font-size:14px}
+
+/* sections */
+.mp-sec{padding-top:46px;padding-bottom:10px}
+.mp-sec-sm{padding-top:34px;padding-bottom:6px}
+.mp-eyebrow{display:flex;align-items:center;gap:6px;color:#A6E35A;font-size:12.5px;font-weight:900;letter-spacing:.05em;margin-bottom:6px}
+.mp-eyebrow-sm{margin-top:16px}
+.mp-h2{font-size:clamp(24px,3.2vw,31px);font-weight:900;letter-spacing:-.02em;margin:0 0 4px;line-height:1.15}
+.mp-lead{color:#C9D3C2;font-size:14.5px;margin:0 0 20px}
+.mp-card{background:linear-gradient(180deg,#132414,#0E1B0F);border:1px solid #2A4A22;border-radius:14px}
+.mp-svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.mp-svc{padding:22px}
+.mp-svc-icon{width:44px;height:44px;border-radius:10px;background:#244A1D;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.mp-svc-icon svg{color:#A6E35A;width:26px;height:26px}
+.mp-svc h3{font-size:17px;font-weight:800;margin:0 0 6px}
+.mp-svc p{font-size:14px;color:#C9D3C2;line-height:1.5;margin:0}
+.mp-addons{border:1.5px solid #8ED24A;box-shadow:0 0 24px rgba(142,210,74,.12)}
+.mp-addons-icon{width:38px;height:38px;border-radius:50%;border:2px solid #A6E35A;color:#A6E35A;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.mp-addons ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+.mp-addons li,.mp-addons li a{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#E6EBE0;text-decoration:none}
+.mp-addon-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mp-addon-chip{display:flex;align-items:center;gap:8px;padding:10px;font-size:12.5px;font-weight:700;line-height:1.25}
+.mp-addon-chip svg{color:#A6E35A;width:24px;height:24px;flex-shrink:0}
+
+/* before/after */
+.mp-ba{display:grid;grid-template-columns:.62fr 1.38fr;gap:36px;align-items:center}
+.mp-ba-slides{display:flex;flex-direction:column;gap:16px}
+.mp-ba-frame{border:1.5px solid #A6E35A;border-radius:16px;overflow:hidden;box-shadow:0 0 30px rgba(142,210,74,.12)}
+.mp-ba-frame>div{border-radius:0 !important}
+
+/* reviews */
+.mp-rev-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.mp-rev-actions{display:flex;align-items:center;gap:22px;margin-bottom:20px}
+.mp-rev-badge{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:14.5px}
+.mp-rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+.mp-rev{overflow:hidden;padding:6px}
+.mp-rev img{width:100%;height:auto;display:block;border-radius:9px}
+.mp-rev-grid+.mp-center{margin-top:18px}
+
+/* pricing */
+.mp-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mp-price{display:flex;flex-direction:column;align-items:center;padding:20px 12px;color:#F5F3EE;cursor:pointer;font-family:inherit;text-align:center}
+.mp-price.is-featured{border:2px solid #A6E35A;box-shadow:0 0 30px rgba(166,227,90,.18)}
+.mp-price-icon{color:#A6E35A;margin-bottom:6px}
+.mp-price-name{font-size:14px;font-weight:700}
+.mp-price-amt{font-size:clamp(30px,4vw,40px);font-weight:900;color:#A6E35A;letter-spacing:-.02em;margin:4px 0 0}
+.mp-price-per{font-size:13px;color:#C9D3C2}
+.mp-price-size{font-size:13px;color:#C9D3C2;margin-top:4px}
+.mp-price-note svg{flex-shrink:0}
+.mp-price-note{display:flex;align-items:center;justify-content:center;gap:8px;text-align:left;font-size:14px;color:#E6EBE0;margin:16px auto 6px;max-width:620px}
+.mp-price-more{font-size:12.5px;color:#93A08D;text-align:center;max-width:720px;margin:0 auto;line-height:1.55}
+
+/* who */
+.mp-who{display:grid;grid-template-columns:240px 1fr;overflow:hidden}
+.mp-who-img{overflow:hidden}
+.mp-who-img img{width:100%;height:100%;max-height:320px;object-fit:cover;object-position:center 15%;display:block;transform:scale(1.08)}
+.mp-who-body{padding:22px 24px}
+.mp-who h2{font-size:22px;font-weight:900;margin:0 0 8px}
+.mp-who p{font-size:14px;color:#D2DACB;line-height:1.6;margin:0 0 10px}
+.mp-link{display:inline-flex;align-items:center;gap:5px;color:#A6E35A !important;font-weight:800;font-size:14px;text-decoration:none}
+
+/* chips */
+.mp-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.mp-chip{display:inline-flex;align-items:center;gap:6px;background:#132414;border:1px solid #2A4A22;border-radius:999px;padding:8px 16px;font-size:13.5px;font-weight:700;text-decoration:none}
+
+/* faq */
+.mp-faq{max-width:900px}
+.mp-faq-item{background:#0F1C10;border:1px solid #244020;border-radius:9px;margin-bottom:8px}
+.mp-faq-item summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;font-weight:700;font-size:14.5px}
+.mp-faq-item summary::-webkit-details-marker{display:none}
+.mp-faq-plus{flex-shrink:0;transition:transform .2s}
+.mp-faq-item[open] .mp-faq-plus{transform:rotate(45deg);color:#A6E35A}
+.mp-faq-item p{margin:0;padding:0 16px 15px;color:#C9D3C2;font-size:14px;line-height:1.6}
+
+/* cta */
+.mp-cta{margin-top:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 36px;border:1.5px solid #A6E35A;border-radius:18px;background:radial-gradient(circle at 85% 50%,rgba(142,210,74,.35),transparent 55%),linear-gradient(120deg,#1E4A17,#2D6A1F 55%,#1C4415)}
+.mp-cta-left{display:flex;gap:22px;align-items:flex-start}
+.mp-cta-icon{color:#B9F26A;flex-shrink:0}
+.mp-cta h2{font-size:clamp(22px,2.8vw,30px);font-weight:900;margin:0 0 8px;line-height:1.15;letter-spacing:-.015em}
+.mp-cta p{margin:0;color:#E6F0DE;font-size:15px;max-width:420px}
+.mp-cta-btns{display:flex;flex-direction:column;gap:12px;min-width:250px}
+
+/* footer */
+.mp-footer{padding-top:30px;padding-bottom:90px}
+.mp-foot-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.mp-foot-links{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;font-weight:600}
+.mp-foot-links a{text-decoration:none}
+.mp-badge img{width:110px;height:auto;display:block}
+.mp-foot-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid #1C2E1B;font-size:12.5px;color:#93A08D}
+.mp-foot-legal{display:flex;gap:16px;flex-wrap:wrap}
+.mp-foot-legal a{color:#93A08D}
+
+.mp-sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;display:none;gap:8px;padding:10px 14px;background:#0A130B;border-top:1px solid #24402B;box-shadow:0 -4px 16px rgba(0,0,0,.35)}
+.mp-sticky-bar .mp-btn-outline{flex:1;padding:13px}
+.mp-sticky-bar .mp-btn{flex:2;padding:13px}
+
+@media (max-width:980px){
+  .mp-links{display:none}
+  .mp-svc-grid{grid-template-columns:repeat(3,1fr)}
+  .mp-addons{display:none}
+  .mp-svc-grid~.mp-show-sm{display:block !important}
+  .mp-fall-body{padding-left:120px}
+}
+@media (max-width:760px){
+  .mp-hide-sm{display:none !important}
+  .mp-show-sm{display:flex !important}
+  div.mp-show-sm{display:block !important}
+  .mp-brand-name{font-size:18px}
+  .mp-brand-sub{font-size:10.5px}
+  .mp-hero{display:flex;flex-direction:column;min-height:0;text-align:center}
+  .mp-hero-text{order:1}
+  .mp-hero-img{order:2}
+  .mp-hero-text{padding:18px 20px 0;align-items:center}
+  .mp-pill{align-self:center;font-size:10px;letter-spacing:0;padding:5px 10px;margin-bottom:12px;white-space:nowrap}
+  .mp-hero h1{font-size:clamp(30px,8.4vw,40px);margin-bottom:8px}
+  .mp-hero-services{font-size:16.5px;margin-bottom:8px}
+  .mp-hero-sub{font-size:14.5px;margin:0 auto 16px}
+  .mp-hero-btns{flex-direction:column;width:100%;gap:10px;margin-bottom:14px}
+  .mp-hero-btns>*{width:100%}
+  .mp-hero-img{clip-path:none;height:230px;margin-top:6px}
+  .mp-hero-img::after{display:none}
+  .mp-hero-img::before{background:linear-gradient(180deg,#0A130B 0%,rgba(10,19,11,0) 35%,rgba(10,19,11,0) 70%,#0A130B 100%)}
+  .mp-hero-img img{object-position:28% 60%}
+  .mp-trust{grid-template-columns:repeat(4,1fr);padding:12px 2px;margin-top:-28px}
+  .mp-trust-item{flex-direction:column;text-align:center;gap:6px;padding:2px 4px}
+  .mp-trust-icon svg{width:28px;height:28px}
+  .mp-trust-t{font-size:11.5px;line-height:1.2}
+  .mp-trust-s{display:none}
+  .mp-fall-img{width:38%}
+  .mp-fall-leaves{left:-6px}
+  .mp-fall-leaves svg:nth-child(3){display:none}
+  .mp-fall-body{flex-direction:column;text-align:center;padding:16px 16px 18px}
+  .mp-fall-text{position:relative;z-index:1}
+  .mp-fall h2{font-size:23px}
+  .mp-svc-grid{grid-template-columns:repeat(3,1fr);gap:9px}
+  .mp-svc{padding:13px 11px}
+  .mp-svc-icon{background:none;width:auto;height:auto;justify-content:flex-start;margin-bottom:8px}
+  .mp-svc h3{font-size:14px}
+  .mp-svc p{font-size:12px}
+  .mp-addon-chip{font-size:11px;padding:9px 8px;gap:6px}
+  .mp-addon-chip svg{width:20px;height:20px}
+  .mp-ba{display:block}
+  .mp-ba-slides .mp-btn-outline{margin-top:2px}
+  .mp-rev-head{flex-wrap:wrap}
+  .mp-rev-head .mp-h2{font-size:22px}
+  .mp-rev-head .mp-lead{margin-bottom:10px}
+  .mp-rev-actions{margin-bottom:14px}
+  .mp-rev-actions{margin-bottom:0}
+  .mp-rev-badge{border:1px solid #2A4A22;border-radius:999px;padding:6px 10px;font-size:13px;white-space:nowrap}
+  .mp-rev-grid{grid-template-columns:1fr;gap:12px}
+  .mp-price-grid{gap:9px}
+  .mp-price{padding:14px 4px}
+  .mp-price-name{font-size:12px}
+  .mp-price-amt{font-size:27px}
+  .mp-price-per,.mp-price-size{font-size:11.5px}
+  .mp-price-note{font-size:12.5px}
+  .mp-who{grid-template-columns:42% 1fr}
+  .mp-who-img img{max-height:none;min-height:100%}
+  .mp-who-body{padding:14px 14px 16px}
+  .mp-who h2{font-size:17px}
+  .mp-who p{font-size:12.5px;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+  .mp-chip{font-size:12px;padding:7px 12px}
+  .mp-faq-item summary{font-size:13.5px;padding:12px 14px}
+  .mp-cta{flex-direction:column;align-items:stretch;padding:22px 18px;margin-top:30px}
+  .mp-cta-left{gap:14px}
+  .mp-cta-icon{width:40px;height:40px}
+  .mp-cta-btns{min-width:0}
+  .mp-foot-top{flex-direction:column;align-items:center;text-align:center}
+  .mp-foot-links{justify-content:center;gap:16px}
+  .mp-foot-bottom{flex-direction:column;align-items:center;text-align:center}
+}
+@media (max-width:640px){
+  .mp-sticky-bar{display:flex}
+  .mp-chat-bubble{bottom:84px !important}
+  .mp-chat-window{bottom:152px !important}
+  .mp-chat-nudge{bottom:152px !important}
+}
+`;
 
 function ServiceCard({ icon, title, desc }) {
   return (

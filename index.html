@@ -20,9 +20,9 @@
          matter for the rare case of a real visitor with JavaScript actually
          disabled (see the <noscript> block below, which un-hides it), and
          for crawlers reading the raw HTML with basic styling applied. */
-      #root { font-family: 'Inter', system-ui, sans-serif; color: #F5F3EE; max-width: 700px; margin: 0 auto; padding: 24px; line-height: 1.6; }
-      #root a { color: #8FBC6A; }
-      #root h1, #root h2 { color: #F5F3EE; }
+      #root:not(.is-app) { font-family: 'Inter', system-ui, sans-serif; color: #F5F3EE; max-width: 700px; margin: 0 auto; padding: 24px; line-height: 1.6; }
+      #root:not(.is-app) a { color: #8FBC6A; }
+      #root:not(.is-app) h1, #root:not(.is-app) h2 { color: #F5F3EE; }
     </style>
     <!-- Only reached if JavaScript is actually disabled — the overwhelming
          majority of visitors have it on, and main.jsx un-hides #root the
@@ -33,6 +33,11 @@
     <noscript>
       <style>#root { visibility: visible !important; }</style>
     </noscript>
+
+    <!-- Inter for headings/body; loaded non-blocking so it never delays first paint. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'" />
 
     <!-- Primary SEO -->
     <title>Lawn Care & Mowing Service in Douglasville, GA | Mow Pro GA</title>
