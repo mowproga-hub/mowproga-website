@@ -459,6 +459,13 @@ export function rewriteHead(html, pathname) {
 
 export default async function middleware(request) {
   const url = new URL(request.url);
+  // Prefer the build-time prerendered page (real design + this page's own
+  // head tags, written by scripts/prerender.mjs) so visitors see the finished
+  // page on first paint. Falls back to the old index.html rewrite.
+  const pre = await fetch(`${url.origin}/prerender/${url.pathname.slice(1).replace(/\//g, "__")}.html`);
+  if (pre.ok) {
+    return new Response(await pre.text(), { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+  }
   const res = await fetch(`${url.origin}/index.html`);
   const html = await res.text();
   return new Response(rewriteHead(html, url.pathname), {

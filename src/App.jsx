@@ -2332,14 +2332,14 @@ function QuoteLandingPage({ content }) {
   );
 }
 
-export default function MowProLanding() {
+export default function MowProLanding({ initialPath }) {
   const [content, setContent] = useState(DEFAULT_CONTENT);
   const editing = false; // Public site — editing happens by updating the code directly, not in-browser.
   const [showQuote, setShowQuote] = useState(false);
   const [quoteServiceType, setQuoteServiceType] = useState("mowing");
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [showMorePairs, setShowMorePairs] = useState(false);
-  const [route, setRoute] = useState(() => pathToRoute(typeof window !== "undefined" ? window.location.pathname : "/"));
+  const [route, setRoute] = useState(() => pathToRoute(typeof window !== "undefined" ? window.location.pathname : (initialPath || "/")));
 
   useEffect(() => {
     loadGoogleAnalytics();

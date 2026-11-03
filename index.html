@@ -20,9 +20,9 @@
          matter for the rare case of a real visitor with JavaScript actually
          disabled (see the <noscript> block below, which un-hides it), and
          for crawlers reading the raw HTML with basic styling applied. */
-      #root:not(.is-app) { font-family: 'Inter', system-ui, sans-serif; color: #F5F3EE; max-width: 700px; margin: 0 auto; padding: 24px; line-height: 1.6; }
-      #root:not(.is-app) a { color: #8FBC6A; }
-      #root:not(.is-app) h1, #root:not(.is-app) h2 { color: #F5F3EE; }
+      #root:not(.is-app):not([data-prerendered]) { font-family: 'Inter', system-ui, sans-serif; color: #F5F3EE; max-width: 700px; margin: 0 auto; padding: 24px; line-height: 1.6; }
+      #root:not(.is-app):not([data-prerendered]) a { color: #8FBC6A; }
+      #root:not(.is-app):not([data-prerendered]) h1, #root:not(.is-app):not([data-prerendered]) h2 { color: #F5F3EE; }
     </style>
     <!-- Only reached if JavaScript is actually disabled — the overwhelming
          majority of visitors have it on, and main.jsx un-hides #root the
@@ -34,10 +34,12 @@
       <style>#root { visibility: visible !important; }</style>
     </noscript>
 
-    <!-- Inter for headings/body; loaded non-blocking so it never delays first paint. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'" />
+    <!-- Inter, self-hosted (no Google Fonts round-trip) and preloaded so the
+         first paint already uses it. -->
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      @font-face { font-family: 'Inter'; font-style: normal; font-display: swap; font-weight: 100 900; src: url('/fonts/inter-latin.woff2') format('woff2'); }
+    </style>
 
     <!-- Primary SEO -->
     <title>Lawn Care & Mowing Service in Douglasville, GA | Mow Pro GA</title>
