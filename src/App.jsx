@@ -1638,7 +1638,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
       <main>
       {/* HERO — real leaf photo as a full-bleed background */}
       <section className="mp-fhero">
-        <img className="mp-fhero-bg" src="/images/before-leaf-driveway.webp" alt="Fallen leaves covering a Douglasville lawn before a Mow Pro GA fall cleanup" width="592" height="800" fetchPriority="high" />
+        <img className="mp-fhero-bg" src="/images/fall-hero.webp" srcSet="/images/fall-hero-900.webp 900w, /images/fall-hero.webp 1672w" sizes="(max-width: 760px) 900px, 1240px" alt="A pile of raked autumn leaves on a green lawn" width="1672" height="941" fetchPriority="high" />
         <div className="mp-fhero-in">
           <a href="/" onClick={goTo("/")} className="mp-back">← Back to Home</a>
           <div className="mp-fhero-pillrow"><span className="mp-pill mp-pill-fall"><Leaf size={13} /> FALL CLEANUP SERVICES</span></div>
@@ -3046,8 +3046,8 @@ const HOME_CSS = `
 /* fall cleanup page (v2 mockup) */
 .mp-fwrap{max-width:980px}
 .mp-fhero{position:relative;overflow:hidden;max-width:1240px;margin:0 auto;min-height:470px;display:flex;align-items:center}
-.mp-fhero-bg{position:absolute;top:0;bottom:0;right:0;left:auto;width:58%;height:100%;object-fit:cover;object-position:center 65%;filter:saturate(1.15) brightness(.9)}
-.mp-fhero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0A130B 0%,#0A130B 42%,rgba(10,19,11,.55) 56%,rgba(10,19,11,.1) 80%,rgba(10,19,11,0) 100%),linear-gradient(180deg,rgba(10,19,11,.0) 70%,#0A130B 100%)}
+.mp-fhero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center}
+.mp-fhero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0A130B 0%,rgba(10,19,11,.9) 30%,rgba(10,19,11,.45) 52%,rgba(10,19,11,0) 72%),linear-gradient(180deg,rgba(10,19,11,.0) 70%,#0A130B 100%)}
 .mp-fhero-in{position:relative;z-index:2;padding:22px 20px 56px;max-width:640px;display:flex;flex-direction:column}
 .mp-fhero-pillrow{display:flex;justify-content:center;max-width:460px}
 .mp-fhero h1{font-size:clamp(32px,4.6vw,46px);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin:0 0 10px}
@@ -3086,8 +3086,8 @@ const HOME_CSS = `
 .mp-chips-row{justify-content:flex-start;padding-left:40px}
 @media (max-width:760px){
   .mp-fhero{min-height:0}
-  .mp-fhero-bg{width:100%;object-position:70% 60%}
-  .mp-fhero::after{background:linear-gradient(90deg,rgba(10,19,11,.93) 0%,rgba(10,19,11,.8) 55%,rgba(10,19,11,.25) 100%),linear-gradient(180deg,rgba(10,19,11,.55) 0%,rgba(10,19,11,0) 30%,rgba(10,19,11,0) 75%,#0A130B 100%)}
+  .mp-fhero-bg{object-position:78% center}
+  .mp-fhero::after{background:linear-gradient(90deg,rgba(10,19,11,.86) 0%,rgba(10,19,11,.6) 50%,rgba(10,19,11,.05) 100%),linear-gradient(180deg,rgba(10,19,11,.55) 0%,rgba(10,19,11,0) 30%,rgba(10,19,11,0) 75%,#0A130B 100%)}
   .mp-fhero-in{padding:14px 20px 48px;text-align:left}
   .mp-fhero .mp-back{align-self:flex-start;margin-bottom:8px}
   .mp-fhero-pillrow{max-width:none;margin-bottom:2px}
