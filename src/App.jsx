@@ -1560,94 +1560,119 @@ function ChatWidget() {
   );
 }
 
-function AboutPage({ content, navigate, setShowQuote, showQuote }) {
+function RatingLink({ location }) {
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
-      {/* NAV */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 10, padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18, background: "none", border: "none", color: "#F5F3EE", cursor: "pointer", padding: 0, textDecoration: "none" }}>
-          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
-          Mow Pro GA
+    <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("reviews_link_click", { location })} className="mp-rating">
+      <GoogleG size={24} />
+      <strong>5.0</strong>
+      <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={17} fill="#FBBC04" color="#FBBC04" />)}</span>
+      <span className="mp-rating-sep" />
+      <span className="mp-u">65 Google Reviews</span>
+    </a>
+  );
+}
+
+function ReviewCards({ reviews, location }) {
+  return (
+    <>
+      <div className="mp-frev-bar">
+        <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge mp-rev-badge-plain">
+          <GoogleG size={24} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
         </a>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
-          <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Fall Cleanup
-          </a>
-          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Leaf Removal
-          </a>
-          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
-            <Phone size={14} color="#8FBC6A" />
-            {content.phone}
-          </a>
-          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
-            Get Quote
-          </button>
-        </div>
+        <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("reviews_link_click", { location })} className="mp-btn-outline mp-btn-sm">Read All Reviews <ArrowRight size={15} /></a>
       </div>
-
-      {/* BACK LINK */}
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "20px 24px 0" }}>
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 13.5, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-          ← Back to home
-        </a>
+      <div className="mp-rev-grid">
+        {reviews.map((r) => (
+          <div key={r.name} className="mp-card mp-rev">
+            <img src={r.screenshot} alt={`Google review from ${r.name}`} width={r.w || 800} height={r.h || 500} loading="lazy" />
+          </div>
+        ))}
       </div>
+    </>
+  );
+}
 
-      {/* STORY */}
-      <main style={{ maxWidth: 640, margin: "0 auto", padding: "24px 24px 70px" }}>
-        <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Our Story</div>
-        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 24px" }}>
-          Built one yard — and one door hanger — at a time.
-        </h1>
-
-        <div style={{ width: "100%", maxHeight: 420, overflow: "hidden", borderRadius: 16, marginBottom: 30, boxShadow: "0 16px 40px -18px rgba(0,0,0,0.5)" }}>
-          <img src="/images/our-story.webp" alt="Joseph on the Mow Pro GA mower" width="700" height="1516" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
+// ─── About page ─────────────────────────────────────────────────────────────
+function AboutPage({ content, navigate, setShowQuote, showQuote }) {
+  const openQuote = (location) => { trackEvent("quote_opened", { location: `about_${location}` }); setShowQuote(true); };
+  const goTo = (path) => (e) => { e.preventDefault(); navigate(path); };
+  const phoneDisplay = formatPhone(content.phone);
+  return (
+    <SiteShell
+      content={content} navigate={navigate} showQuote={showQuote} setShowQuote={setShowQuote}
+      active="about" trackPrefix="about_"
+      ctaTitle="Ready for a Yard You Don't Have to Think About?"
+      ctaText="Get a free quote today and see why Douglasville homeowners trust Mow Pro GA."
+    >
+      <main>
+      <section className="mp-wrap mp-about-hero">
+        <div className="mp-about-text">
+          <a href="/" onClick={goTo("/")} className="mp-back">← Back to Home</a>
+          <span className="mp-pill"><Users size={13} /> OUR STORY</span>
+          <h1>Built one yard — and one door hanger — at a time.</h1>
+          <p className="mp-hero-sub">A local, family-run lawn care company in Douglasville, GA. Not a franchise, not a call center — a family that shows up and stands behind every cut.</p>
+          <div className="mp-fhero-btns">
+            <button onClick={() => openQuote("hero")} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Free Instant Quote <ArrowRight size={18} /></button>
+            <a href={`tel:${content.phone}`} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
+          </div>
+          <RatingLink location="about_hero" />
         </div>
-
-        <div style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.85 }}>
-          <p style={{ margin: "0 0 22px" }}>
-            Mow Pro Lawn Care LLC didn't start with a business plan. It started with a truck, a mower, and a decision to build something real for my family in Douglasville.
-          </p>
-          <p style={{ margin: "0 0 22px" }}>
-            My son's been part of that from early on. Most weekends, he's out with me hanging door hangers around the neighborhood — not because he has to, but because he wanted to help. It's hot, thankless work, especially in a Georgia July. Some folks stopped him mid-hang just to say they already had a lawn guy. I think even he was starting to wonder if any of it was actually doing anything.
-          </p>
-          <p style={{ margin: "0 0 22px" }}>
-            Then one afternoon, right after he hung our 97th door hanger of the day, my phone rang. A new customer, calling because of the hanger he'd just placed. Before the day was out, five more calls came in from that same neighborhood.
-          </p>
-          <p style={{ margin: "0 0 22px" }}>
-            I watched it click for him — the hours in that heat weren't wasted, they were working. That's not a lesson you can just tell a kid. He had to feel it for himself.
-          </p>
-          <p style={{ margin: "0 0 22px" }}>
-            That's what Mow Pro GA actually is. Not a franchise, not a call center, not a crew of strangers rotating through your yard. It's a family building something real, one lawn and one door hanger at a time — and hopefully, something my kids will be proud to say they helped build from the ground up.
-          </p>
-          <p style={{ margin: 0 }}>
-            When you book with us, that's what you're getting: a family business that shows up, stands behind its work, and has a very good reason to make sure it's done right every single time.
-          </p>
+        <div className="mp-about-photo">
+          <img src="/images/our-story.webp" alt="Joseph, owner of Mow Pro GA, on the company's Ferris mower" width="700" height="1516" fetchPriority="high" />
         </div>
+      </section>
 
-        <div style={{ marginTop: 44, textAlign: "center" }}>
-          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            Get My Free Instant Quote <ArrowRight size={18} />
-          </button>
+      <div className="mp-wrap mp-fwrap"><TrustBar /></div>
+
+      <section className="mp-wrap mp-fwrap mp-sec">
+        <div className="mp-card mp-story">
+          <div className="mp-eyebrow">HOW IT STARTED</div>
+          <p>Mow Pro Lawn Care LLC didn't start with a business plan. It started with a truck, a mower, and a decision to build something real for my family in Douglasville.</p>
+          <p>My son's been part of that from early on. Most weekends, he's out with me hanging door hangers around the neighborhood — not because he has to, but because he wanted to help. It's hot, thankless work, especially in a Georgia July. Some folks stopped him mid-hang just to say they already had a lawn guy. I think even he was starting to wonder if any of it was actually doing anything.</p>
+          <blockquote className="mp-story-quote">Then one afternoon, right after he hung our 97th door hanger of the day, my phone rang.</blockquote>
+          <p>A new customer, calling because of the hanger he'd just placed. Before the day was out, five more calls came in from that same neighborhood.</p>
+          <p>I watched it click for him — the hours in that heat weren't wasted, they were working. That's not a lesson you can just tell a kid. He had to feel it for himself.</p>
+          <p>That's what Mow Pro GA actually is. Not a franchise, not a call center, not a crew of strangers rotating through your yard. It's a family building something real, one lawn and one door hanger at a time — and hopefully, something my kids will be proud to say they helped build from the ground up.</p>
+          <p>When you book with us, that's what you're getting: a family business that shows up, stands behind its work, and has a very good reason to make sure it's done right every single time.</p>
+          <div className="mp-story-sign">— Joseph, owner</div>
         </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-eyebrow">WHAT YOU CAN COUNT ON</div>
+        <h2 className="mp-h2">Why Neighbors Choose Mow Pro</h2>
+        <div className="mp-fsvc-grid">
+          {[
+            [<Users key="i" />, "Familiar Faces", "Your yard is handled by our own trusted team — not a rotating crew of strangers."],
+            [<FileText key="i" />, "Quoted in Person", "Every job is quoted at your property, so the price you get is the price you pay."],
+            [<CheckCircle2 key="i" />, "Same Standard, Every Visit", "Every visit is held to the same standard, with a photo-confirmed invoice when we're done."],
+            [<ShieldCheck key="i" />, "Insured, No Contracts", "A registered Georgia LLC with general liability insurance. Cancel anytime."],
+          ].map(([icon, t, d]) => (
+            <div key={t} className="mp-card mp-fsvc">
+              <div className="mp-fsvc-icon">{icon}</div>
+              <div><h3>{t}</h3><p>{d}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <h2 className="mp-h2">What Neighbors Are Saying</h2>
+        <p className="mp-lead mp-lead-tight">Real reviews from local customers on Google.</p>
+        <ReviewCards reviews={content.reviews.slice(0, 3)} location="about_reviews" />
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm mp-center">
+        <h2 className="mp-h2">Neighborhoods We Serve</h2>
+        <p className="mp-lead">Proudly serving Douglasville, GA and nearby areas, including:</p>
+        <div className="mp-chips">
+          {NEIGHBORHOODS.map((n) => (
+            <a key={n.slug} href={`/lawn-care/${n.slug}`} onClick={goTo(`/lawn-care/${n.slug}`)} className="mp-chip"><MapPin size={14} color="#A6E35A" /> {n.name}</a>
+          ))}
+        </div>
+      </section>
       </main>
-
-      <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
-      <ChatWidget />
-
-      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
-        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
-          <img
-            src="/images/urban-ag-council-badge.webp"
-            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
-            style={{ maxWidth: 160, width: "100%", height: "auto" }}
-          />
-        </a>
-      </div>
-      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
-        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
-      </div>
-    </div>
+    </SiteShell>
   );
 }
 
@@ -1813,386 +1838,326 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
 // ─── Leaf Removal service page ──────────────────────────────────────────────
 // Copy lives in siteData.js so the crawler version (middleware.js) matches.
 function LeafRemovalPage({ content, navigate, setShowQuote, showQuote }) {
-  const card = { border: "1px solid #24331F", borderRadius: 12, padding: "16px 18px", background: "#152016", textAlign: "left" };
+  const openQuote = (location) => { trackEvent("quote_opened", { location: `leaf_removal_${location}` }); setShowQuote(true); };
+  const goTo = (path) => (e) => { e.preventDefault(); navigate(path); };
+  const phoneDisplay = formatPhone(content.phone);
+  const sizes = SIZE_OPTIONS.filter((o) => LEAF_PRICES[o.key] !== null);
+  const optionIcons = [<Wind key="a" />, <CalendarDays key="b" />, <Trash2 key="c" />];
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
-      {/* NAV */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 10, padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18, background: "none", border: "none", color: "#F5F3EE", cursor: "pointer", padding: 0, textDecoration: "none" }}>
-          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
-          Mow Pro GA
-        </a>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
-          <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Fall Cleanup
-          </a>
-          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
-            <Phone size={14} color="#8FBC6A" />
-            {content.phone}
-          </a>
-          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
-            Get Quote
-          </button>
-        </div>
-      </div>
-
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "20px 24px 0" }}>
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#8FBC6A", fontWeight: 700, fontSize: 13.5, textDecoration: "none" }}>
-          ← Back to home
-        </a>
-      </div>
-
-      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0", textAlign: "center" }}>
-        <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Leaf Removal</div>
-        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 16px" }}>
-          Leaf Removal Service in Douglasville, GA
-        </h1>
-        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>{LEAF_REMOVAL_INTRO}</p>
-
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 20 }}>
-          <button
-            onClick={() => { trackEvent("quote_opened", { location: "leaf_removal_hero" }); setShowQuote(true); }}
-            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
-          >
-            Get My Free Leaf Removal Quote <ArrowRight size={18} />
-          </button>
-          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 10, padding: "16px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            <Phone size={16} /> Call Now
-          </a>
-        </div>
-        <a
-          href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer"
-          aria-label={`${content.ratingLine} — opens in a new tab`}
-          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", marginBottom: 46 }}
-        >
-          <div style={{ display: "flex", gap: 2 }}>
-            {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={13} fill="#8FBC6A" color="#8FBC6A" />)}
+    <SiteShell
+      content={content} navigate={navigate} showQuote={showQuote} setShowQuote={setShowQuote}
+      active="services" quoteType="leaf" trackPrefix="leaf_removal_"
+      ctaTitle="Leaves Piling Up?"
+      ctaText="Text, call, or request a quote — most yards confirmed same day."
+    >
+      <main>
+      <section className="mp-fhero">
+        <img className="mp-fhero-bg" src="/images/fall-hero.webp" srcSet="/images/fall-hero-900.webp 900w, /images/fall-hero.webp 1672w" sizes="(max-width: 760px) 900px, 1240px" alt="A pile of raked autumn leaves on a green lawn" width="1672" height="941" fetchPriority="high" />
+        <div className="mp-fhero-in">
+          <a href="/" onClick={goTo("/")} className="mp-back">← Back to Home</a>
+          <div className="mp-fhero-pillrow"><span className="mp-pill mp-pill-fall"><Leaf size={13} /> LEAF REMOVAL</span></div>
+          <h1>Leaf Removal Service in Douglasville, GA</h1>
+          <p className="mp-hero-services">Lawn • Beds • Driveways • Walkways</p>
+          <p className="mp-hero-sub">{LEAF_REMOVAL_INTRO}</p>
+          <div className="mp-fhero-btns">
+            <button onClick={() => openQuote("hero")} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Free Leaf Removal Quote <ArrowRight size={18} /></button>
+            <a href={`tel:${content.phone}`} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
           </div>
-          {content.ratingLine}
-          <ExternalLink size={12} />
-        </a>
-
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>A real Mow Pro leaf job, before and after</p>
-          <div style={{ maxWidth: 400, margin: "0 auto" }}>
-            <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="3/4" />
-            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
-          </div>
+          <RatingLink location="leaf_removal_hero" />
         </div>
+      </section>
 
-        <JobPhotos photos={LEAF_PAGE_PHOTOS} />
+      <div className="mp-wrap mp-fwrap"><TrustBar /></div>
 
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 10px" }}>Why Clear the Leaves</h2>
-          <p style={{ color: "#B9C4B2", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>{LEAF_REMOVAL_WHY}</p>
-        </div>
-
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 20px" }}>How Our Leaf Removal Works</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
-            {LEAF_REMOVAL_OPTIONS.map(([t, d]) => (
-              <div key={t} style={card}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 15.5, marginBottom: 6 }}><Wind size={18} color="#8FBC6A" />{t}</div>
-                <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal Pricing</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>Priced by yard size. Regular mowing customers get a discounted leaf rate. We confirm the exact price once we see the property in person.</p>
-          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left", display: "flex", flexDirection: "column", gap: 10 }}>
-            {[...LEAF_PRICE_ROWS, ["Bag & haul away (optional, default is piled on-site)", "$5–8/bag"]].map(([label, price]) => (
-              <div key={label} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "#152016" }}>
-                <div style={{ fontWeight: 700, fontSize: 14.5 }}>{label}</div>
-                <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15, whiteSpace: "nowrap" }}>{price}</div>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={() => { trackEvent("quote_opened", { location: "leaf_removal_pricing" }); setShowQuote(true); }}
-            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, marginTop: 24 }}
-          >
-            Get My Free Leaf Removal Quote <ArrowRight size={18} />
-          </button>
-        </div>
-
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>What to Do With the Leaves in Douglas County</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>Leaf pickup rules depend on where you live. Here's how it works around here:</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {LEAF_LOCAL_RULES.map(([t, d]) => (
-              <div key={t} style={card}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 15, marginBottom: 6 }}><MapPin size={16} color="#8FBC6A" />{t}</div>
-                <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaf Removal by Neighborhood</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10, marginTop: 16 }}>
-            {NEIGHBORHOODS.map((n) => (
-              <a key={n.slug} href={`/lawn-care/${n.slug}`} onClick={(e) => { e.preventDefault(); navigate(`/lawn-care/${n.slug}`); }}
-                style={{ display: "flex", alignItems: "center", gap: 6, background: "#152016", border: "1px solid #24331F", borderRadius: 999, padding: "8px 16px", fontSize: 13.5, fontWeight: 700, color: "#F5F3EE", textDecoration: "none" }}>
-                <MapPin size={14} color="#8FBC6A" />{n.short || n.name.replace(/^the /, "")}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ marginBottom: 20, textAlign: "left" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>Leaf Removal Questions</h2>
-          {LEAF_REMOVAL_FAQ.map(([q, a]) => (
-            <div key={q} style={{ borderBottom: "1px solid #24331F", padding: "18px 0" }}>
-              <div style={{ fontWeight: 700, fontSize: 15.5, color: "#F5F3EE", marginBottom: 6 }}>{q}</div>
-              <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{a}</div>
+      <section className="mp-wrap mp-fwrap mp-sec">
+        <div className="mp-eyebrow">HOW IT WORKS</div>
+        <h2 className="mp-h2">How Our Leaf Removal Works</h2>
+        <p className="mp-lead">Pick what fits your yard — one cleanup, all season, piled or hauled away.</p>
+        <div className="mp-fsvc-grid mp-fsvc-grid-3">
+          {LEAF_REMOVAL_OPTIONS.map(([t, d], i) => (
+            <div key={t} className="mp-card mp-fsvc">
+              <div className="mp-fsvc-icon">{optionIcons[i % optionIcons.length]}</div>
+              <div><h3>{t}</h3><p>{d}</p></div>
             </div>
           ))}
-          <p style={{ textAlign: "center", color: "#B9C4B2", fontSize: 14.5, marginTop: 22 }}>
-            Want the full end-of-season package? See our{" "}
-            <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ color: "#8FBC6A", fontWeight: 700, textDecoration: "none" }}>fall yard cleanup</a>.
-          </p>
         </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-eyebrow">REAL RESULTS</div>
+        <h2 className="mp-h2">See the Difference</h2>
+        <p className="mp-lead">A real Mow Pro leaf job, before and after — Douglasville, GA.</p>
+        <div className="mp-ba-frame mp-fba">
+          <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="5/2" />
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <h2 className="mp-h3">More Real Mow Pro Jobs</h2>
+        <div className="mp-jobs">
+          {LEAF_PAGE_PHOTOS.map((p) => (
+            <figure key={p.src} className="mp-card mp-job">
+              <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
+              <figcaption>{p.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-card mp-why">
+          <Leaf size={34} className="mp-fprice-leaf" />
+          <div>
+            <h2 className="mp-h2">Why Clear the Leaves</h2>
+            <p>{LEAF_REMOVAL_WHY}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-fprice">
+          <div className="mp-fprice-head">
+            <Leaf size={34} className="mp-fprice-leaf" />
+            <div>
+              <h2 className="mp-h2">Leaf Removal Pricing</h2>
+              <p className="mp-lead">Priced by yard size. Regular mowing customers get a discounted leaf rate. We confirm the exact price once we see the property in person.</p>
+            </div>
+          </div>
+          <div className="mp-price-grid">
+            {sizes.map((s, i) => (
+              <button key={s.key} className={`mp-card mp-price${i === 0 ? " is-featured" : ""}`} onClick={() => openQuote(`pricing_${s.key}`)}>
+                <Leaf size={20} className="mp-price-icon mp-orange" />
+                <div className="mp-price-name">{["Small Yards", "Medium Yards", "Large Yards"][i]}</div>
+                <div className="mp-price-amt">${LEAF_PRICES[s.key]}+</div>
+                <div className="mp-price-per">Starting price</div>
+                <div className="mp-price-size">{s.sub}</div>
+              </button>
+            ))}
+          </div>
+          <div className="mp-card mp-fhaul">
+            <Truck size={34} className="mp-fhaul-icon" />
+            <div className="mp-fhaul-txt"><strong>Bag &amp; haul away</strong><span>Optional add-on</span><span className="mp-dim">(default is piled on-site)</span></div>
+            <b>$5–8/bag</b>
+          </div>
+          <p className="mp-price-note"><CheckCircle2 size={19} color="#A6E35A" /> Extra large / acreage (over 20,000 sq ft) gets a custom quote.</p>
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-farea-head">
+          <MapPin size={28} color="#A6E35A" />
+          <div>
+            <h2 className="mp-h2">What to Do With the Leaves in Douglas County</h2>
+            <p className="mp-lead mp-lead-tight">Leaf pickup rules depend on where you live. Here's how it works around here:</p>
+          </div>
+        </div>
+        <div className="mp-rules">
+          {LEAF_LOCAL_RULES.map(([t, d]) => (
+            <div key={t} className="mp-card mp-rule">
+              <h3>{t}</h3>
+              <p>{d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <h2 className="mp-h2">What Neighbors Are Saying</h2>
+        <p className="mp-lead mp-lead-tight">Real reviews from local customers on Google.</p>
+        <ReviewCards reviews={content.reviews.slice(0, 3)} location="leaf_removal_reviews" />
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-farea-head">
+          <MapPin size={28} color="#A6E35A" />
+          <div>
+            <h2 className="mp-h2">Leaf Removal by Neighborhood</h2>
+            <p className="mp-lead mp-lead-tight">See local leaf rules and pricing for your area:</p>
+          </div>
+        </div>
+        <div className="mp-chips mp-chips-row">
+          {NEIGHBORHOODS.map((n) => (
+            <a key={n.slug} href={`/lawn-care/${n.slug}`} onClick={goTo(`/lawn-care/${n.slug}`)} className="mp-chip"><MapPin size={14} color="#A6E35A" /> {n.short || n.name.replace(/^the /, "")}</a>
+          ))}
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm mp-faq">
+        <h2 className="mp-h2">Leaf Removal Questions</h2>
+        <p className="mp-lead mp-lead-tight">Quick answers to common questions.</p>
+        {LEAF_REMOVAL_FAQ.map(([q, a]) => (
+          <details key={q} className="mp-faq-item">
+            <summary>{q}<Plus size={18} className="mp-faq-plus" /></summary>
+            <p>{a}</p>
+          </details>
+        ))}
+        <p className="mp-faq-more">Want the full end-of-season package? See our <a href="/fall-cleanup" onClick={goTo("/fall-cleanup")} className="mp-link">fall yard cleanup <ArrowRight size={14} /></a></p>
+      </section>
       </main>
-
-      <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center", marginTop: 30 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Leaves piling up?</h2>
-        <p style={{ margin: "0 0 20px", opacity: 0.85 }}>Text, call, or request a quote — most yards confirmed same day.</p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => { trackEvent("quote_opened", { location: "leaf_removal_footer" }); setShowQuote(true); }} style={{ background: "#0F1A10", color: "#F5F3EE", border: "none", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            Get My Free Instant Quote
-          </button>
-          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#0F1A10", border: "1.5px solid #0F1A10", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            <Phone size={16} /> Call Mow Pro Now
-          </a>
-        </div>
-      </div>
-
-      <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} initialServiceType="leaf" />
-      <ChatWidget />
-
-      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
-        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
-          <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" style={{ maxWidth: 160, width: "100%", height: "auto" }} />
-        </a>
-      </div>
-      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
-        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
-      </div>
-    </div>
+    </SiteShell>
   );
 }
 
-// Same pricing tiers shown on the homepage and /fall-cleanup, reused here so
-// a neighborhood page's numbers can't drift out of sync with the real prices.
 const NEIGHBORHOOD_NEARBY_LIST = (currentSlug) =>
   NEIGHBORHOODS.filter((x) => x.slug !== currentSlug).map((x) => x.name).join(", ");
 
+// ─── Neighborhood pages (/lawn-care/*) — one template for all of them ───────
 function NeighborhoodPage({ neighborhood, content, navigate, setShowQuote, showQuote }) {
   const n = neighborhood;
   const photos = neighborhoodPhotos(n);
+  const openQuote = (location) => { trackEvent("quote_opened", { location: `neighborhood_${location}`, neighborhood: n.slug }); setShowQuote(true); };
+  const goTo = (path) => (e) => { e.preventDefault(); navigate(path); };
+  const phoneDisplay = formatPhone(content.phone);
+  const tiers = SIZE_OPTIONS.filter((o) => MOW_PRICES.Biweekly[o.key] != null);
+  const leafSizes = SIZE_OPTIONS.filter((o) => LEAF_PRICES[o.key] !== null);
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "#0F1A10", color: "#F5F3EE", minHeight: "100vh" }}>
-      {/* NAV */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 10, padding: "18px 24px", maxWidth: 1100, margin: "0 auto" }}>
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 800, fontSize: 18, background: "none", border: "none", color: "#F5F3EE", cursor: "pointer", padding: 0, textDecoration: "none" }}>
-          <img src="/images/logo.png" alt="Mow Pro GA logo" style={{ width: 40, height: 40, borderRadius: "50%", display: "block" }} />
-          Mow Pro GA
-        </a>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 8 }}>
-          <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Fall Cleanup
-          </a>
-          <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ background: "none", border: "none", color: "#F5F3EE", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-            Leaf Removal
-          </a>
-          <a href={`tel:${content.phone}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#F5F3EE", textDecoration: "none" }}>
-            <Phone size={14} color="#8FBC6A" />
-            {content.phone}
-          </a>
-          <button onClick={() => setShowQuote(true)} style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
-            Get Quote
-          </button>
+    <SiteShell
+      content={content} navigate={navigate} showQuote={showQuote} setShowQuote={setShowQuote}
+      active="areas" trackPrefix={`neighborhood_${n.slug}_`}
+      ctaTitle={`Ready for a Yard You Don't Have to Think About?`}
+      ctaText={`Get a free quote today and see why ${n.name.replace(/^the /, "")} homeowners trust Mow Pro GA.`}
+    >
+      <main>
+      <section className="mp-hero">
+        <div className="mp-hero-img">
+          <img src={content.equipmentPhoto} alt="Mow Pro GA's Ferris mower, trimmers and blower in front of the company trailer" width="1402" height="713" fetchPriority="high" />
         </div>
-      </div>
-
-      {/* BACK LINK */}
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "20px 24px 0" }}>
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#8FBC6A", fontWeight: 700, fontSize: 13.5, cursor: "pointer", padding: 0, textDecoration: "none" }}>
-          ← Back to home
-        </a>
-      </div>
-
-      <main style={{ maxWidth: 700, margin: "0 auto", padding: "24px 24px 0", textAlign: "center" }}>
-        <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#8FBC6A", marginBottom: 12 }}>Local Lawn Care</div>
-        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, lineHeight: 1.15, margin: "0 0 16px" }}>
-          Lawn Care in {placeLabel(n)}
-        </h1>
-        <p style={{ fontSize: 16, color: "#D8DED2", lineHeight: 1.7, margin: "0 auto 26px", maxWidth: 560 }}>
-          Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in {n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.
-        </p>
-        {n.intro && (
-          <p style={{ fontSize: 15, color: "#B9C4B2", lineHeight: 1.7, margin: "-10px auto 26px", maxWidth: 560 }}>{n.intro}</p>
-        )}
-
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 20 }}>
-          <button
-            onClick={() => { trackEvent("quote_opened", { location: "neighborhood_hero", neighborhood: n.slug }); setShowQuote(true); }}
-            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
-          >
-            Get My Free Instant Quote <ArrowRight size={18} />
-          </button>
-          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#F5F3EE", border: "1.5px solid #3A4A38", borderRadius: 10, padding: "16px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            <Phone size={16} /> Call Now
-          </a>
-        </div>
-
-        <a
-          href={GOOGLE_REVIEWS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${content.ratingLine} — opens in a new tab`}
-          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13.5, color: "#B9C4B2", textDecoration: "underline", marginBottom: 46 }}
-        >
-          <div style={{ display: "flex", gap: 2 }}>
-            {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={13} fill="#8FBC6A" color="#8FBC6A" />)}
+        <div className="mp-hero-text">
+          <a href="/" onClick={goTo("/")} className="mp-back">← Back to Home</a>
+          <div className="mp-pill"><MapPin size={13} /> LOCAL LAWN CARE · {n.city.toUpperCase()}</div>
+          <h1>Lawn Care in {placeLabel(n)}</h1>
+          <p className="mp-hero-services">Mowing • Edging • Trimming • Cleanup</p>
+          <p className="mp-hero-sub">Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in {n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.</p>
+          <div className="mp-hero-btns">
+            <button onClick={() => openQuote("hero")} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Free Instant Quote <ArrowRight size={18} /></button>
+            <a href={`tel:${content.phone}`} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
           </div>
-          {content.ratingLine}
-          <ExternalLink size={12} />
-        </a>
-
-        {/* BEFORE / AFTER — a real completed job, not staged for this
-            specific neighborhood (no photo library is tagged that way), but
-            genuine proof of work rather than a stock or invented image. Sized
-            with an explicit aspect-ratio via BeforeAfterSlider so it doesn't
-            shift layout while loading, and it's the only large image this
-            page loads — no separate preload, no eager hint — so it doesn't
-            add weight beyond what the homepage already costs. */}
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>See the Difference</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 0 20px" }}>A real Mow Pro GA yard, before and after</p>
-          <div style={{ maxWidth: 560, margin: "0 auto" }}>
-            <BeforeAfterSlider before={photos.before} after={photos.after} />
-            <p style={{ textAlign: "center", fontSize: 12.5, color: "#7C8A78", marginTop: 8 }}>Drag to see it before — and after</p>
-          </div>
+          <RatingLink location={`neighborhood_${n.slug}_hero`} />
         </div>
+      </section>
 
-        {/* WHAT'S INCLUDED */}
-        <div style={{ marginBottom: 50, textAlign: "left" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px", textAlign: "center" }}>What's Included, Every Visit</h2>
-          <p style={{ textAlign: "center", color: "#B9C4B2", margin: "0 0 24px" }}>No surprises. No upsells. Just a clean yard.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-            <ServiceCard icon={<Scissors size={22} color="#8FBC6A" />} title="Mowing & Edging" desc="Clean, consistent cuts with sharp, well-maintained equipment." />
-            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Weed Eating" desc="Fence lines, mailboxes, and obstacles — fully trimmed, every time." />
-            <ServiceCard icon={<Wind size={22} color="#8FBC6A" />} title="Blow-Off Cleanup" desc="Driveways and walkways left spotless when we're done." />
-            <ServiceCard icon={<Sprout size={22} color="#8FBC6A" />} title="Crack Spray Add-On" desc="Keep walkways weed-free — available as an add-on, +$25+." />
-          </div>
-        </div>
+      <div className="mp-wrap mp-fwrap"><TrustBar /></div>
 
-        {/* PRICING */}
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>{n.name} Lawn Care Pricing</h2>
-          <p style={{ color: "#B9C4B2", margin: "0 auto 20px", lineHeight: 1.6, maxWidth: 560 }}>
-            Every-2-weeks maintenance starting at $65+ per visit, priced by yard size. Mowing, edging, weed eating, and blow-off are all included — no surprise add-ons. Weekly, monthly, and one-time cuts are also available (see the quote form). We confirm the exact price once we see the property in person.
-          </p>
-          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {SIZE_OPTIONS.map((opt) => (
-                <div key={opt.key} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#152016" }}>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 14.5 }}>{opt.label}</div>
-                    <div style={{ fontSize: 12, color: "#7C8A78" }}>{opt.sub}</div>
-                  </div>
-                  <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15 }}>
-                    {MOW_PRICES.Biweekly[opt.key] == null ? "Custom" : `$${MOW_PRICES.Biweekly[opt.key]}+`}
-                  </div>
-                </div>
-              ))}
+      {n.intro && (
+        <section className="mp-wrap mp-fwrap mp-sec">
+          <div className="mp-card mp-why">
+            <MapPin size={34} className="mp-fprice-leaf" />
+            <div>
+              <div className="mp-eyebrow">ABOUT {n.name.replace(/^the /, "").toUpperCase()}</div>
+              <p>{n.intro}</p>
             </div>
           </div>
-          <button
-            onClick={() => { trackEvent("quote_opened", { location: "neighborhood_pricing", neighborhood: n.slug }); setShowQuote(true); }}
-            style={{ background: "#8FBC6A", color: "#0F1A10", border: "none", borderRadius: 10, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, marginTop: 24 }}
-          >
-            Get My Free Instant Quote <ArrowRight size={18} />
-          </button>
-        </div>
+        </section>
+      )}
 
-        {/* LEAF REMOVAL & FALL CLEANUP — local leaf-disposal rules for this area */}
-        <div style={{ marginBottom: 50 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 12px" }}>Leaf Removal & Fall Cleanup in {n.name}</h2>
-          <p style={{ color: "#B9C4B2", lineHeight: 1.7, maxWidth: 560, margin: "0 auto 12px" }}>{leafRuleText(n)}</p>
-          <p style={{ color: "#B9C4B2", lineHeight: 1.7, maxWidth: 560, margin: "0 auto 18px" }}>{leafServiceText(n)}</p>
-          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "left", display: "flex", flexDirection: "column", gap: 10 }}>
-            {LEAF_PRICE_ROWS.map(([label, price]) => (
-              <div key={label} style={{ border: "1px solid #24331F", borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "#152016" }}>
-                <div style={{ fontWeight: 700, fontSize: 14.5 }}>{label}</div>
-                <div style={{ fontWeight: 800, color: "#8FBC6A", fontSize: 15, whiteSpace: "nowrap" }}>{price}</div>
-              </div>
+      <section className="mp-wrap mp-fwrap mp-sec">
+        <div className="mp-eyebrow">WHAT'S INCLUDED</div>
+        <h2 className="mp-h2">What's Included, Every Visit</h2>
+        <p className="mp-lead">No surprises. No upsells. Just a clean yard.</p>
+        <div className="mp-fsvc-grid">
+          {[
+            [<Tractor key="i" />, "Mowing & Edging", "Clean, consistent cuts with sharp, well-maintained equipment."],
+            [<Sprout key="i" />, "Weed Eating", "Fence lines, mailboxes, and obstacles — fully trimmed, every time."],
+            [<Wind key="i" />, "Blow-Off Cleanup", "Driveways and walkways left spotless when we're done."],
+            [<SprayCan key="i" />, "Crack Spray Add-On", "Keep walkways weed-free — available as an add-on, +$25+."],
+          ].map(([icon, t, d]) => (
+            <div key={t} className="mp-card mp-fsvc">
+              <div className="mp-fsvc-icon">{icon}</div>
+              <div><h3>{t}</h3><p>{d}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-eyebrow">REAL RESULTS</div>
+        <h2 className="mp-h2">See the Difference</h2>
+        <p className="mp-lead">A real Mow Pro GA yard, before and after.</p>
+        <div className="mp-ba-frame mp-fba">
+          <BeforeAfterSlider before={photos.before} after={photos.after} aspect="16/9" />
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-fprice">
+          <div className="mp-fprice-head">
+            <Sprout size={34} className="mp-fprice-leaf" />
+            <div>
+              <h2 className="mp-h2">{n.name.replace(/^the /, "The ")} Lawn Care Pricing</h2>
+              <p className="mp-lead">Every-2-weeks maintenance, priced by yard size. Mowing, edging, weed eating, and blow-off are all included. Weekly, monthly, and one-time cuts are also available in the quote form. We confirm the exact price once we see the property in person.</p>
+            </div>
+          </div>
+          <div className="mp-price-grid">
+            {tiers.map((s, i) => (
+              <button key={s.key} className={`mp-card mp-price${i === 0 ? " is-featured" : ""}`} onClick={() => openQuote(`pricing_${s.key}`)}>
+                <Sprout size={20} className="mp-price-icon" />
+                <div className="mp-price-name">{["Small Yards", "Medium Yards", "Large Yards"][i]}</div>
+                <div className="mp-price-amt">${MOW_PRICES.Biweekly[s.key]}+</div>
+                <div className="mp-price-per">per visit</div>
+                <div className="mp-price-size">{s.sub}</div>
+              </button>
             ))}
           </div>
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 16 }}>
-            <a href="/leaf-removal" onClick={(e) => { e.preventDefault(); navigate("/leaf-removal"); }} style={{ color: "#8FBC6A", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Leaf removal service →</a>
-            <a href="/fall-cleanup" onClick={(e) => { e.preventDefault(); navigate("/fall-cleanup"); }} style={{ color: "#8FBC6A", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Fall yard cleanup →</a>
+          <p className="mp-price-note"><CheckCircle2 size={19} color="#A6E35A" /> Extra large / acreage (over 20,000 sq ft) gets a custom quote. No contracts — cancel anytime.</p>
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-eyebrow mp-orange">FALL SERVICE</div>
+        <h2 className="mp-h2">Leaf Removal &amp; Fall Cleanup in {n.name}</h2>
+        <div className="mp-card mp-rule mp-rule-wide">
+          <p>{leafRuleText(n)}</p>
+          <p>{leafServiceText(n)}</p>
+        </div>
+        <div className="mp-leaf-row">
+          {leafSizes.map((s, i) => (
+            <div key={s.key} className="mp-card mp-leaf-tier">
+              <span>{["Small", "Medium", "Large"][i]} yard</span>
+              <b>${LEAF_PRICES[s.key]}+</b>
+            </div>
+          ))}
+        </div>
+        <div className="mp-leaf-links">
+          <a href="/leaf-removal" onClick={goTo("/leaf-removal")} className="mp-link">Leaf removal service <ArrowRight size={14} /></a>
+          <a href="/fall-cleanup" onClick={goTo("/fall-cleanup")} className="mp-link">Fall yard cleanup <ArrowRight size={14} /></a>
+        </div>
+      </section>
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <h2 className="mp-h2">What Neighbors Are Saying</h2>
+        <p className="mp-lead mp-lead-tight">Real reviews from local customers on Google.</p>
+        <ReviewCards reviews={content.reviews.slice(0, 3)} location={`neighborhood_${n.slug}_reviews`} />
+      </section>
+
+      {n.faq && (
+        <section className="mp-wrap mp-fwrap mp-sec-sm mp-faq">
+          <h2 className="mp-h2">{n.name.replace(/^the /, "The ")} Lawn Care Questions</h2>
+          <p className="mp-lead mp-lead-tight">Quick answers to common questions.</p>
+          {n.faq.map(([q, a]) => (
+            <details key={q} className="mp-faq-item">
+              <summary>{q}<Plus size={18} className="mp-faq-plus" /></summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </section>
+      )}
+
+      <section className="mp-wrap mp-fwrap mp-sec-sm">
+        <div className="mp-farea-head">
+          <MapPin size={28} color="#A6E35A" />
+          <div>
+            <h2 className="mp-h2">Also Serving Nearby</h2>
+            <p className="mp-lead mp-lead-tight">Mow Pro GA also serves {NEIGHBORHOOD_NEARBY_LIST(n.slug)}, plus Douglasville and Douglas County, GA generally.</p>
           </div>
         </div>
-
-        {/* LOCAL FAQ — only for neighborhoods with page-specific questions */}
-        {n.faq && (
-          <div style={{ marginBottom: 50, textAlign: "left", maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
-            <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>{n.name} Lawn Care Questions</h2>
-            {n.faq.map(([q, a]) => (
-              <div key={q} style={{ borderBottom: "1px solid #24331F", padding: "18px 0" }}>
-                <div style={{ fontWeight: 700, fontSize: 15.5, color: "#F5F3EE", marginBottom: 6 }}>{q}</div>
-                <div style={{ fontSize: 14, color: "#B9C4B2", lineHeight: 1.6 }}>{a}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* NEARBY */}
-        <div style={{ marginBottom: 20 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 10px" }}>Also Serving Nearby</h2>
-          <p style={{ color: "#B9C4B2", lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>
-            Mow Pro GA also serves {NEIGHBORHOOD_NEARBY_LIST(n.slug)}, plus Douglasville and Douglas County, GA generally.
-          </p>
+        <div className="mp-chips mp-chips-row">
+          {NEIGHBORHOODS.filter((x) => x.slug !== n.slug).map((x) => (
+            <a key={x.slug} href={`/lawn-care/${x.slug}`} onClick={goTo(`/lawn-care/${x.slug}`)} className="mp-chip"><MapPin size={14} color="#A6E35A" /> {x.short || x.name.replace(/^the /, "")}</a>
+          ))}
         </div>
+      </section>
       </main>
-
-      {/* FOOTER CTA */}
-      <div style={{ background: "#8FBC6A", color: "#0F1A10", padding: "40px 24px", textAlign: "center", marginTop: 30 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 8px" }}>Ready for a yard you don't have to think about?</h2>
-        <p style={{ margin: "0 0 20px", opacity: 0.85 }}>Text, call, or request a quote — most yards confirmed same day.</p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => { trackEvent("quote_opened", { location: "neighborhood_footer", neighborhood: n.slug }); setShowQuote(true); }} style={{ background: "#0F1A10", color: "#F5F3EE", border: "none", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            Get My Free Instant Quote
-          </button>
-          <a href={`tel:${content.phone}`} style={{ background: "transparent", color: "#0F1A10", border: "1.5px solid #0F1A10", borderRadius: 10, padding: "14px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            <Phone size={16} /> Call Mow Pro Now
-          </a>
-        </div>
-      </div>
-
-      <QuoteModal open={showQuote} onClose={() => setShowQuote(false)} basePrice={content.price} />
-      <ChatWidget />
-
-      <div style={{ textAlign: "center", padding: "20px 20px 0" }}>
-        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer">
-          <img
-            src="/images/urban-ag-council-badge.webp"
-            alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council"
-            style={{ maxWidth: 160, width: "100%", height: "auto" }}
-          />
-        </a>
-      </div>
-      <div style={{ textAlign: "center", padding: 20, fontSize: 12.5, color: "#7C8A78" }}>
-        Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA
-      </div>
-    </div>
+    </SiteShell>
   );
 }
 
@@ -2690,7 +2655,7 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
               </div>
             </div>
             <a href="/#pricing" onClick={jump("pricing")}>Pricing</a>
-            <a href="/about" onClick={goTo("/about")}>About</a>
+            <a href="/about" onClick={goTo("/about")} className={active === "about" ? "is-active" : undefined}>About</a>
             <a href="/#reviews" onClick={jump("reviews")}>Reviews</a>
             <a href="/#faq" onClick={jump("faq")}>FAQ</a>
           </nav>
@@ -3228,6 +3193,49 @@ const HOME_CSS = `
   .mp-q-main{padding-bottom:40px}
   .mp-q-photo{margin:14px 0 0;border-radius:16px;height:260px}
   .mp-q-rake{margin:24px 0 0;border-radius:16px}
+}
+
+/* about / leaf / neighborhood pages */
+.mp-about-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;padding-top:26px;padding-bottom:30px}
+.mp-about-text{display:flex;flex-direction:column}
+.mp-about-text .mp-pill{align-self:flex-start;margin-bottom:12px}
+.mp-about-text h1{font-size:clamp(30px,4.4vw,44px);font-weight:900;line-height:1.08;letter-spacing:-.025em;margin:0 0 12px}
+.mp-about-photo{border:1.5px solid #A6E35A;border-radius:18px;overflow:hidden;box-shadow:0 0 30px rgba(142,210,74,.15);height:440px}
+.mp-about-photo img{width:100%;height:100%;object-fit:cover;object-position:center 3%;display:block}
+.mp-story{padding:26px 28px}
+.mp-story p{font-size:16px;color:#DCE3D6;line-height:1.8;margin:0 0 16px}
+.mp-story-quote{margin:6px 0 18px;padding:14px 18px;border-left:4px solid #A6E35A;background:#0A130B;border-radius:0 10px 10px 0;font-size:19px;font-weight:800;line-height:1.4;color:#F5F3EE}
+.mp-story-sign{color:#A6E35A;font-weight:800;font-size:15px;margin-top:4px}
+.mp-fsvc-grid-3{grid-template-columns:repeat(3,1fr)}
+.mp-why{display:flex;gap:16px;align-items:flex-start;padding:20px 22px}
+.mp-why p{margin:0;font-size:15px;color:#DCE3D6;line-height:1.65}
+.mp-why .mp-h2{margin-bottom:8px}
+.mp-rules{display:flex;flex-direction:column;gap:10px}
+.mp-rule{padding:16px 18px}
+.mp-rule h3{font-size:15.5px;font-weight:800;margin:0 0 6px}
+.mp-rule p{font-size:14px;color:#C9D3C2;line-height:1.6;margin:0}
+.mp-rule-wide p+p{margin-top:10px}
+.mp-leaf-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.mp-leaf-tier{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+.mp-leaf-tier span{font-weight:700;font-size:14px}
+.mp-leaf-tier b{color:#F2A33A;font-size:18px;font-weight:900}
+.mp-leaf-links{display:flex;gap:22px;flex-wrap:wrap;margin-top:12px}
+.mp-hero-text .mp-back{align-self:flex-start}
+@media (max-width:760px){
+  .mp-about-hero{display:flex;flex-direction:column;gap:18px;padding-top:14px;text-align:center}
+  .mp-about-text{align-items:center}
+  .mp-about-text .mp-back{align-self:flex-start}
+  .mp-about-text .mp-pill{align-self:center}
+  .mp-about-text .mp-fhero-btns{width:100%;max-width:none}
+  .mp-about-photo{height:340px;width:100%}
+  .mp-story{padding:18px 16px}
+  .mp-story p{font-size:15px}
+  .mp-story-quote{font-size:17px}
+  .mp-fsvc-grid-3{grid-template-columns:1fr}
+  .mp-why{padding:16px 14px;gap:12px}
+  .mp-why p{font-size:14px}
+  .mp-leaf-row{grid-template-columns:1fr;gap:8px}
+  .mp-hero-text .mp-back{align-self:flex-start}
 }
 
 `;
