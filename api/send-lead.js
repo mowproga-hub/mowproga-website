@@ -60,13 +60,57 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
   return { subject, html };
 }
 
+// Short list of the extras the customer picked, for the UmmiYard request card.
+export function addonsOf(b = {}) {
+  const out = [];
+  if (b.service === "Leaf removal") { if (b.bagHaul) out.push("Bag & haul"); if (b.heavyTrees) out.push("Heavy trees"); }
+  else if (b.service === "Hedge trimming") { if (b.tallCount) out.push(`${b.tallCount} tall shrubs`); if (b.hedgeOver10) out.push("Some over 10 ft"); if (b.hedgeOvergrown) out.push("Overgrown"); if (b.hedgeHaul) out.push("Haul clippings"); }
+  else if (b.service === "Brush & overgrowth") { if (b.brushHaul) out.push("Haul debris"); }
+  else if (b.service === "Mowing") { if (b.crackSpray) out.push("Crack spray"); if (b.overgrown === "mild") out.push("Overgrown (mild)"); if (b.overgrown === "severe") out.push("Overgrown (severe)"); if (b.edgeRestore) out.push("Edge restore"); }
+  return out.join(", ");
+}
+
+// Hands the lead to UmmiYard (Requests tab + phone alert, and the thank-you
+// text when the customer agreed to texts). Server to server, locked with
+// WEBSITE_LEAD_SECRET. Never blocks or breaks the lead email.
+export async function forwardToUmmiYard(b = {}, { fetchImpl = fetch, env = process.env } = {}) {
+  const secret = env.WEBSITE_LEAD_SECRET;
+  if (!secret) return { skipped: "no_secret" };
+  const url = env.UMMIYARD_LEAD_URL || "https://www.ummiyard.com/api/website-lead";
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const r = await fetchImpl(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-lead-secret": secret },
+      body: JSON.stringify({
+        name: b.name, phone: b.phone, address: b.address, service: b.service, size: b.size,
+        frequency: b.frequency, priceNum: b.priceNum, firstVisit: b.firstVisit, regularCut: b.regularCut,
+        priceLabel: b.price, addons: addonsOf(b), textConsent: b.textConsent, source: b.source,
+        brand: "Mow Pro GA", contact: "Joseph",
+      }),
+      signal: ctrl.signal,
+    });
+    return await r.json().catch(() => ({ status: r.status }));
+  } catch (e) {
+    console.error("forwardToUmmiYard:", e.message);
+    return { error: e.message };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  // Runs alongside the email; awaited below so Vercel doesn't cut it off.
+  const forwarding = forwardToUmmiYard(req.body || {});
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
+    await forwarding;
     return res.status(500).json({ error: "Server is missing its Resend API key." });
   }
 
@@ -91,8 +135,10 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     if (!response.ok) throw new Error(data?.message || "Resend error");
+    await forwarding;
     res.status(200).json({ success: true });
   } catch (err) {
+    await forwarding;
     res.status(500).json({ error: err.message || "Something went wrong sending the lead." });
   }
 }
