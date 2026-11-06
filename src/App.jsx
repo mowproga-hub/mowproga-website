@@ -2749,6 +2749,9 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
                   <a href="https://www.facebook.com/mowproga" target="_blank" rel="noopener noreferrer" aria-label="Mow Pro on Facebook" className="mp-soc mp-soc-fb">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.9c0-.6.3-.9 1-.9z"/></svg>
                   </a>
+                  <a href="https://www.instagram.com/mowproga" target="_blank" rel="noopener noreferrer" aria-label="Mow Pro on Instagram" className="mp-soc mp-soc-ig">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg>
+                  </a>
                   <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" aria-label="Mow Pro reviews on Google" className="mp-soc mp-soc-g">G</a>
                 </div>
               </div>
@@ -2993,6 +2996,7 @@ const HOME_CSS = `
 .mp-foot-social{display:flex;gap:10px;margin-top:10px}
 .mp-foot-col a.mp-soc{display:inline-flex;width:40px;height:40px;padding:0;border-radius:50%;align-items:center;justify-content:center}
 .mp-soc-fb{background:#1877F2}
+.mp-soc-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 .mp-foot-col a.mp-soc-g{background:#fff;color:#4285F4;font:700 19px Arial,sans-serif}
 .mp-badge img{width:120px;height:auto;display:block}
 @media (max-width:980px){.mp-foot-grid{grid-template-columns:1fr 1fr}.mp-foot-about{grid-column:1/-1}.mp-foot-grid>.mp-foot-col:last-child{grid-column:1/-1}}
