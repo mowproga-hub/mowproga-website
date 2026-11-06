@@ -4,7 +4,7 @@ import {
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
   FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS,
 } from "./siteData.js";
-import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Truck, Users, Calculator, Image as ImageIcon } from "lucide-react";
+import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Truck, Users, Calculator, Mail, Clock, Image as ImageIcon } from "lucide-react";
 
 // g.page/r/{id}/review is Google's write-a-review shortlink — it drops
 // visitors straight into a blank star-rating form, not a reviews list. It's
@@ -2703,22 +2703,60 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
 
       {/* FOOTER */}
       <footer className="mp-wrap mp-footer">
-        <div className="mp-foot-top">
-          <a href="/" onClick={goTo("/")} className="mp-brand">
-            <img src="/images/logo.png" alt="Mow Pro GA logo" width="40" height="40" loading="lazy" />
-            <span><span className="mp-brand-name">Mow Pro GA</span><span className="mp-brand-sub">Lawn Care • Douglasville, GA</span></span>
-          </a>
-          <nav className="mp-foot-links" aria-label="Footer">
-            <a href="/" onClick={goTo("/")}>Home</a>
-            <a href="/#services" onClick={jump("services")}>Services</a>
+        <div className="mp-foot-grid">
+          <div className="mp-foot-about">
+            <a href="/" onClick={goTo("/")} className="mp-brand">
+              <img src="/images/logo.png" alt="Mow Pro GA logo" width="40" height="40" loading="lazy" />
+              <span><span className="mp-brand-name">Mow Pro GA</span><span className="mp-brand-sub">Lawn Care • Douglasville, GA</span></span>
+            </a>
+            <p className="mp-foot-tag">Family-run lawn care for homes in Douglasville and nearby. No contracts.</p>
+            <div className="mp-foot-contact">
+              <div className="mp-foot-legalname">Mow Pro Lawn Care LLC</div>
+              <a href={`tel:${content.phone}`} onClick={() => trackEvent("call_click", { location: trackPrefix + "footer" })} className="mp-foot-phone"><Phone size={18} /> Call or text {phoneDisplay}</a>
+              <a href="mailto:joseph@mowproga.com" className="mp-foot-line"><Mail size={16} /> joseph@mowproga.com</a>
+              <div className="mp-foot-line"><MapPin size={16} /> Serving Douglasville, GA 30134 &amp; nearby</div>
+              <div className="mp-foot-line"><Clock size={16} /> Mon–Sat, 9 AM – 6 PM</div>
+              <button onClick={() => openQuote("footer_box")} className="mp-btn mp-foot-quote">Get My Free Instant Quote</button>
+            </div>
+          </div>
+          <nav className="mp-foot-col" aria-label="Services">
+            <p className="mp-foot-h">Services</p>
+            <a href="/#services" onClick={jump("services")}>Lawn Mowing</a>
+            <a href="/leaf-removal" onClick={goTo("/leaf-removal")}>Leaf Removal</a>
+            <a href="/fall-cleanup" onClick={goTo("/fall-cleanup")}>Fall Cleanup</a>
+            <a href="/#services" onClick={jump("services")}>Hedge Trimming</a>
             <a href="/#pricing" onClick={jump("pricing")}>Pricing</a>
-            <a href="/about" onClick={goTo("/about")}>About</a>
-            <a href="/#reviews" onClick={jump("reviews")}>Reviews</a>
-            <a href="/#faq" onClick={jump("faq")}>FAQ</a>
           </nav>
-          <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge">
-            <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" loading="lazy" />
-          </a>
+          <nav className="mp-foot-col" aria-label="Areas we serve">
+            <p className="mp-foot-h">Areas We Serve</p>
+            {["stewarts-mill", "shallowford-heights", "springwood-village", "big-a", "winston", "lithia-springs", "villa-rica"].map((slug) => {
+              const n = NEIGHBORHOODS.find((x) => x.slug === slug);
+              return n ? <a key={slug} href={`/lawn-care/${slug}`} onClick={goTo(`/lawn-care/${slug}`)}>{n.short || n.name}</a> : null;
+            })}
+          </nav>
+          <div className="mp-foot-col">
+            <p className="mp-foot-h">Company</p>
+            <div className="mp-foot-inline">
+              <a href="/about" onClick={goTo("/about")}>About</a><span>·</span>
+              <a href="/#reviews" onClick={jump("reviews")}>Reviews</a><span>·</span>
+              <a href="/#faq" onClick={jump("faq")}>FAQ</a>
+            </div>
+            <div className="mp-foot-proof">
+              <div>
+                <div className="mp-foot-stars" aria-hidden="true">★★★★★</div>
+                <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-foot-rating">{content.ratingLine}</a>
+                <div className="mp-foot-social">
+                  <a href="https://www.facebook.com/mowproga" target="_blank" rel="noopener noreferrer" aria-label="Mow Pro on Facebook" className="mp-soc mp-soc-fb">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.9c0-.6.3-.9 1-.9z"/></svg>
+                  </a>
+                  <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" aria-label="Mow Pro reviews on Google" className="mp-soc mp-soc-g">G</a>
+                </div>
+              </div>
+              <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge">
+                <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" loading="lazy" />
+              </a>
+            </div>
+          </div>
         </div>
         <div className="mp-foot-bottom">
           <span>© {new Date().getFullYear()} Mow Pro Lawn Care LLC. All rights reserved.</span>
@@ -2937,10 +2975,27 @@ const HOME_CSS = `
 
 /* footer */
 .mp-footer{padding-top:30px;padding-bottom:90px}
-.mp-foot-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.mp-foot-links{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;font-weight:600}
-.mp-foot-links a{text-decoration:none}
-.mp-badge img{width:110px;height:auto;display:block}
+.mp-foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:28px;align-items:start}
+.mp-foot-tag{color:#C9D3C2;font-size:14.5px;line-height:1.5;margin:12px 0 14px}
+.mp-foot-contact{background:#12241A;border:1px solid #1F3A24;border-radius:14px;padding:16px}
+.mp-foot-legalname{font-size:12.5px;color:#93A08D;font-weight:600;margin-bottom:4px}
+.mp-foot-phone{display:flex;align-items:center;gap:8px;color:#fff;font-size:19px;font-weight:800;text-decoration:none}
+.mp-foot-line{display:flex;align-items:center;gap:8px;color:#C9D3C2;font-size:14.5px;margin-top:7px;text-decoration:none}
+.mp-foot-line svg,.mp-foot-phone svg{color:#A6E35A;flex-shrink:0}
+.mp-foot-quote{width:100%;margin-top:14px}
+.mp-foot-h{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#A6E35A;font-weight:800;margin:4px 0 10px}
+.mp-foot-col a{display:block;color:#E8EFE4;text-decoration:none;font-size:14.5px;padding:5px 0}
+.mp-foot-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#93A08D}
+.mp-foot-inline a{display:inline;padding:5px 0}
+.mp-foot-proof{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-top:20px;flex-wrap:wrap}
+.mp-foot-stars{color:#FFD54A;font-size:17px;letter-spacing:2px}
+.mp-foot-col a.mp-foot-rating{padding:2px 0;font-size:13.5px}
+.mp-foot-social{display:flex;gap:10px;margin-top:10px}
+.mp-foot-col a.mp-soc{display:inline-flex;width:40px;height:40px;padding:0;border-radius:50%;align-items:center;justify-content:center}
+.mp-soc-fb{background:#1877F2}
+.mp-foot-col a.mp-soc-g{background:#fff;color:#4285F4;font:700 19px Arial,sans-serif}
+.mp-badge img{width:120px;height:auto;display:block}
+@media (max-width:980px){.mp-foot-grid{grid-template-columns:1fr 1fr}.mp-foot-about{grid-column:1/-1}.mp-foot-grid>.mp-foot-col:last-child{grid-column:1/-1}}
 .mp-foot-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid #1C2E1B;font-size:12.5px;color:#93A08D}
 .mp-foot-legal{display:flex;gap:16px;flex-wrap:wrap}
 .mp-foot-legal a{color:#93A08D}
@@ -3020,8 +3075,6 @@ const HOME_CSS = `
   .mp-cta-left{gap:14px}
   .mp-cta-icon{width:40px;height:40px}
   .mp-cta-btns{min-width:0}
-  .mp-foot-top{flex-direction:column;align-items:center;text-align:center}
-  .mp-foot-links{justify-content:center;gap:16px}
   .mp-foot-bottom{flex-direction:column;align-items:center;text-align:center}
 }
 @media (max-width:640px){
