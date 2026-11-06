@@ -127,7 +127,7 @@ const HOME_FAQ = [
 const DEFAULT_CONTENT = {
   headline: "Biweekly Lawn Mowing in Douglasville, GA",
   subheading: "Your yard, handled. Reliable mowing, edging, and cleanup from a local, family-run crew. Same-day quotes. Fast response. No contracts.",
-  phone: "4046696945",
+  phone: "4705179547",
   serviceArea: "SERVING DOUGLASVILLE & SURROUNDING AREAS",
   price: "75",
   ratingLine: "5.0 stars · 65 reviews on Google",
@@ -231,7 +231,7 @@ const FALL_CLEANUP_JSONLD = {
     "@type": "LocalBusiness",
     "@id": "https://mowproga.com/#business",
     "name": "Mow Pro Lawn Care LLC",
-    "telephone": "+14046696945",
+    "telephone": "+14705179547",
     "url": FALL_CLEANUP_SEO.url,
     "image": FALL_CLEANUP_SEO.image,
     "priceRange": "$$",
@@ -1472,7 +1472,7 @@ function ChatWidget() {
       }
       trackEvent("chat_widget_message", {});
     } catch (err) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong — feel free to text or call us directly at (404) 669-6945." }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong — feel free to text or call us directly at (470) 517-9547." }]);
     }
     setLoading(false);
   };

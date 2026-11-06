@@ -19,7 +19,7 @@ export const NEIGHBORHOODS = [
       ["Do you serve my part of Villa Rica?", "Yes. We serve residential homes across Villa Rica, GA (30180), on both the Douglas County and Carroll County sides of town, including Downtown Villa Rica, the Conners Road area, and the non-gated streets around Mirror Lake. We don't currently service gated communities."],
       ["How much does lawn mowing cost in Villa Rica?", "Every-2-weeks mowing starts at $65 for small yards, $75 for medium yards, and $85 for large yards, with edging, weed eating, and blow-off included on every visit. Weekly, monthly, and one-time cuts are also available. Get an instant estimate online, and we confirm the final price once we see the yard."],
       ["Do you do leaf removal in Villa Rica?", "Yes. Leaf removal starts at $130 for small yards. We pile leaves on your property at no extra charge, or bag and haul them away for $5-8 a bag. Villa Rica city crews don't pick up yard waste that a contractor removed, so you're never left with bags the city won't take."],
-      ["How do I get a quote in Villa Rica?", "Request a free instant quote online, or call or text 404-669-6945. There are no contracts, and you can cancel anytime."],
+      ["How do I get a quote in Villa Rica?", "Request a free instant quote online, or call or text 470-517-9547. There are no contracts, and you can cancel anytime."],
     ] },
 ];
 
@@ -35,7 +35,7 @@ export const titleLabel = (n) => {
 
 export const neighborhoodTitle = (n) => `Lawn Care in ${titleLabel(n)} | Mow Pro`;
 export const neighborhoodDescription = (n) =>
-  `Lawn mowing, edging, leaf removal, and fall cleanup for homes in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 404-669-6945.`;
+  `Lawn mowing, edging, leaf removal, and fall cleanup for homes in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 470-517-9547.`;
 
 export const LEAF_PRICE_ROWS = [
   ["Small yard (under 5,000 sq ft)", "$130+"],
@@ -64,7 +64,7 @@ export const leafServiceText = (n) =>
 // ── Leaf Removal service page ──────────────────────────────────────────────
 export const LEAF_REMOVAL_SEO = {
   title: "Leaf Removal Service in Douglasville, GA | Mow Pro",
-  description: "Leaf removal in Douglasville, GA: leaves cleared off your lawn, beds, and driveway, piled on-site or bagged and hauled away. From $130. Call 404-669-6945.",
+  description: "Leaf removal in Douglasville, GA: leaves cleared off your lawn, beds, and driveway, piled on-site or bagged and hauled away. From $130. Call 470-517-9547.",
   url: "https://mowproga.com/leaf-removal",
   image: "https://mowproga.com/images/leaf-cleanup-ba.webp",
 };
@@ -99,7 +99,7 @@ export const LEAF_REMOVAL_FAQ = [
 // /leaf-removal don't compete for the same searches) ──────────────────────
 export const FALL_CLEANUP_SEO = {
   title: "Fall Yard Cleanup in Douglasville, GA | Mow Pro",
-  description: "Fall yard cleanup in Douglasville, GA: leaves cleared, flower beds cleaned out, a final mow and edge, and debris hauled away. From $130. Call 404-669-6945.",
+  description: "Fall yard cleanup in Douglasville, GA: leaves cleared, flower beds cleaned out, a final mow and edge, and debris hauled away. From $130. Call 470-517-9547.",
   url: "https://mowproga.com/fall-cleanup",
   image: "https://mowproga.com/images/leaf-cleanup-ba.webp",
 };
