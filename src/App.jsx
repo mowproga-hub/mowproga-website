@@ -83,6 +83,13 @@ function captureLeadSource() {
   try {
     const params = new URLSearchParams(window.location.search);
     let source = params.get("utm_source") || params.get("ref");
+    // Which ad or post they came from (utm_content), so leads from different
+    // ads in the same campaign can be told apart, e.g. "facebook · Ad C ($20 off)".
+    const content = params.get("utm_content");
+    if (source && content) {
+      const adLabels = { "ad-a": "Ad A", "ad-b": "Ad B", "offer-c": "Ad C ($20 off)" };
+      source = `${source} · ${adLabels[content] || content}`;
+    }
     // No tag? Fall back to the referring site (e.g. yelp.com, nextdoor.com),
     // since some listings like Yelp don't allow tracking URLs.
     if (!source && document.referrer) {
