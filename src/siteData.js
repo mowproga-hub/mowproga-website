@@ -114,3 +114,36 @@ export const LEAF_PAGE_PHOTOS = [JOB_PHOTOS.leafLawn, JOB_PHOTOS.overgrown];
 export const FALL_PAGE_PHOTOS = [JOB_PHOTOS.overgrown, JOB_PHOTOS.leafLawn];
 export const jobPhotosHtml = (list) =>
   `<h2>More Real Mow Pro Jobs</h2>${list.map((p) => `<figure><img src="${p.src}" alt="${p.alt}" width="${p.w}" height="${p.h}" loading="lazy" /><figcaption>${p.caption}</figcaption></figure>`).join("")}`;
+
+// ─── Live Google rating + review count ───────────────────────────────────
+// Comes from UmmiYard, which syncs Mow Pro's Google Business Profile every
+// 15 minutes (free Google Business Profile API, no per-call charge). Used by
+// the footer (browser), the middleware (crawlers), and the prerender build.
+export const REVIEW_STATS_URL = "https://www.ummiyard.com/api/review-stats?owner=9326eb49-7c27-4eea-9cfa-0991e0de385a";
+
+export async function fetchReviewStats(fetchImpl = fetch, timeoutMs = 2500) {
+  try {
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const t = ctl ? setTimeout(() => ctl.abort(), timeoutMs) : null;
+    const r = await fetchImpl(REVIEW_STATS_URL, ctl ? { signal: ctl.signal } : {});
+    if (t) clearTimeout(t);
+    if (!r.ok) return null;
+    const d = await r.json();
+    const total = Number(d.total);
+    if (!Number.isFinite(total) || total <= 0) return null;
+    const rating = Number(d.rating);
+    return { total, rating: Number.isFinite(rating) && rating > 0 ? rating : null };
+  } catch { return null; }
+}
+
+export const ratingText = (s, sep = " · ") => `${(s.rating ?? 5).toFixed(1)} stars${sep}${s.total} reviews on Google`;
+
+// Swaps the baked-in count for the live one in a page's HTML (visible text
+// and the JSON-LD reviewCount). The star average in JSON-LD is left alone.
+export function applyReviewStats(html, s) {
+  if (!s) return html;
+  return html
+    .replace(/\d+(?:\.\d)? stars, \d+ reviews on Google/g, ratingText(s, ", "))
+    .replace(/\d+(?:\.\d)? stars · \d+ reviews on Google/g, ratingText(s))
+    .replace(/("reviewCount":\s*")\d+(")/g, `$1${s.total}$2`);
+}

@@ -3,6 +3,7 @@ import {
   NEIGHBORHOODS, getNeighborhood, placeLabel, titleLabel, neighborhoodTitle, neighborhoodDescription, leafRuleText, leafServiceText,
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS, LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ,
   FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS,
+  fetchReviewStats, ratingText,
 } from "./siteData.js";
 import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, Upload, X, Plus, Trash2, MessageCircle, Send, ExternalLink, Leaf, ShieldCheck, CalendarCheck, CalendarDays, Zap, Menu, FileText, SprayCan, Shrub, Trees, Tractor, ChevronDown, Truck, Users, Calculator, Mail, Clock, Image as ImageIcon } from "lucide-react";
 
@@ -13,6 +14,20 @@ import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, 
 // Maps search-action URL (Google's documented format for opening a specific
 // listing by name+address without needing a Place ID) that lands on the
 // business's Maps listing with its real rating and reviews visible.
+// Footer rating line: shows the built-in text first (matches the prerendered
+// HTML, so no flash), then swaps in the live Google count from UmmiYard.
+let reviewStatsPromise = null;
+function LiveRatingLine({ fallback }) {
+  const [text, setText] = useState(fallback);
+  useEffect(() => {
+    let alive = true;
+    reviewStatsPromise = reviewStatsPromise || fetchReviewStats();
+    reviewStatsPromise.then((s) => { if (alive && s) setText(ratingText(s)); });
+    return () => { alive = false; };
+  }, []);
+  return text;
+}
+
 const GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134";
 
 // Replace with your real Measurement ID from analytics.google.com (looks like "G-XXXXXXXXXX").
@@ -2765,7 +2780,7 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
             <div className="mp-foot-proof">
               <div>
                 <div className="mp-foot-stars" aria-hidden="true">★★★★★</div>
-                <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-foot-rating">{content.ratingLine}</a>
+                <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-foot-rating"><LiveRatingLine fallback={content.ratingLine} /></a>
                 <div className="mp-foot-social">
                   <a href="https://www.facebook.com/mowproga" target="_blank" rel="noopener noreferrer" aria-label="Mow Pro on Facebook" className="mp-soc mp-soc-fb">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.9c0-.6.3-.9 1-.9z"/></svg>

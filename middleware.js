@@ -22,6 +22,7 @@ import {
   NEIGHBORHOODS, placeLabel, neighborhoodTitle, neighborhoodDescription, leafRuleText, leafServiceText,
   LEAF_PRICE_ROWS, LEAF_REMOVAL_SEO, LEAF_REMOVAL_INTRO, LEAF_REMOVAL_WHY, LEAF_REMOVAL_OPTIONS,
   LEAF_LOCAL_RULES, LEAF_REMOVAL_FAQ, FALL_CLEANUP_SEO, LEAF_PAGE_PHOTOS, FALL_PAGE_PHOTOS, jobPhotosHtml,
+  fetchReviewStats, applyReviewStats,
 } from "./src/siteData.js";
 
 export const config = {
@@ -462,13 +463,16 @@ export default async function middleware(request) {
   // Prefer the build-time prerendered page (real design + this page's own
   // head tags, written by scripts/prerender.mjs) so visitors see the finished
   // page on first paint. Falls back to the old index.html rewrite.
-  const pre = await fetch(`${url.origin}/prerender/${url.pathname.slice(1).replace(/\//g, "__")}.html`);
+  const [pre, stats] = await Promise.all([
+    fetch(`${url.origin}/prerender/${url.pathname.slice(1).replace(/\//g, "__")}.html`),
+    fetchReviewStats(fetch, 1500),
+  ]);
   if (pre.ok) {
-    return new Response(await pre.text(), { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+    return new Response(applyReviewStats(await pre.text(), stats), { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
   }
   const res = await fetch(`${url.origin}/index.html`);
   const html = await res.text();
-  return new Response(rewriteHead(html, url.pathname), {
+  return new Response(applyReviewStats(rewriteHead(html, url.pathname), stats), {
     status: 200,
     headers: { "content-type": "text/html; charset=utf-8" },
   });

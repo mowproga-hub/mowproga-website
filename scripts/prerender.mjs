@@ -38,3 +38,18 @@ for (const route of routes) {
   console.log("prerendered", route, `${Math.round(html.length / 1024)} KB`);
 }
 fs.rmSync(path.join(root, "dist-ssr"), { recursive: true, force: true });
+
+// Bake today's Google review count into every built page (visible footer
+// text and JSON-LD). If UmmiYard can't be reached, the numbers already in the
+// source stay as they are and the build still succeeds.
+const { fetchReviewStats, applyReviewStats } = await import(pathToFileURL(path.join(root, "src", "siteData.js")).href);
+const stats = await fetchReviewStats(fetch, 5000);
+if (stats) {
+  const htmlFiles = [];
+  const walk = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (p.endsWith(".html")) htmlFiles.push(p); } };
+  walk(dist);
+  for (const f of htmlFiles) fs.writeFileSync(f, applyReviewStats(fs.readFileSync(f, "utf8"), stats));
+  console.log(`review stats: ${stats.total} reviews applied to ${htmlFiles.length} pages`);
+} else {
+  console.log("review stats: UmmiYard not reachable, kept the built-in count");
+}
