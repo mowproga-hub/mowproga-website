@@ -145,5 +145,8 @@ export function applyReviewStats(html, s) {
   return html
     .replace(/\d+(?:\.\d)? stars, \d+ reviews on Google/g, ratingText(s, ", "))
     .replace(/\d+(?:\.\d)? stars · \d+ reviews on Google/g, ratingText(s))
-    .replace(/("reviewCount":\s*")\d+(")/g, `$1${s.total}$2`);
+    .replace(/("reviewCount":\s*")\d+(")/g, `$1${s.total}$2`)
+    // Rating badges (<span class="mp-u">66 Google Reviews</span>, React may
+    // put <!-- --> between the number and the words).
+    .replace(/(<span class="mp-u">)\d+((?:<!-- -->)?\s?(?:Google )?Reviews<\/span>)/g, `$1${s.total}$2`);
 }

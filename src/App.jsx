@@ -28,6 +28,20 @@ function LiveRatingLine({ fallback }) {
   return text;
 }
 
+// Review count shown on the rating badges: starts at the built-in number
+// (matches the prerendered HTML), then swaps in the live Google count.
+const REVIEW_COUNT_FALLBACK = 66;
+function LiveReviewCount() {
+  const [n, setN] = useState(REVIEW_COUNT_FALLBACK);
+  useEffect(() => {
+    let alive = true;
+    reviewStatsPromise = reviewStatsPromise || fetchReviewStats();
+    reviewStatsPromise.then((s) => { if (alive && s && s.total) setN(s.total); });
+    return () => { alive = false; };
+  }, []);
+  return n;
+}
+
 const GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134";
 
 // Replace with your real Measurement ID from analytics.google.com (looks like "G-XXXXXXXXXX").
@@ -1610,7 +1624,7 @@ function RatingLink({ location }) {
       <strong>5.0</strong>
       <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={17} fill="#FBBC04" color="#FBBC04" />)}</span>
       <span className="mp-rating-sep" />
-      <span className="mp-u">65 Google Reviews</span>
+      <span className="mp-u"><LiveReviewCount /> Google Reviews</span>
     </a>
   );
 }
@@ -1620,7 +1634,7 @@ function ReviewCards({ reviews, location }) {
     <>
       <div className="mp-frev-bar">
         <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge mp-rev-badge-plain">
-          <GoogleG size={24} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
+          <GoogleG size={24} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u"><LiveReviewCount /> Reviews</span>
         </a>
         <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("reviews_link_click", { location })} className="mp-btn-outline mp-btn-sm">Read All Reviews <ArrowRight size={15} /></a>
       </div>
@@ -1759,7 +1773,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
             <strong>5.0</strong>
             <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={17} fill="#FBBC04" color="#FBBC04" />)}</span>
             <span className="mp-rating-sep" />
-            <span className="mp-u">65 Google Reviews</span>
+            <span className="mp-u"><LiveReviewCount /> Google Reviews</span>
           </a>
         </div>
       </section>
@@ -1832,7 +1846,7 @@ function FallCleanupPage({ content, navigate, setShowQuote, showQuote }) {
         <p className="mp-lead mp-lead-tight">Real reviews from local customers on Google.</p>
         <div className="mp-frev-bar">
           <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge mp-rev-badge-plain">
-            <GoogleG size={24} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
+            <GoogleG size={24} /> <strong>5.0</strong> <span className="mp-rating-sep" /> <span className="mp-u"><LiveReviewCount /> Reviews</span>
           </a>
           <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-btn-outline mp-btn-sm">Read All Reviews <ArrowRight size={15} /></a>
         </div>
@@ -2269,7 +2283,7 @@ function QuoteLandingPage({ content }) {
                 <strong>5.0</strong>
                 <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={16} fill="#FBBC04" color="#FBBC04" />)}</span>
                 <span className="mp-rating-sep" />
-                <span className="mp-u">65 Google Reviews</span>
+                <span className="mp-u"><LiveReviewCount /> Google Reviews</span>
               </a>
             </section>
             <div className="mp-q-photo">
@@ -2473,7 +2487,7 @@ export default function MowProLanding({ initialPath }) {
             <strong>5.0</strong>
             <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={17} fill="#FBBC04" color="#FBBC04" />)}</span>
             <span className="mp-rating-sep" />
-            <span className="mp-u">65 Google Reviews</span>
+            <span className="mp-u"><LiveReviewCount /> Google Reviews</span>
           </a>
         </div>
       </section>
@@ -2573,7 +2587,7 @@ export default function MowProLanding({ initialPath }) {
           </div>
           <div className="mp-rev-actions">
             <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-rev-badge">
-              <GoogleG size={22} /> <strong>5.0</strong><span className="mp-hide-sm">&nbsp;Rating</span> <span className="mp-rating-sep" /> <span className="mp-u">65 Reviews</span>
+              <GoogleG size={22} /> <strong>5.0</strong><span className="mp-hide-sm">&nbsp;Rating</span> <span className="mp-rating-sep" /> <span className="mp-u"><LiveReviewCount /> Reviews</span>
             </a>
             <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mp-btn-outline mp-btn-sm mp-hide-sm">Read All Reviews <ArrowRight size={15} /></a>
           </div>
