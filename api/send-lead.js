@@ -4,7 +4,7 @@
 
 // Pure function, kept separate from the handler so the email content can be
 // unit-tested without needing a live RESEND_API_KEY or network access.
-export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source, frequency, regularPrice, brushHaul, textConsent }) {
+export function buildEmail({ name, phone, address, size, price, service, crackSpray, overgrown, edgeRestore, heavyTrees, bagHaul, tallCount, hedgeOver10, hedgeOvergrown, hedgeHaul, source, frequency, regularPrice, brushHaul, textConsent }, firstContact) {
   // form.overgrownLevel is "none" | "mild" | "severe" — "none" is a
   // non-empty string, so a plain `overgrown ? "Yes" : "No"` check always
   // printed "Yes" regardless of what was actually selected.
@@ -28,6 +28,7 @@ export function buildEmail({ name, phone, address, size, price, service, crackSp
 
   const html = `
     <h2>New quote request from mowproga.com</h2>
+    <p style="font-size:16px;padding:8px 10px;background:#F1F7E8;border-radius:6px"><b>First contact:</b> ${firstContact || (textConsent === true ? "Couldn't confirm the thank-you text. Check your UmmiYard Inbox before texting them" : "📞 You reach out first: CALL (no texts allowed)")}</p>
     <p><b>Source:</b> ${sourceLabel}</p>
     <p><b>Name:</b> ${name}</p>
     <p><b>Phone:</b> ${phone}</p>
@@ -115,7 +116,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { subject, html } = buildEmail(req.body);
+    // Wait for UmmiYard (max 8s) so the email can say whether the customer
+    // already got the thank-you text or Joseph must reach out first.
+    const fwd = await forwarding;
+    const { subject, html } = buildEmail(req.body, fwd && typeof fwd.firstContact === "string" ? fwd.firstContact : null);
 
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
