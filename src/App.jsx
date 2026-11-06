@@ -31,9 +31,27 @@ function loadGoogleAnalytics() {
   gtag("config", GA_MEASUREMENT_ID);
 }
 
+// Meta Pixel (Facebook/Instagram ads). Base code + PageView live in
+// index.html; SPA page changes are picked up by the pixel automatically.
+// Only these events are mirrored to Meta, and never names/phones/addresses.
+const META_EVENTS = {
+  generate_lead: "Lead",
+  chat_lead_sent: "Lead",
+  quote_opened: "InitiateCheckout",
+  call_click: "Contact",
+};
+
 function trackEvent(name, params) {
-  if (typeof window !== "undefined" && window.gtag) {
+  if (typeof window === "undefined") return;
+  if (window.gtag) {
     window.gtag("event", name, params || {});
+  }
+  const metaName = META_EVENTS[name];
+  if (metaName && window.fbq) {
+    const p = params || {};
+    const metaParams = { content_name: name };
+    if (typeof p.value === "number" && p.value > 0) { metaParams.value = p.value; metaParams.currency = p.currency || "USD"; }
+    try { window.fbq("track", metaName, metaParams); } catch (e) {}
   }
 }
 
