@@ -144,7 +144,7 @@ function leafRemovalPage() {
 
         <h2>Leaf Removal Pricing</h2>
         <ul>${LEAF_PRICE_ROWS.map(([k, v]) => `<li>${k}: ${v}</li>`).join("")}<li>Bag &amp; haul away (optional, default is piled on-site): $5–8/bag</li></ul>
-        <p>Regular mowing customers get a discounted leaf rate. We confirm the exact price once we see the property in person.</p>
+        <p>Regular mowing customers get a discounted leaf rate. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person.</p>
 
         <h2>What to Do With the Leaves in Douglas County</h2>
         <ul>${LEAF_LOCAL_RULES.map(([t, d]) => `<li><strong>${t}:</strong> ${d}</li>`).join("")}</ul>
@@ -185,9 +185,9 @@ const PAGES = {
         <h2>Fall Cleanup Pricing</h2>
         <p>Leaf removal is priced by yard size, same as our other services:</p>
         <ul>
-          <li>Small yard (under 5,000 sq ft): $130+</li>
-          <li>Medium yard (5,000–10,000 sq ft): $260+</li>
-          <li>Large yard (10,000–20,000 sq ft): $400+</li>
+          <li>Small yard (under 5,000 sq ft): $127+</li>
+          <li>Medium yard (5,000–10,000 sq ft): $187+</li>
+          <li>Large yard (10,000–20,000 sq ft): $287+</li>
           <li>Extra large / acreage (over 20,000 sq ft): custom quote</li>
           <li>Bag &amp; haul away (optional add-on, default is piled on-site): $5–8/bag</li>
         </ul>
@@ -199,7 +199,7 @@ const PAGES = {
         <h2>Fall Cleanup Questions</h2>
         <dl>
           <dt>How much does fall yard cleanup cost in Douglasville, GA?</dt>
-          <dd>Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.</dd>
+          <dd>Fall cleanup is priced by yard size, same as leaf removal: small yards start at $127, medium at $187, large at $287, and extra-large or acreage properties get a custom quote. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person.</dd>
           <dt>Do you bag and haul away the leaves, or leave them on the property?</dt>
           <dd>By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5-8 per bag, confirmed once we see the volume.</dd>
           <dt>When should I schedule fall cleanup in Douglasville?</dt>
@@ -268,7 +268,7 @@ const FALL_CLEANUP_FAQ_JSON_LD = {
       name: "How much does fall yard cleanup cost in Douglasville, GA?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $130, medium at $260, large at $400, and extra-large or acreage properties get a custom quote. We confirm the exact price once we see the property in person.",
+        text: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $127, medium at $187, large at $287, and extra-large or acreage properties get a custom quote. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person.",
       },
     },
     {
@@ -312,12 +312,12 @@ const FALL_CLEANUP_JSON_LD = {
     { "@type": "City", name: "Powder Springs, GA" },
     { "@type": "AdministrativeArea", name: "Douglas County, GA" },
   ],
-  priceRange: "$130+",
+  priceRange: "$127+",
   offers: {
     "@type": "Offer",
     priceCurrency: "USD",
-    priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" },
-    description: "Leaf removal starts at $130 for small yards ($260 medium, $400 large). Bagging and haul-away adds $5-8 per bag.",
+    priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" },
+    description: "Leaf removal starts at $127 for small yards ($187 medium, $287 large). Bagging and haul-away adds $5-8 per bag.",
   },
   provider: { "@id": "https://mowproga.com/#business" },
 };
@@ -349,8 +349,8 @@ function neighborhoodJsonLd(n) {
       name: `Lawn care and leaf removal in ${n.name}`,
       itemListElement: [
         { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 65, priceCurrency: "USD" }, itemOffered: { "@type": "Service", name: "Biweekly Lawn Mowing & Edging" } },
-        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" }, url: "https://mowproga.com/leaf-removal", itemOffered: { "@type": "Service", name: "Leaf Removal", serviceType: "Leaf Removal" } },
-        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" }, url: "https://mowproga.com/fall-cleanup", itemOffered: { "@type": "Service", name: "Fall Yard Cleanup", serviceType: "Fall Cleanup" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" }, url: "https://mowproga.com/leaf-removal", itemOffered: { "@type": "Service", name: "Leaf Removal", serviceType: "Leaf Removal" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" }, url: "https://mowproga.com/fall-cleanup", itemOffered: { "@type": "Service", name: "Fall Yard Cleanup", serviceType: "Fall Cleanup" } },
       ],
     },
     provider: { "@id": "https://mowproga.com/#business" },
@@ -373,8 +373,8 @@ const LEAF_REMOVAL_JSON_LD = {
   offers: {
     "@type": "Offer",
     priceCurrency: "USD",
-    priceSpecification: { "@type": "PriceSpecification", minPrice: 130, priceCurrency: "USD" },
-    description: "Leaf removal starts at $130 for small yards ($260 medium, $400 large). Leaves piled on-site at no charge, or bagged and hauled away for $5-8 per bag.",
+    priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" },
+    description: "Leaf removal starts at $127 for small yards ($187 medium, $287 large). Leaves piled on-site at no charge, or bagged and hauled away for $5-8 per bag.",
   },
   provider: { "@id": "https://mowproga.com/#business" },
 };

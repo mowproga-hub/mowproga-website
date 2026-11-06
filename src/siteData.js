@@ -18,7 +18,7 @@ export const NEIGHBORHOODS = [
     faq: [
       ["Do you serve my part of Villa Rica?", "Yes. We serve residential homes across Villa Rica, GA (30180), on both the Douglas County and Carroll County sides of town, including Downtown Villa Rica, the Conners Road area, and the non-gated streets around Mirror Lake. We don't currently service gated communities."],
       ["How much does lawn mowing cost in Villa Rica?", "Every-2-weeks mowing starts at $65 for small yards, $75 for medium yards, and $85 for large yards, with edging, weed eating, and blow-off included on every visit. Weekly, monthly, and one-time cuts are also available. Get an instant estimate online, and we confirm the final price once we see the yard."],
-      ["Do you do leaf removal in Villa Rica?", "Yes. Leaf removal starts at $130 for small yards. We pile leaves on your property at no extra charge, or bag and haul them away for $5-8 a bag. Villa Rica city crews don't pick up yard waste that a contractor removed, so you're never left with bags the city won't take."],
+      ["Do you do leaf removal in Villa Rica?", "Yes. Leaf removal starts at $127 for small yards. We pile leaves on your property at no extra charge, or bag and haul them away for $5-8 a bag. Villa Rica city crews don't pick up yard waste that a contractor removed, so you're never left with bags the city won't take."],
       ["How do I get a quote in Villa Rica?", "Request a free instant quote online, or call or text 470-517-9547. There are no contracts, and you can cancel anytime."],
     ] },
 ];
@@ -38,9 +38,9 @@ export const neighborhoodDescription = (n) =>
   `Lawn mowing, edging, leaf removal, and fall cleanup for homes in ${placeLabel(n)}. Local, family-run crew, same-day quotes, no contracts. Call 470-517-9547.`;
 
 export const LEAF_PRICE_ROWS = [
-  ["Small yard (under 5,000 sq ft)", "$130+"],
-  ["Medium yard (5,000–10,000 sq ft)", "$260+"],
-  ["Large yard (10,000–20,000 sq ft)", "$400+"],
+  ["Small yard (under 5,000 sq ft)", "$127+"],
+  ["Medium yard (5,000–10,000 sq ft)", "$187+"],
+  ["Large yard (10,000–20,000 sq ft)", "$287+"],
   ["Extra large / acreage (over 20,000 sq ft)", "Custom quote"],
 ];
 
@@ -59,12 +59,12 @@ export const LEAF_RULES = {
 
 export const leafRuleText = (n) => (LEAF_RULES[n.rules] || LEAF_RULES.douglasville)(n);
 export const leafServiceText = (n) =>
-  `We clear leaves off lawns, flower beds, driveways, and walkways in ${n.name}, as a one-time service or every visit through leaf season. Pricing starts at $130 for small yards. Leaves are piled on-site at no extra charge, or bagged and hauled away for $5–8 a bag.`;
+  `We clear leaves off lawns, flower beds, driveways, and walkways in ${n.name}, as a one-time service or every visit through leaf season. Pricing starts at $127 for small yards. Leaves are piled on-site at no extra charge, or bagged and hauled away for $5–8 a bag.`;
 
 // ── Leaf Removal service page ──────────────────────────────────────────────
 export const LEAF_REMOVAL_SEO = {
   title: "Leaf Removal Service in Douglasville, GA | Mow Pro",
-  description: "Leaf removal in Douglasville, GA: leaves cleared off your lawn, beds, and driveway, piled on-site or bagged and hauled away. From $130. Call 470-517-9547.",
+  description: "Leaf removal in Douglasville, GA: leaves cleared off your lawn, beds, and driveway, piled on-site or bagged and hauled away. From $127. Call 470-517-9547.",
   url: "https://mowproga.com/leaf-removal",
   image: "https://mowproga.com/images/leaf-cleanup-ba.webp",
 };
@@ -88,7 +88,7 @@ export const LEAF_LOCAL_RULES = [
 ];
 
 export const LEAF_REMOVAL_FAQ = [
-  ["How much does leaf removal cost in Douglasville, GA?", "Leaf removal is priced by yard size: small yards start at $130, medium at $260, and large at $400. Extra-large lots and acreage get a custom quote. Regular mowing customers get a discounted leaf rate. We confirm the exact price once we see the property."],
+  ["How much does leaf removal cost in Douglasville, GA?", "Leaf removal is priced by yard size: small yards start at $127, medium at $187, and large at $287. Extra-large lots and acreage get a custom quote. Regular mowing customers get a discounted leaf rate. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property."],
   ["What's the difference between leaf removal and a fall cleanup?", "Leaf removal is just the leaves: cleared off the lawn, beds, and hard surfaces, once or every visit during leaf season. A fall cleanup is the full end-of-season package: leaf removal plus flower bed cleanout and a final mow and edge before winter."],
   ["Can you clear the leaves every time you mow?", "Yes. For our mowing customers, leaves are cleared on every visit while they're falling, billed by the time it takes on top of your regular cut, only when leaves are actually down. Once they stop falling, your price goes back to normal."],
   ["Will the City of Douglasville pick up leaves in plastic bags?", "No. Inside city limits, bagged leaves have to be in biodegradable or compostable bags, 50 pounds or less each. That's one reason our default is piling leaves at your wood line instead of bagging them."],
@@ -99,7 +99,7 @@ export const LEAF_REMOVAL_FAQ = [
 // /leaf-removal don't compete for the same searches) ──────────────────────
 export const FALL_CLEANUP_SEO = {
   title: "Fall Yard Cleanup in Douglasville, GA | Mow Pro",
-  description: "Fall yard cleanup in Douglasville, GA: leaves cleared, flower beds cleaned out, a final mow and edge, and debris hauled away. From $130. Call 470-517-9547.",
+  description: "Fall yard cleanup in Douglasville, GA: leaves cleared, flower beds cleaned out, a final mow and edge, and debris hauled away. From $127. Call 470-517-9547.",
   url: "https://mowproga.com/fall-cleanup",
   image: "https://mowproga.com/images/leaf-cleanup-ba.webp",
 };
