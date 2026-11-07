@@ -45,51 +45,23 @@ function LiveReviewCount() {
 
 const GOOGLE_REVIEWS_URL = "https://maps.google.com/maps?cid=8012885615534154734";
 
-// Douglas County Chamber of Commerce membership badge (ChamberMaster widget,
-// member 10273). React never runs <script> tags written in JSX, so the widget
-// script is loaded here after mount. The box has a fixed size so the footer
-// doesn't jump when the badge loads; if the script fails, the box still links
-// to the Chamber listing.
+// Membership badges in the footer. Plain linked images (no third-party
+// widget script): faster, no layout shift, and the Chamber listing link is in
+// the prerendered HTML where crawlers can see it.
 const CHAMBER_LISTING_URL = "https://business.douglascountygeorgia.com/list/member/mow-pro-lawn-care-llc-10273";
-const CHAMBER_WIDGET_ID = "mni-membership-639296603436991506";
-function ChamberBadge() {
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    const el = document.getElementById(CHAMBER_WIDGET_ID);
-    if (!el) return;
-    const obs = new MutationObserver(() => { if (el.childElementCount) setLoaded(true); });
-    obs.observe(el, { childList: true, subtree: true });
-    const create = () => {
-      if (el.childElementCount || !window.MNI?.Widgets?.Member) return;
-      try {
-        new window.MNI.Widgets.Member(CHAMBER_WIDGET_ID, {
-          member: 10273,
-          styleTemplate: "#@id{text-align:center;position:relative}#@id .mn-widget-member-name{font-weight:700;font-size:11px;line-height:1.2}#@id .mn-widget-member-logo{max-width:100%;max-height:78px;height:auto}",
-        }).create();
-      } catch (e) { /* badge is optional; the fallback link stays */ }
-    };
-    let tag = document.querySelector("script[data-chamber-badge]");
-    if (window.MNI?.Widgets?.Member) create();
-    else {
-      if (!tag) {
-        tag = document.createElement("script");
-        tag.src = "https://douglascountychamber.chambermaster.com/Content/Script/Member.js";
-        tag.async = true;
-        tag.dataset.chamberBadge = "1";
-        document.body.appendChild(tag);
-      }
-      tag.addEventListener("load", create);
-    }
-    return () => { obs.disconnect(); tag && tag.removeEventListener("load", create); };
-  }, []);
+function MemberBadges() {
   return (
-    <div className="mp-chamber">
-      <div id={CHAMBER_WIDGET_ID} />
-      {!loaded && (
-        <a href={CHAMBER_LISTING_URL} target="_blank" rel="noopener noreferrer" className="mp-chamber-fallback">
-          Proud member of the Douglas County Chamber of Commerce
+    <div className="mp-badges-wrap">
+      <p className="mp-badges-h">Proud member of</p>
+      <div className="mp-badges">
+        <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge-card">
+          <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" width="320" height="157" loading="lazy" />
         </a>
-      )}
+        <a href={CHAMBER_LISTING_URL} target="_blank" rel="noopener noreferrer" className="mp-badge-card mp-badge-chamber">
+          <img src="/images/douglas-county-chamber-logo.webp" alt="Mow Pro Lawn Care is a proud member of the Douglas County Chamber of Commerce" width="240" height="203" loading="lazy" />
+          <span>Douglas County Chamber</span>
+        </a>
+      </div>
     </div>
   );
 }
@@ -2861,12 +2833,7 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
                   <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" aria-label="Mow Pro reviews on Google" className="mp-soc mp-soc-g">G</a>
                 </div>
               </div>
-              <div className="mp-badges">
-                <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge">
-                  <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" width="120" height="59" loading="lazy" />
-                </a>
-                <ChamberBadge />
-              </div>
+              <MemberBadges />
             </div>
           </div>
         </div>
@@ -3107,12 +3074,14 @@ const HOME_CSS = `
 .mp-soc-fb{background:#1877F2}
 .mp-soc-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 .mp-foot-col a.mp-soc-g{background:#fff;color:#4285F4;font:700 19px Arial,sans-serif}
-.mp-badge img{width:120px;height:auto;display:block}
-.mp-badges{display:flex;align-items:center;gap:12px}
-.mp-chamber{width:120px;height:150px;padding:6px;background:#fff;color:#1C2E1B;border-radius:8px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;font-size:11px;line-height:1.25;text-align:center}
-.mp-foot-col .mp-chamber a{color:#1C2E1B;padding:0;font-size:11px}
-.mp-foot-col .mp-chamber a.mp-chamber-fallback{display:block;padding:0;font-size:11px;font-weight:700;color:#1C2E1B}
-.mp-chamber img{max-width:100%;height:auto}
+.mp-badges-wrap{flex-basis:100%;margin-top:6px}
+.mp-badges-h{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#93A08D;font-weight:700;margin:0 0 8px}
+.mp-badges{display:flex;gap:10px}
+.mp-foot-col a.mp-badge-card{flex:1 1 0;min-width:0;max-width:170px;height:78px;padding:8px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;text-decoration:none}
+.mp-badge-card img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+.mp-badge-chamber{flex-direction:column}
+.mp-badge-chamber img{max-height:38px}
+.mp-badge-chamber span{font-size:10px;line-height:1.15;font-weight:700;color:#1C2E1B;text-align:center}
 @media (max-width:980px){.mp-foot-grid{grid-template-columns:1fr 1fr}.mp-foot-about{grid-column:1/-1}.mp-foot-grid>.mp-foot-col:last-child{grid-column:1/-1}}
 .mp-foot-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid #1C2E1B;font-size:12.5px;color:#93A08D}
 .mp-foot-legal{display:flex;gap:16px;flex-wrap:wrap}
@@ -3197,6 +3166,7 @@ const HOME_CSS = `
 }
 @media (max-width:640px){
   .mp-sticky-bar{display:flex}
+  .mp-footer{padding-bottom:160px}
   .mp-chat-bubble{bottom:84px !important}
   .mp-chat-window{bottom:152px !important}
   .mp-chat-nudge{bottom:152px !important}
