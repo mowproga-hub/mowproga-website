@@ -87,7 +87,7 @@ function neighborhoodPage(n) {
         <p>Mow Pro GA provides biweekly lawn mowing, edging, and yard cleanup to homeowners in ${n.name === n.city ? n.name : `${n.name}, a non-gated residential area of ${n.city}, Georgia`}. Local, family-run, and fully insured — we quote every job in person and stand behind every cut. Same-day quotes, no contracts.</p>
         ${n.intro ? `<p>${n.intro}</p>` : ""}
         <p>Call or text <a href="tel:4705179547">470-517-9547</a>, or request a free instant quote online.</p>
-        <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134" target="_blank" rel="noopener noreferrer">5.0 stars, 66 reviews on Google</a></p>
+        <p><a href="https://maps.google.com/maps?cid=8012885615534154734" target="_blank" rel="noopener noreferrer">5.0 stars, 66 reviews on Google</a></p>
 
         <h2>See the Difference</h2>
         <p>A real Mow Pro GA yard, before and after:</p>
@@ -120,7 +120,7 @@ function neighborhoodPage(n) {
         <p>Mow Pro GA also serves ${NEIGHBORHOODS.filter((x) => x.slug !== n.slug).map((x) => x.name).join(", ")}, plus Douglasville and Douglas County, GA generally.</p>
 
         <p><a href="/">Mow Pro GA home</a> · <a href="/leaf-removal">Leaf Removal</a> · <a href="/fall-cleanup">Fall Cleanup Services</a> · <a href="/about">About Mow Pro GA</a></p>
-        <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
+        <address>Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA 30134</address>
       </main>
     `,
   };
@@ -157,7 +157,7 @@ function leafRemovalPage() {
         <dl>${LEAF_REMOVAL_FAQ.map(([q, a]) => `<dt>${q}</dt><dd>${a}</dd>`).join("")}</dl>
 
         <p><a href="/">Mow Pro GA home</a> · <a href="/fall-cleanup">Fall Yard Cleanup</a> · <a href="/about">About Mow Pro GA</a></p>
-        <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
+        <address>Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA 30134</address>
       </main>
     `,
   };
@@ -211,7 +211,7 @@ const PAGES = {
 
         <p>Just need the leaves cleared? See our <a href="/leaf-removal">leaf removal service</a>.</p>
         <p><a href="/">Mow Pro GA home</a> · <a href="/about">About Mow Pro GA</a></p>
-        <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
+        <address>Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA 30134</address>
       </main>
     `,
   },
@@ -249,7 +249,7 @@ const PAGES = {
       <main>
         <h1>Get a Free Lawn Care Quote in Douglasville, GA</h1>
         <p>Fast, free quotes for lawn mowing, fall cleanup, and hedge trimming in Douglasville, GA. 5-star rated, no contracts. Call or text <a href="tel:4705179547">470-517-9547</a>, or request your price online — most quotes confirmed same day.</p>
-        <address>Mow Pro GA · Mow Pro Lawn Care LLC · 1695 Hampton Pass, Douglasville, GA 30134</address>
+        <address>Mow Pro GA · Mow Pro Lawn Care LLC · Douglasville, GA 30134</address>
       </main>
     `,
   },

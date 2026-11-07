@@ -10,10 +10,11 @@ import { Star, CheckCircle2, Phone, MapPin, ArrowRight, Scissors, Sprout, Wind, 
 // g.page/r/{id}/review is Google's write-a-review shortlink — it drops
 // visitors straight into a blank star-rating form, not a reviews list. It's
 // the right link for a "leave us a review" CTA, but wrong for anything
-// claiming to show existing reviews. This is the correct read-only link: a
-// Maps search-action URL (Google's documented format for opening a specific
-// listing by name+address without needing a Place ID) that lands on the
-// business's Maps listing with its real rating and reviews visible.
+// claiming to show existing reviews. This is the correct read-only link: the
+// listing's Maps CID URL (from the Business Profile), which opens the Maps
+// listing with its real rating and reviews visible. Mow Pro is a
+// service-area business with a hidden address, so no street address is used
+// anywhere on the site.
 // Footer rating line: shows the built-in text first (matches the prerendered
 // HTML, so no flash), then swaps in the live Google count from UmmiYard.
 let reviewStatsPromise = null;
@@ -42,7 +43,56 @@ function LiveReviewCount() {
   return n;
 }
 
-const GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=Mow+Pro+Lawn+Care+LLC%2C+1695+Hampton+Pass%2C+Douglasville%2C+GA+30134";
+const GOOGLE_REVIEWS_URL = "https://maps.google.com/maps?cid=8012885615534154734";
+
+// Douglas County Chamber of Commerce membership badge (ChamberMaster widget,
+// member 10273). React never runs <script> tags written in JSX, so the widget
+// script is loaded here after mount. The box has a fixed size so the footer
+// doesn't jump when the badge loads; if the script fails, the box still links
+// to the Chamber listing.
+const CHAMBER_LISTING_URL = "https://business.douglascountygeorgia.com/list/member/mow-pro-lawn-care-llc-10273.htm";
+const CHAMBER_WIDGET_ID = "mni-membership-639296603436991506";
+function ChamberBadge() {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById(CHAMBER_WIDGET_ID);
+    if (!el) return;
+    const obs = new MutationObserver(() => { if (el.childElementCount) setLoaded(true); });
+    obs.observe(el, { childList: true, subtree: true });
+    const create = () => {
+      if (el.childElementCount || !window.MNI?.Widgets?.Member) return;
+      try {
+        new window.MNI.Widgets.Member(CHAMBER_WIDGET_ID, {
+          member: 10273,
+          styleTemplate: "#@id{text-align:center;position:relative}#@id .mn-widget-member-name{font-weight:700;font-size:11px;line-height:1.2}#@id .mn-widget-member-logo{max-width:100%;max-height:78px;height:auto}",
+        }).create();
+      } catch (e) { /* badge is optional; the fallback link stays */ }
+    };
+    let tag = document.querySelector("script[data-chamber-badge]");
+    if (window.MNI?.Widgets?.Member) create();
+    else {
+      if (!tag) {
+        tag = document.createElement("script");
+        tag.src = "https://douglascountychamber.chambermaster.com/Content/Script/Member.js";
+        tag.async = true;
+        tag.dataset.chamberBadge = "1";
+        document.body.appendChild(tag);
+      }
+      tag.addEventListener("load", create);
+    }
+    return () => { obs.disconnect(); tag && tag.removeEventListener("load", create); };
+  }, []);
+  return (
+    <div className="mp-chamber">
+      <div id={CHAMBER_WIDGET_ID} />
+      {!loaded && (
+        <a href={CHAMBER_LISTING_URL} target="_blank" rel="noopener noreferrer" className="mp-chamber-fallback">
+          Proud member of the Douglas County Chamber of Commerce
+        </a>
+      )}
+    </div>
+  );
+}
 
 // Replace with your real Measurement ID from analytics.google.com (looks like "G-XXXXXXXXXX").
 const GA_MEASUREMENT_ID = "G-RG2D6LV1ZL";
@@ -291,7 +341,6 @@ const FALL_CLEANUP_JSONLD = {
     "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "1695 Hampton Pass",
       "addressLocality": "Douglasville",
       "addressRegion": "GA",
       "postalCode": "30134",
@@ -2501,7 +2550,7 @@ export default function MowProLanding({ initialPath }) {
           <div className="mp-fall-leaves" aria-hidden="true">
             <Leaf size={46} /><Leaf size={34} /><Leaf size={28} />
           </div>
-          <img src="/images/before-leaf-driveway.webp" alt="" className="mp-fall-img" loading="lazy" />
+          <img src="/images/before-leaf-driveway.webp" alt="Leaf-covered driveway before a Mow Pro fall cleanup in Douglasville, GA" width="592" height="800" className="mp-fall-img" loading="lazy" />
           <div className="mp-fall-body">
             <div className="mp-fall-text">
               <span className="mp-fall-tag"><Leaf size={12} /> FALL SEASON SERVICE</span>
@@ -2812,9 +2861,12 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
                   <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" aria-label="Mow Pro reviews on Google" className="mp-soc mp-soc-g">G</a>
                 </div>
               </div>
-              <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge">
-                <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" loading="lazy" />
-              </a>
+              <div className="mp-badges">
+                <a href="https://urbanagcouncil.com" target="_blank" rel="noopener noreferrer" className="mp-badge">
+                  <img src="/images/urban-ag-council-badge.webp" alt="Mow Pro Lawn Care is a proud member of the Georgia Urban Ag Council" width="120" height="59" loading="lazy" />
+                </a>
+                <ChamberBadge />
+              </div>
             </div>
           </div>
         </div>
@@ -3056,6 +3108,11 @@ const HOME_CSS = `
 .mp-soc-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 .mp-foot-col a.mp-soc-g{background:#fff;color:#4285F4;font:700 19px Arial,sans-serif}
 .mp-badge img{width:120px;height:auto;display:block}
+.mp-badges{display:flex;align-items:center;gap:12px}
+.mp-chamber{width:120px;height:150px;padding:6px;background:#fff;color:#1C2E1B;border-radius:8px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;font-size:11px;line-height:1.25;text-align:center}
+.mp-foot-col .mp-chamber a{color:#1C2E1B;padding:0;font-size:11px}
+.mp-foot-col .mp-chamber a.mp-chamber-fallback{display:block;padding:0;font-size:11px;font-weight:700;color:#1C2E1B}
+.mp-chamber img{max-width:100%;height:auto}
 @media (max-width:980px){.mp-foot-grid{grid-template-columns:1fr 1fr}.mp-foot-about{grid-column:1/-1}.mp-foot-grid>.mp-foot-col:last-child{grid-column:1/-1}}
 .mp-foot-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid #1C2E1B;font-size:12.5px;color:#93A08D}
 .mp-foot-legal{display:flex;gap:16px;flex-wrap:wrap}
