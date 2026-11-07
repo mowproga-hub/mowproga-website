@@ -50,7 +50,7 @@ const GOOGLE_REVIEWS_URL = "https://maps.google.com/maps?cid=8012885615534154734
 // script is loaded here after mount. The box has a fixed size so the footer
 // doesn't jump when the badge loads; if the script fails, the box still links
 // to the Chamber listing.
-const CHAMBER_LISTING_URL = "https://business.douglascountygeorgia.com/list/member/mow-pro-lawn-care-llc-10273.htm";
+const CHAMBER_LISTING_URL = "https://business.douglascountygeorgia.com/list/member/mow-pro-lawn-care-llc-10273";
 const CHAMBER_WIDGET_ID = "mni-membership-639296603436991506";
 function ChamberBadge() {
   const [loaded, setLoaded] = useState(false);
