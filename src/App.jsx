@@ -2287,7 +2287,7 @@ function QuoteLandingPage({ content }) {
       {/* Minimal header — logo only, no menu, so the only paths are a quote or a call */}
       <header className="mp-q-head">
         <div className="mp-brand">
-          <img src="/images/logo.png" alt="Mow Pro GA logo" width="46" height="46" />
+          <img src="/images/mowpro-logo.png" alt="Mow Pro Lawn Care logo" width="46" height="46" />
           <span><span className="mp-brand-name">Mow Pro GA</span><span className="mp-brand-sub">Lawn Care • Douglasville, GA</span></span>
         </div>
       </header>
@@ -2716,7 +2716,7 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
       <header className="mp-nav">
         <div className="mp-nav-in">
           <a href="/" onClick={goTo("/")} className="mp-brand">
-            <img src="/images/logo.png" alt="Mow Pro GA logo" width="44" height="44" />
+            <img src="/images/mowpro-logo.png" alt="Mow Pro Lawn Care logo" width="44" height="44" />
             <span>
               <span className="mp-brand-name">Mow Pro GA</span>
               <span className="mp-brand-sub">Lawn Care • Douglasville, GA</span>
@@ -2784,7 +2784,7 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
         <div className="mp-foot-grid">
           <div className="mp-foot-about">
             <a href="/" onClick={goTo("/")} className="mp-brand">
-              <img src="/images/logo.png" alt="Mow Pro GA logo" width="40" height="40" loading="lazy" />
+              <img src="/images/mowpro-logo.png" alt="Mow Pro Lawn Care logo" width="40" height="40" loading="lazy" />
               <span><span className="mp-brand-name">Mow Pro GA</span><span className="mp-brand-sub">Lawn Care • Douglasville, GA</span></span>
             </a>
             <p className="mp-foot-tag">Family-run lawn care for homes in Douglasville and nearby. No contracts.</p>
