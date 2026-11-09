@@ -2344,34 +2344,48 @@ function QuoteLandingPage({ content }) {
         )}
 
         {screen === "form" && leafEntry && service === "leaf" && formKey === 0 && (
-          <>
-            <section className="mp-q-hero mp-q-hero-sm mp-q-leaf">
-              <span className="mp-pill"><Leaf size={15} /> LEAF CLEANUP · DOUGLASVILLE</span>
-              <h1>Get Your Leaf Cleanup Price</h1>
-              <p>Pick your yard size below and see your price right away. Lawn, beds and driveway cleared. Leaves blown to the woods or a pile, or bagged at the curb.</p>
-              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("reviews_link_click", { location: "quote_page_leaf" })} className="mp-rating mp-q-rating">
-                <GoogleG size={22} />
-                <strong>5.0</strong>
-                <span className="mp-stars">{[1, 2, 3, 4, 5].map((i) => <Star key={i} size={16} fill="#FBBC04" color="#FBBC04" />)}</span>
-                <span className="mp-rating-sep" />
-                <span className="mp-u"><LiveReviewCount /> Google Reviews</span>
-              </a>
+          <div className="mp-qleaf">
+            <section className="mp-fhero mp-qleaf-hero">
+              <img className="mp-fhero-bg" src="/images/fall-hero-900.webp" alt="A pile of raked autumn leaves on a green lawn" width="900" height="507" fetchPriority="high" />
+              <div className="mp-fhero-in">
+                <div className="mp-fhero-pillrow"><span className="mp-pill mp-pill-fall"><Leaf size={13} /> LEAF CLEANUP</span></div>
+                <h1>Leaf Cleanup in Douglasville, GA</h1>
+                <p className="mp-hero-services">Lawn • Beds • Driveways • Walkways</p>
+                <p className="mp-hero-sub">Small yards from $127. Leaves blown into the woods or a pile where you want them, or bagged at the curb. Pick your yard size below for your price.</p>
+                <div className="mp-fhero-btns">
+                  <a href="#leaf-form" onClick={(e) => { e.preventDefault(); document.getElementById("leaf-form")?.scrollIntoView({ behavior: "smooth" }); }} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Leaf Cleanup Price <ArrowRight size={18} /></a>
+                  <a href={`tel:${content.phone}`} onClick={() => trackEvent("call_click", { location: "quote_page_leaf_hero" })} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
+                </div>
+                <RatingLink location="quote_page_leaf_hero" />
+              </div>
             </section>
-            <div className="mp-q-photo mp-q-photo-leaf">
-              <img src="/images/leaf-driveway-ba.webp" alt="Before and after a Mow Pro leaf cleanup on a Douglasville driveway" width="900" height="675" fetchPriority="high" />
-            </div>
-            <div className="mp-q-card">
-              <QuoteModal
-                key={`${service}-${formKey}`}
-                inline
-                basePrice={content.price}
-                initialServiceType={service}
-                onSubmitted={(r) => { setResult(r); go("done"); }}
-              />
-            </div>
+
+            <div className="mp-qleaf-trust"><TrustBar /></div>
+
+            <section className="mp-qleaf-sec">
+              <div className="mp-eyebrow">REAL RESULTS</div>
+              <h2 className="mp-h2">See the Difference</h2>
+              <p className="mp-qleaf-lead">A real Mow Pro leaf job, before and after. Douglasville, GA.</p>
+              <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="4/5" />
+            </section>
+
+            <section className="mp-qleaf-sec" id="leaf-form">
+              <div className="mp-eyebrow">YOUR PRICE</div>
+              <h2 className="mp-h2">Get Your Leaf Cleanup Price</h2>
+              <p className="mp-qleaf-lead">Each price covers up to 2 hours of work. We confirm the final price once we see the yard.</p>
+              <div className="mp-q-card">
+                <QuoteModal
+                  key={`${service}-${formKey}`}
+                  inline
+                  basePrice={content.price}
+                  initialServiceType={service}
+                  onSubmitted={(r) => { setResult(r); go("done"); }}
+                />
+              </div>
+            </section>
             <div className="mp-q-bottom">{callBtn}</div>
             <button onClick={() => go("pick")} className="mp-q-other">Need a different service? See all services →</button>
-          </>
+          </div>
         )}
 
         {screen === "form" && !(leafEntry && service === "leaf" && formKey === 0) && (
@@ -3348,14 +3362,13 @@ const HOME_CSS = `
 .mp-q-call{font-size:19px;padding:16px 20px}
 .mp-q-back{align-self:flex-start;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;margin-bottom:12px}
 .mp-q-hero-sm h1{margin-top:12px}
-.mp-q-photo-leaf{height:230px}
-.mp-q-photo-leaf img{object-position:50% 0%}
-.mp-q-photo-leaf::after{background:linear-gradient(180deg,rgba(10,19,11,0) 70%,#0A130B 100%)}
-.mp-q-prices{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 4px;padding:0}
-.mp-q-prices li{background:#13221A;border:1px solid #2A3D2C;border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}
-.mp-q-prices strong{font-size:15px}
-.mp-q-prices span{font-size:13.5px;color:#8FBC6A;font-weight:700}
-.mp-q-note{font-size:13px;opacity:.75;text-align:center;margin:4px 0 12px}
+.mp-qleaf{margin:0 -18px}
+.mp-qleaf-hero{margin-top:0}
+.mp-qleaf-trust{padding:14px 18px 0}
+.mp-qleaf-sec{padding:30px 18px 0}
+.mp-qleaf-lead{opacity:.85;margin:6px 0 14px}
+.mp-qleaf .mp-q-card{margin-top:4px}
+.mp-qleaf .mp-q-bottom,.mp-qleaf .mp-q-other{margin-left:18px;margin-right:18px}
 .mp-q-other{display:block;margin:14px auto 4px;background:none;border:none;color:#8FBC6A;font-size:14.5px;text-decoration:underline;cursor:pointer}
 .mp-q-hero-sm .mp-pill{font-size:13.5px;padding:8px 16px}
 .mp-q-card{background:linear-gradient(180deg,#132414,#0E1B0F);border:1px solid #2A4A22;border-radius:16px;padding:18px 16px;margin-top:10px}
