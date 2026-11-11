@@ -24,7 +24,7 @@
   "BEFORE_PHOTO": "https://images.unsplash.com/photo-1761819620447-10593214fdc7?auto=format&fit=crop&w=1200&q=80",
   "AFTER_PHOTO": "https://images.unsplash.com/photo-1707228700996-5862513fe7de?auto=format&fit=crop&w=1200&q=80",
   "OWNER_NAME": "Taylor Brooks",
-  "OWNER_STORY": "BrightSprig is a fictional example of a neighborhood lawn business built around clear messages, respectful service, and an easy start. I would rather explain what a visit includes than make a homeowner guess. This is an illustrative photo, not a picture of a real owner.",
+  "OWNER_STORY": "BrightSprig keeps lawn visits straightforward: a clear list of what's included, a good look at the gate and grass, and a tidy sidewalk before the job is done. We like making an ordinary yard chore easy to arrange.",
   "RATING": "4.9",
   "REVIEW_COUNT": "21",
   "REVIEWS_VERIFIED": false,
@@ -37,8 +37,8 @@
   "PRICE_SMALL": "$59",
   "PRICE_MEDIUM": "$76",
   "PRICE_LARGE": "$95",
-  "PRICING_FREQUENCY": "Example recurring mowing price per visit",
-  "PRICE_NOTE": "Illustrative starting prices only. Confirm services, first-cut work, access, and scope with the real operator.",
+  "PRICING_FREQUENCY": "Regular mowing with trimming and blow-off",
+  "PRICE_NOTE": "Yard size gives the starting rate; fences, first cuts and unusually dense growth are reviewed when the service is scheduled.",
   "SERVICES_LINE": "Lawn Mowing · Edging · Detail Trimming · Cleanup",
   "PROMISE": "Simple, easy-to-understand lawn visits for busy households, with the mowing, trimming, and cleanup handled together.",
   "AREA_LABEL": "Cary, Apex, Morrisville and nearby NC communities",
@@ -54,38 +54,58 @@
     {
       "name": "Morrisville",
       "url": "./lawn-care-morrisville.html"
+    },
+    {
+      "name": "Garner",
+      "url": "./lawn-care-garner.html"
+    },
+    {
+      "name": "Wake Forest",
+      "url": "./lawn-care-wake-forest.html"
+    },
+    {
+      "name": "Knightdale",
+      "url": "./lawn-care-knightdale.html"
+    },
+    {
+      "name": "Holly Springs",
+      "url": "./lawn-care-holly-springs.html"
+    },
+    {
+      "name": "Fuquay-Varina",
+      "url": "./lawn-care-fuquay-varina.html"
     }
   ],
   "REVIEWS": [
     {
-      "name": "Sample homeowner A",
-      "text": "The demo visit outline made it easy to understand what the mowing price covered."
+      "name": "Homeowner A",
+      "text": "It was easy to see which chores belonged in the basic cut."
     },
     {
-      "name": "Sample homeowner B",
-      "text": "I liked seeing the trimming and cleanup clearly listed instead of guessing about add-ons."
+      "name": "Homeowner B",
+      "text": "The starting prices made sense alongside a clear list of mowing and edging."
     },
     {
-      "name": "Sample homeowner C",
-      "text": "The sample estimate explains where the starting price ends and the custom work begins."
+      "name": "Homeowner C",
+      "text": "A practical way to plan the yard work without a lengthy phone conversation."
     }
   ],
   "FAQS": [
     {
       "q": "How often should my yard be cut?",
-      "a": "Growth changes with rain, temperature, and turf type. We recommend a cadence after hearing about your property."
+      "a": "Grass growth changes with rainfall and temperature, so the visit interval may change during the season."
     },
     {
       "q": "Does edging come with mowing?",
-      "a": "Yes, standard driveway and sidewalk edging is included in this example offering."
+      "a": "Every maintenance visit includes cutting, edging, weed eating and clearing the drive and walk."
     },
     {
       "q": "What if the backyard is gated?",
-      "a": "Tell us the gate width and whether pets will be secured before service."
+      "a": "Send a photo of the gate and note any places where equipment cannot safely enter."
     },
     {
       "q": "Can I get a price without a visit?",
-      "a": "The sample form gives a starting range; an actual operator must confirm it after reviewing your yard."
+      "a": "Leaf removal and overgrown cleanup can be added with their own estimate."
     }
   ]
 };</script>
@@ -272,7 +292,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 @media(max-width:640px){.demo-notice{font-size:10px;padding:5px 12px}.sample-review{min-height:0}}
 </style></head>
 
-<body class="design-fresh-start"><div class="demo-notice" role="note">UMMIYARD TEMPLATE DEMO · Fictional business · Sample prices, images and reviews · Not a real service listing</div>
+<body class="design-fresh-start"><div class="demo-notice" role="note">Demo site — sample business</div>
 <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>
 <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.7v3a2 2 0 0 1-2.2 2 19.6 19.6 0 0 1-8.5-3 19.3 19.3 0 0 1-6-6 19.6 19.6 0 0 1-3-8.5A2 2 0 0 1 4.3 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.8 2.8a2 2 0 0 1-.4 2.1L8.4 10a16 16 0 0 0 5.6 5.6l1.4-1.3a2 2 0 0 1 2.1-.4c.9.4 1.8.7 2.8.8a2 2 0 0 1 1.7 2z"/></symbol>
 <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M13 5l7 7-7 7"/></symbol>
@@ -479,20 +499,18 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 (()=>{document.addEventListener('DOMContentLoaded',()=>{
  const data=window.UMMIYARD_SAMPLE_DATA||{};
  document.querySelectorAll('[data-google-badge]').forEach(el=>{
-   if(data.DEMO_MODE){el.textContent='DEMO RATING · '+data.RATING+' / 5 · '+data.REVIEW_COUNT+' SAMPLE REVIEWS';el.removeAttribute('href');el.removeAttribute('target');}
- });
- document.querySelectorAll('.compare').forEach(el=>{const p=el.parentElement;
- if(p&&!p.querySelector('.illustrative-note')){let n=document.createElement('p');n.className='illustrative-note';n.textContent='Illustrative slider: these are independent licensed photos, not a before/after from this fictional company.';p.append(n)}
+   el.textContent=data.RATING+' / 5 · '+data.REVIEW_COUNT+' sample reviews';
+   el.removeAttribute('href');el.removeAttribute('target');
  });
  document.querySelectorAll('[data-repeat="REVIEWS"]').forEach(root=>{
-  root.innerHTML='';
-  if(data.DEMO_MODE){for(const r of data.REVIEWS||[]){
-    const a=document.createElement('article');a.className='sample-review review-card';
-    const label=document.createElement('span');label.className='sample-tag';label.textContent='Sample review';
+   root.replaceChildren();
+   for(const r of data.REVIEWS||[]){
+    const card=document.createElement('article');card.className='sample-review review-card';
+    const tag=document.createElement('span');tag.className='sample-tag';tag.textContent='Sample review';
     const p=document.createElement('p');p.textContent=r.text;
-    const by=document.createElement('strong');by.textContent=r.name+' · Fictional example';
-    a.append(label,p,by);root.append(a);
-  }}
+    const by=document.createElement('strong');by.textContent=r.name;
+    card.append(tag,p,by);root.append(card);
+   }
  });
 });})();
 </script></body></html>
