@@ -57,7 +57,7 @@ In this revision, all 80 town files were read back from GitHub. Checks confirmed
 
 - **8 town files** per template; each homepage's sample data references all eight.
 - **1 H1, 1 demo label, 4 FAQ disclosures, and 3 other-town links** per local page.
-- No remaining literal `\${name}` placeholders or identical repeated full paragraphs detected.
+- No unresolved template interpolation text or identical repeated full paragraphs detected.
 - **Maximum same-template four-word-shingle Jaccard overlap: 6.3%** after normalizing town names and excluding repeated link labels from the comparison. This is one defined phrase-similarity measure, not a guarantee about every possible word-overlap metric or Google search ranking.
 
 | Template | Highest within-template 4-word phrase overlap |
