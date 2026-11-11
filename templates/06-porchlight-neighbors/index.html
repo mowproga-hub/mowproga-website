@@ -422,6 +422,16 @@ html,body{overflow-x:clip!important}
 .footer .footer__social a{width:44px!important;height:44px!important}
 .footer__bottom,.footer__legal{padding:6px 0!important;font-size:10px!important;margin:5px 0 0!important}
 }
+</style><style id="footer-accessibility-2026">
+.footer__social a{display:grid!important;place-items:center!important;width:44px!important;height:44px!important}
+.footer__social a[aria-disabled="true"]{cursor:default!important;pointer-events:none!important}
+.footer__social svg.icon{display:block!important;width:21px!important;height:21px!important;stroke:currentColor!important;stroke-width:2.2!important;fill:none!important}
+.footer__social svg.icon :is(path,rect,circle){stroke:currentColor!important;fill:none!important}
+.final-cta .btn-primary{background:#e7ffcd!important;color:#123524!important;border-color:#e7ffcd!important}
+.final-cta .btn-primary *{color:#123524!important}
+.final-cta .btn-secondary{background:transparent!important;border-color:#f8fff8!important;color:#f8fff8!important}
+.final-cta .btn-secondary *{color:#f8fff8!important}
+@media(max-width:640px){.footer__social a{min-width:44px!important;min-height:44px!important}}
 </style></head>
 
 <body class="design-porchlight-neighbors"><div class="demo-notice" role="note">Demo site — sample business</div>
@@ -617,7 +627,16 @@ html,body{overflow-x:clip!important}
     });
   }
   function initSocial() {
-    document.querySelectorAll('[data-social]').forEach(link => { if (!link.hasAttribute('href')) link.hidden = true; });
+    document.querySelectorAll('[data-social]').forEach(link => {
+      const href=(link.getAttribute('href')||'').trim();
+      if (!href || href === '#' || href.startsWith('{{')) {
+        link.removeAttribute('href');
+        link.setAttribute('aria-disabled','true');
+        link.setAttribute('title','Social profile');
+      } else {
+        link.removeAttribute('aria-disabled');
+      }
+    });
   }
   document.addEventListener('DOMContentLoaded', () => {
     renderAreas(); renderReviews(); renderFAQ(); replaceTokens();
