@@ -355,7 +355,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
   }
   function safeLink(s) {
     const x = fill(s || '').trim();
-    return /^(https?:\/\/|\/|#|tel:|mailto:|data:image\\/svg\\+xml,|\\.\\/)/i.test(x) ? x : '';
+    return /^(https?:\/\/|\/|#|tel:|mailto:|data:image\/svg\+xml,|\.\/)/i.test(x) ? x : '';
   }
   function icon(name) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
