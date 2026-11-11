@@ -360,7 +360,7 @@ h1,h2,h3,.final-cta h2{font-family:'Fraunces',Georgia,serif!important;letter-spa
   }
   function safeLink(s) {
     const x = fill(s || '').trim();
-    return /^(https?:\/\/|\/|#|tel:|mailto:|data:image\\/svg\\+xml,|\\.\\/)/i.test(x) ? x : '';
+    return /^(https?:\/\/|\/|#|tel:|mailto:|data:image\/svg\+xml,|\.\/)/i.test(x) ? x : '';
   }
   function icon(name) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
