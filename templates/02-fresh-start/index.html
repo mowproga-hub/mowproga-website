@@ -21,8 +21,7 @@
   "LOGO_URL": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2218%22%20fill%3D%22%23269B57%22%2F%3E%3Cpath%20d%3D%22M21%2074%2049%2022l30%2052M36%2059h29%22%20stroke%3D%22%2312271A%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E",
   "HERO_PHOTO": "https://images.unsplash.com/photo-1738193830098-2d92352a1856?auto=format&fit=crop&w=1200&q=80",
   "OWNER_PHOTO": "https://images.unsplash.com/photo-1734303023491-db8037a21f09?auto=format&fit=crop&w=1200&q=80",
-  "BEFORE_PHOTO": "https://images.pexels.com/photos/17972815/pexels-photo-17972815.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "AFTER_PHOTO": "https://images.pexels.com/photos/4832503/pexels-photo-4832503.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "RECENT_WORK_PHOTO": "https://images.pexels.com/photos/4832503/pexels-photo-4832503.jpeg?auto=compress&cs=tinysrgb&w=1200",
   "OWNER_NAME": "Taylor Brooks",
   "OWNER_STORY": "I started BrightSprig because keeping up with the yard should not be complicated. We explain what each cut covers, show up ready for the gate and the garden corners, and clear the driveway before we go. Simple visits and clear communication are the whole point.",
   "RATING": "4.9",
@@ -140,16 +139,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 .area-links{display:flex;flex-wrap:wrap;gap:12px}
 .area-chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:11px 15px;border-radius:100px;font-size:14px;font-weight:700}
 .area-chip .icon{width:16px;height:16px}
-.compare{position:relative;isolation:isolate;overflow:hidden;aspect-ratio:16/10;--split:50%;border-radius:var(--media-radius,20px);background:#C9D9CD}
-.compare img{position:absolute;width:100%;height:100%;inset:0;object-fit:cover}
-.compare__after{clip-path:inset(0 calc(100% - var(--split)) 0 0)}
-.compare__divider{pointer-events:none;position:absolute;z-index:2;top:0;bottom:0;left:var(--split);width:2px;background:white;box-shadow:0 0 6px #17241a9c;transform:translateX(-50%)}
-.compare__handle{position:absolute;top:50%;left:50%;width:48px;height:48px;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border:3px solid white;border-radius:50%;background:var(--brand);color:var(--cta-ink,#122b1a);box-shadow:0 5px 25px #07120a55;font-weight:900;font-size:20px;white-space:nowrap}
-.compare input{position:absolute;inset:0;width:100%;height:100%;margin:0;z-index:3;opacity:0;cursor:ew-resize}
-.compare:focus-within{outline:3px solid var(--brand);outline-offset:4px}
-.compare__label{position:absolute;z-index:2;top:18px;padding:7px 12px;border-radius:6px;background:rgba(10,25,20,.82);color:white;font-size:12px;letter-spacing:.08em;font-weight:850;text-transform:uppercase;pointer-events:none}
-.compare__label--before{right:18px}.compare__label--after{left:18px}
-.compare__hint{font-size:13px;line-height:1.5;margin-top:12px}
+.recent-work{margin:0;min-width:0}
+.recent-work img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:var(--media-radius,20px);background:#C9D9CD}
+.recent-work__caption{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;margin-top:12px;font-size:13px;line-height:1.5}
+.recent-work__caption strong{font-weight:800;color:var(--text)}
+.recent-work__caption strong span{font-weight:500;opacity:.75}
+.recent-work__caption>span{color:var(--muted)}
+@media(max-width:640px){.recent-work img{aspect-ratio:4/3}.recent-work__caption{flex-direction:column;align-items:flex-start;gap:3px}}
 .review-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
 .review-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:var(--card-radius,18px)}
 .review-card img{display:block;width:100%;height:250px;object-fit:contain;object-position:center;background:#FFF}
@@ -170,7 +166,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 .mobile-nav .btn{margin:10px 18px 18px}
 .footer-bottom{font-size:12px;padding-top:25px;margin-top:35px;border-top:1px solid var(--line);opacity:.85}
 @media(max-width:850px){.desktop-nav,.header-action{display:none!important}.menu-toggle{display:flex}.review-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:640px){.footer__links a,.footer__info a,.footer__col a{min-height:44px;display:flex;align-items:center;margin-bottom:0}.review-visit,.reviews__link{min-height:44px}.wrap{width:min(100% - 32px,550px)}.section{padding-block:65px}.section-heading h2{font-size:34px}.review-grid{grid-template-columns:1fr}.review-card img{height:auto;max-height:400px;object-fit:contain}.rating-badge{font-size:12px}.compare{aspect-ratio:4/3}.compare__label{top:12px}.mobile-sticky{position:fixed;inset:auto 0 0;z-index:50;display:grid;grid-template-columns:102px minmax(0,1fr);gap:9px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--sticky-bg);box-shadow:0 -5px 22px #0002;border-top:1px solid var(--line)}.mobile-sticky .btn{padding-inline:7px;min-height:52px;font-size:13px;line-height:1.15}.mobile-sticky .btn .icon{width:17px;height:17px}body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}.area-links{gap:9px}.area-chip{font-size:13px}}
+@media(max-width:640px){.footer__links a,.footer__info a,.footer__col a{min-height:44px;display:flex;align-items:center;margin-bottom:0}.review-visit,.reviews__link{min-height:44px}.wrap{width:min(100% - 32px,550px)}.section{padding-block:65px}.section-heading h2{font-size:34px}.review-grid{grid-template-columns:1fr}.review-card img{height:auto;max-height:400px;object-fit:contain}.rating-badge{font-size:12px}.mobile-sticky{position:fixed;inset:auto 0 0;z-index:50;display:grid;grid-template-columns:102px minmax(0,1fr);gap:9px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--sticky-bg);box-shadow:0 -5px 22px #0002;border-top:1px solid var(--line)}.mobile-sticky .btn{padding-inline:7px;min-height:52px;font-size:13px;line-height:1.15}.mobile-sticky .btn .icon{width:17px;height:17px}body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}.area-links{gap:9px}.area-chip{font-size:13px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
 
@@ -332,7 +328,7 @@ html,body{overflow-x:clip!important}
 .results__head{margin-bottom:12px!important}
 .results__aside,.proof-note{font-size:12px!important;line-height:1.36!important;margin:0 0 9px!important;padding:0!important}
 .compare,.results .compare{aspect-ratio:16/10!important;max-height:215px!important;min-height:0!important;border-radius:12px!important}
-.compare__hint,.results__hint{font-size:11px!important;margin:5px 0 0!important}
+.results__hint{font-size:11px!important;margin:5px 0 0!important}
 .review-head,.reviews__top{margin:0 0 12px!important}
 .review-head .rating-badge,.reviews__score{margin:5px 0!important;padding:7px 10px!important}
 .review-grid{display:flex!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto!important;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain;gap:10px!important;padding:0 0 9px!important;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
@@ -417,7 +413,7 @@ html,body{overflow-x:clip!important}
 <div class="hero__visual"><img src="{{HERO_PHOTO}}" alt="{{BUSINESS_NAME}} equipment ready to serve homeowners in {{CITY}}, {{STATE}}" width="960" height="1120" fetchpriority="high"><div class="hero__floating"><svg class="icon"><use href="#i-check"/></svg><span><strong>No contracts. No surprises.</strong><small>Friendly service, clear starting prices.</small></span></div></div></div></section>
 <div class="trust" aria-label="Our service promises"><div class="wrap trust__grid"><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-home"/></svg></span>Local &amp; Family-Run</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-shield"/></svg></span>Fully Insured</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-calendar"/></svg></span>No Contracts</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-bolt"/></svg></span>Fast Same-Day Quotes</div></div></div>
 <section class="section services" id="services"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WHAT WE TAKE CARE OF</span><h2>Your whole lawn visit, made simple.</h2><p>Three essentials included in your regular visit. Easy extras when the yard needs more.</p></div><div class="service-grid"><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-mower"/></svg></div><h3>Mowing &amp; Edging</h3><p>A regular cut that suits the growing pace of your yard.</p></article><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-trimmer"/></svg></div><h3>Weed Eating</h3><p>Trimmed fence lines so the small spots do not get skipped.</p></article><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-wind"/></svg></div><h3>Blow-Off</h3><p>Grass clippings cleared from front steps and driveways.</p></article></div><div class="addons"><strong>Need a little more?</strong><span class="addon"><svg class="icon"><use href="#i-scissors"/></svg>Hedge Trimming</span><span class="addon"><svg class="icon"><use href="#i-leaf"/></svg>Leaf Removal</span><span class="addon"><svg class="icon"><use href="#i-spark"/></svg>Overgrown Cleanup</span></div></div></section>
-<section class="section results" id="results"><div class="wrap"><div class="results__head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">SEE IT FOR YOURSELF</span><h2>A little consistency changes the view.</h2><p>Slide between a lawn that's grown too long and one that's freshly maintained.</p></div><div class="results__aside">A lawn that has grown past its usual height can look completely different with a consistent cut and tidy borders.</div></div><div class="compare"><img src="{{BEFORE_PHOTO}}" alt="Grass growing long before mowing or leaf cleanup" width="1200" height="750" loading="lazy"><img class="compare__after" src="{{AFTER_PHOTO}}" alt="A neatly maintained, closely cut green lawn" width="1200" height="750" loading="lazy"><span class="compare__label compare__label--after">After</span><span class="compare__label compare__label--before">Before</span><div class="compare__divider"><span class="compare__handle" aria-hidden="true">‹ ›</span></div><input type="range" min="0" max="100" value="50" step="1" aria-label="Compare two lawn conditions: long grass and neatly cut turf"></div><div class="compare__hint">Slide left or right to reveal the result. Keyboard arrows work too.</div></div></section>
+<section class="section results" id="results"><div class="wrap"><div class="results__head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">SEE IT FOR YOURSELF</span><h2>A little consistency changes the view.</h2><p>Explore a neatly maintained lawn in this sample photo layout.</p></div><div class="results__aside">Demo photo only. Replace it with a real completed job from your own business.</div></div><figure class="recent-work"><img src="{{RECENT_WORK_PHOTO}}" alt="Sample photo of a neatly maintained residential lawn" loading="lazy" decoding="async" width="1200" height="750"><figcaption class="recent-work__caption"><strong>Recent work <span>· Sample photo</span></strong><span>Your own before-and-after photos go here</span></figcaption></figure></div></section>
 <section class="section reviews" id="reviews"><div class="wrap"><div class="reviews__top"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WORDS FROM OUR NEIGHBORS</span><h2>A good word from the neighborhood</h2><p>A clean cut, easy communication, and less yard work on your weekend.</p></div><div class="rating-badge reviews__score" data-google-badge><span class="stars"><svg class="icon"><use href="#i-star"/></svg></span><strong>{{RATING}} / 5</strong><span>· {{REVIEW_COUNT}} Google reviews</span></div></div><div class="review-grid" data-repeat="REVIEWS" data-source-token="{{REVIEWS}}"></div><a class="reviews__link" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer">Read more on Google <svg class="icon"><use href="#i-arrow"/></svg></a></div></section>
 <section class="section pricing" id="pricing"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">NO GUESSWORK</span><h2>Pick the yard size that fits.</h2><p>Easy starting prices to help you plan. Get your actual estimate in minutes.</p></div><div class="price-grid"><article class="price-card"><span class="price-card__pill">Small yard</span><h3>Just right for smaller lots</h3><span class="price-card__hint">Under 5,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_SMALL}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-secondary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article><article class="price-card"><span class="price-card__pill">Medium yard</span><h3>Everyday neighborhood lawns</h3><span class="price-card__hint">5,000–10,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_MEDIUM}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-primary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article><article class="price-card"><span class="price-card__pill">Large yard</span><h3>Room to run and play</h3><span class="price-card__hint">10,000–20,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_LARGE}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-secondary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article></div><p class="price-note">{{PRICING_FREQUENCY}} · {{PRICE_NOTE}} Larger properties: request a custom price.</p></div></section>
 <section class="section about" id="about"><div class="wrap about__grid"><figure class="about__photo"><img src="{{OWNER_PHOTO}}" alt="Lawn care worker in an outdoor setting" loading="lazy" width="700" height="900"><figcaption>{{OWNER_NAME}} · Owner</figcaption></figure><div><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">THE PEOPLE BEHIND THE MOWER</span><h2>A small business built around showing up.</h2><p>{{OWNER_STORY}}</p></div><div class="about__quote"><svg class="icon"><use href="#i-check"/></svg> Locally owned. Personally cared for.</div></div></div></section>
@@ -525,17 +521,6 @@ html,body{overflow-x:clip!important}
       }
     }
   }
-  function initCompare() {
-    for (const compare of document.querySelectorAll('.compare')) {
-      const input = compare.querySelector('input[type="range"]');
-      if (!input) continue;
-      const update = () => {
-        compare.style.setProperty('--split', input.value + '%');
-        input.setAttribute('aria-valuetext', input.value + '% of the finished yard visible');
-      };
-      input.addEventListener('input', update); update();
-    }
-  }
   function initMenu() {
     const btn = document.querySelector('[data-menu-button]');
     const nav = document.querySelector('[data-mobile-nav]');
@@ -593,7 +578,7 @@ html,body{overflow-x:clip!important}
   }
   document.addEventListener('DOMContentLoaded', () => {
     renderAreas(); renderReviews(); renderFAQ(); replaceTokens();
-    initCompare(); initMenu(); setStructuredData(); initRating(); initSocial();
+    initMenu(); setStructuredData(); initRating(); initSocial();
     document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
     document.querySelectorAll('svg.icon').forEach(svg => { svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false'); });
   });
