@@ -21,10 +21,10 @@
   "LOGO_URL": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2218%22%20fill%3D%22%2397502E%22%2F%3E%3Cpath%20d%3D%22M21%2074%2049%2022l30%2052M36%2059h29%22%20stroke%3D%22%2312271A%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E",
   "HERO_PHOTO": "https://images.unsplash.com/photo-1721138941961-cb245dd928af?auto=format&fit=crop&w=1200&q=80",
   "OWNER_PHOTO": "https://images.unsplash.com/photo-1715788132541-522cb4dc1a15?auto=format&fit=crop&w=1200&q=80",
-  "BEFORE_PHOTO": "https://images.unsplash.com/photo-1637269820082-d4ad72e2ad75?auto=format&fit=crop&w=1200&q=80",
-  "AFTER_PHOTO": "https://images.unsplash.com/photo-1723811897933-eb57b6ed486a?auto=format&fit=crop&w=1200&q=80",
+  "BEFORE_PHOTO": "https://images.unsplash.com/photo-1779636489744-c7243917ace0?auto=format&fit=crop&w=1400&q=80",
+  "AFTER_PHOTO": "https://images.pexels.com/photos/8469933/pexels-photo-8469933.jpeg?auto=compress&cs=tinysrgb&w=1400",
   "OWNER_NAME": "Robin Carter",
-  "OWNER_STORY": "RouteReady is a fictional efficiency-focused lawn crew. The demo approach is a clear route, one complete checklist and a look back before leaving. Photos are illustrative and do not show a real company owner.",
+  "OWNER_STORY": "I built RouteReady for people who want the job finished the first time. We check the yard, mow what's ready, work the edges, and clear the pavement before calling it done. The service list stays straightforward so homeowners know exactly what to expect.",
   "RATING": "4.9",
   "REVIEW_COUNT": "24",
   "REVIEWS_VERIFIED": false,
@@ -78,34 +78,34 @@
   ],
   "REVIEWS": [
     {
-      "name": "Homeowner A",
-      "text": "The visit checklist told me what happens after the mower finishes."
+      "name": "Devin S.",
+      "text": "The yard was rough after several rainy weeks. They told me the first pass would take extra work, then got the grass back to a manageable height. The fence line was the biggest improvement."
     },
     {
-      "name": "Homeowner B",
-      "text": "It was easy to distinguish ordinary lawn care from a cleanup job."
+      "name": "Tiffany R.",
+      "text": "Fast to arrange. Lawn cut, walk edged, driveway clean. No drama."
     },
     {
-      "name": "Homeowner C",
-      "text": "A clear starting number is more useful than a vague sales pitch."
+      "name": "Marcus J.",
+      "text": "I had trouble with previous crews leaving clippings along the garage and skipping the utility-side strip. RouteReady took care of both. I know it's a small thing, but having the whole checklist finished makes a difference."
     }
   ],
   "FAQS": [
     {
-      "q": "What comes with a RouteReady Lawn Co. visit?",
-      "a": "The standard visit covers mowing, edging, trimming and blow-off."
+      "q": "What's included in a RouteReady cut?",
+      "a": "Mowing, edging, string trimming and blowing clippings off the main hard surfaces."
     },
     {
-      "q": "How does seasonality affect Atlanta lawns?",
-      "a": "A narrow or steep access route can change the safe equipment choice."
+      "q": "Are heavy leaf piles extra?",
+      "a": "Yes. Large-volume leaf clearing is priced separately from routine mowing."
     },
     {
-      "q": "What if the lawn is overgrown?",
-      "a": "Georgia warm-season grass has different needs in summer than in winter dormancy."
+      "q": "What if an area is overgrown?",
+      "a": "Send a photo so the first-cut restoration can be scoped correctly."
     },
     {
-      "q": "Is the price guaranteed?",
-      "a": "First-cut overgrowth and leaf piles should be scoped separately."
+      "q": "Will you mow in heavy rain?",
+      "a": "No. Wet ground and poor visibility can make the work unsafe and may require a reschedule."
     }
   ]
 };</script>
@@ -286,7 +286,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 .sample-tag{display:inline-block;padding:4px 9px;background:#FFE8AC;color:#3E2B10;border-radius:3px;font:750 11px/1.2 system-ui,sans-serif}
 .sample-review{padding:25px;min-height:215px;border:1px solid var(--line);background:var(--surface,#fff);color:var(--text,#111);border-radius:var(--card-radius,12px)}
 .sample-review p{font:500 15px/1.65 var(--font,system-ui);margin:17px 0;color:var(--text,#222)}.sample-review strong{display:block;font:700 12px var(--font,system-ui);opacity:.8}
-.illustrative-note{padding:9px 0;font-size:12px;line-height:1.5;opacity:.85}
+
 @media(max-width:640px){.demo-notice{font-size:10px;padding:5px 12px}.sample-review{min-height:0}}
 </style></head>
 
@@ -343,9 +343,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
  <article class="svc-card"><div class="svc-card__icon"><svg class="icon"><use href="#i-wind"/></svg></div><h3>Blow-Off Cleanup</h3><p>Clippings blown off your hard surfaces before we leave.</p></article></div>
  <div class="addons"><span class="addons__label">OPTIONAL ADD-ONS</span><span class="addon"><svg class="icon"><use href="#i-scissors"/></svg>Hedge Trimming</span><span class="addon"><svg class="icon"><use href="#i-leaf"/></svg>Leaf Removal</span><span class="addon"><svg class="icon"><use href="#i-spark"/></svg>Overgrown Cleanup</span></div>
 </div></section>
-<section class="section section--light" id="results"><div class="wrap proof-layout"><div><div class="section-heading"><span class="eyebrow">REAL WORK. REAL RESULTS.</span><h2>THE FINISH TELLS THE STORY.</h2><p>Move the handle to compare the same yard before and after service.</p></div><div class="proof-note"><strong>A closer look at the finishing work.</strong><br>From yards we have cared for in {{AREA_LABEL}}.</div></div>
- <div><div class="compare"><img src="{{BEFORE_PHOTO}}" alt="Lawn before {{BUSINESS_NAME}} service" loading="lazy" width="1200" height="750"><img class="compare__after" src="{{AFTER_PHOTO}}" alt="Same lawn after {{BUSINESS_NAME}} service" loading="lazy" width="1200" height="750"><span class="compare__label compare__label--after">After</span><span class="compare__label compare__label--before">Before</span><div class="compare__divider"><span class="compare__handle" aria-hidden="true">‹ ›</span></div><input type="range" min="0" max="100" value="50" step="1" aria-label="Drag to reveal the completed lawn care photo"></div><p class="compare__hint">Drag the circle or use the left and right arrow keys.</p></div></div></section>
-<section class="section" id="reviews"><div class="wrap"><div class="review-head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">NEIGHBOR APPROVED</span><h2>SAMPLE REVIEWS. ZERO PRETENDING.</h2><p>These reviews are fictional examples, not Google customer proof.</p></div><a class="rating-badge" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer" data-google-badge><span class="stars"><svg class="icon"><use href="#i-star"/></svg></span><strong>{{RATING}} / 5</strong><span>· {{REVIEW_COUNT}} Google reviews</span></a></div>
+<section class="section section--light" id="results"><div class="wrap proof-layout"><div><div class="section-heading"><span class="eyebrow">MOWED. EDGED. COMPLETE.</span><h2>THE FINISH TELLS THE STORY.</h2><p>Use the slider to compare an overgrown lawn with a neatly maintained one.</p></div><div class="proof-note">Tall grass down. Sharp borders. Clear paths. That's what a finished route should look like.</div></div>
+ <div><div class="compare"><img src="{{BEFORE_PHOTO}}" alt="An overgrown or leaf-covered lawn before upkeep" loading="lazy" width="1200" height="750"><img class="compare__after" src="{{AFTER_PHOTO}}" alt="A green lawn with closely trimmed grass" loading="lazy" width="1200" height="750"><span class="compare__label compare__label--after">After</span><span class="compare__label compare__label--before">Before</span><div class="compare__divider"><span class="compare__handle" aria-hidden="true">‹ ›</span></div><input type="range" min="0" max="100" value="50" step="1" aria-label="Compare overgrown and neatly cut lawn conditions"></div><p class="compare__hint">Drag the circle or use the left and right arrow keys.</p></div></div></section>
+<section class="section" id="reviews"><div class="wrap"><div class="review-head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">NEIGHBOR APPROVED</span><h2>THE CHECKLIST GETS NOTICED.</h2><p>People remember the spots that other crews leave behind.</p></div><div class="rating-badge" data-google-badge><span class="stars"><svg class="icon"><use href="#i-star"/></svg></span><strong>{{RATING}} / 5</strong><span>· {{REVIEW_COUNT}} Google reviews</span></div></div>
  <div class="review-grid" data-repeat="REVIEWS" data-source-token="{{REVIEWS}}"></div><a class="review-visit" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer">See our reviews <svg class="icon"><use href="#i-arrow"/></svg></a>
 </div></section>
 <section class="section pricing" id="pricing"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">UPFRONT PRICING</span><h2>CLEAR STARTING RATES.</h2><p>Honest starting prices. No mystery fees or pressure to sign a long contract.</p></div>
@@ -353,7 +353,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
  <article class="price-card"><span class="price-card__number">02 / MEDIUM</span><h3>Medium yard</h3><div class="price-card__small">Starting at</div><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_MEDIUM}}<span>+ / visit</span></div><div class="price-card__small">5,000–10,000 sq ft</div><a class="btn btn-primary" href="{{QUOTE_URL}}">Get My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article>
  <article class="price-card"><span class="price-card__number">03 / LARGE</span><h3>Large yard</h3><div class="price-card__small">Starting at</div><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_LARGE}}<span>+ / visit</span></div><div class="price-card__small">10,000–20,000 sq ft</div><a class="btn btn-secondary" href="{{QUOTE_URL}}">Get My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article></div><p class="price-note">{{PRICING_FREQUENCY}} · {{PRICE_NOTE}} Extra-large properties receive a custom quote.</p>
 </div></section>
-<section class="section section--light" id="about"><div class="wrap story-layout"><div class="story-photo"><img src="{{OWNER_PHOTO}}" alt="Illustrative licensed worker photo, not the business owner" loading="lazy" width="700" height="900"><div class="story-photo__label">Illustrative photo</div></div><div><div class="section-heading"><span class="eyebrow">WHO WE ARE</span><h2>ONE OPERATOR. ONE STANDARD.</h2><p>{{OWNER_STORY}}</p></div><div class="story__signature">{{OWNER_NAME}} <span style="font:700 14px var(--font);color:#37563a">/ OWNER</span></div></div></div></section>
+<section class="section section--light" id="about"><div class="wrap story-layout"><div class="story-photo"><img src="{{OWNER_PHOTO}}" alt="Lawn care worker outside on a property" loading="lazy" width="700" height="900"><div class="story-photo__label">Out on the route</div></div><div><div class="section-heading"><span class="eyebrow">WHO WE ARE</span><h2>ONE OPERATOR. ONE STANDARD.</h2><p>{{OWNER_STORY}}</p></div><div class="story__signature">{{OWNER_NAME}} <span style="font:700 14px var(--font);color:#37563a">/ OWNER</span></div></div></div></section>
 <section class="section areas" id="areas"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">OUR SERVICE AREA</span><h2>LOCAL ROUTES, CLEAR SERVICE AREA.</h2><p>Serving {{AREA_LABEL}}. Choose your neighborhood to see local service information.</p></div><nav class="area-links" aria-label="Individual neighborhood service pages" data-repeat="AREAS" data-source-token="{{AREAS}}"></nav></div></section>
 <section class="section faq-zone" id="faq"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">GOOD TO KNOW</span><h2>FAST ANSWERS.</h2><p>Quick answers before you get started.</p></div><div class="faq-list" data-repeat="FAQS" data-source-token="{{FAQS}}"></div></div></section>
 <section class="final-cta" id="quote"><div class="wrap final-cta__inner"><div><h2>GET THE YARD OFF YOUR LIST.</h2><p>Tell us about your property in {{CITY}}, {{STATE}}. We'll take it from there.</p></div><div class="final-cta__actions"><a class="btn btn-primary" href="{{QUOTE_URL}}">Get My Free Instant Quote<svg class="icon"><use href="#i-arrow"/></svg></a><a class="btn btn-secondary" href="tel:{{PHONE_DIAL}}"><svg class="icon"><use href="#i-phone"/></svg>Call {{PHONE}}</a></div></div></section>
@@ -525,20 +525,19 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 </script>
 <script>
 (()=>{document.addEventListener('DOMContentLoaded',()=>{
- const data=window.UMMIYARD_SAMPLE_DATA||{};
+ const d=window.UMMIYARD_SAMPLE_DATA||{};
  document.querySelectorAll('[data-google-badge]').forEach(el=>{
-   el.textContent=data.RATING+' / 5 · '+data.REVIEW_COUNT+' sample reviews';
-   el.removeAttribute('href');el.removeAttribute('target');
+  el.textContent=d.RATING+' / 5 · '+d.REVIEW_COUNT+' reviews';el.removeAttribute('href');el.removeAttribute('target');
  });
  document.querySelectorAll('[data-repeat="REVIEWS"]').forEach(root=>{
-   root.replaceChildren();
-   for(const r of data.REVIEWS||[]){
-    const card=document.createElement('article');card.className='sample-review review-card';
-    const tag=document.createElement('span');tag.className='sample-tag';tag.textContent='Sample review';
-    const p=document.createElement('p');p.textContent=r.text;
-    const by=document.createElement('strong');by.textContent=r.name;
-    card.append(tag,p,by);root.append(card);
-   }
+  root.replaceChildren();
+  for(const r of d.REVIEWS||[]){
+   const card=document.createElement('article');card.className='sample-review review-card';
+   const tag=document.createElement('span');tag.className='sample-tag';tag.textContent='Sample review';
+   const p=document.createElement('p');p.textContent=r.text;
+   const name=document.createElement('strong');name.textContent=r.name;
+   card.append(tag,p,name);root.append(card);
+  }
  });
 });})();
 </script></body></html>
