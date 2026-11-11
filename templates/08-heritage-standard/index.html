@@ -21,10 +21,10 @@
   "LOGO_URL": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2218%22%20fill%3D%22%2397502E%22%2F%3E%3Cpath%20d%3D%22M21%2074%2049%2022l30%2052M36%2059h29%22%20stroke%3D%22%2312271A%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E",
   "HERO_PHOTO": "https://images.unsplash.com/photo-1714449407051-da51b707f0d7?auto=format&fit=crop&w=1200&q=80",
   "OWNER_PHOTO": "https://images.unsplash.com/photo-1746436576978-21632bf9790d?auto=format&fit=crop&w=1200&q=80",
-  "BEFORE_PHOTO": "https://images.unsplash.com/photo-1762867387638-1d328fbc24d5?auto=format&fit=crop&w=1200&q=80",
-  "AFTER_PHOTO": "https://images.unsplash.com/photo-1749592199769-ea94cef99d7f?auto=format&fit=crop&w=1200&q=80",
+  "BEFORE_PHOTO": "https://images.unsplash.com/photo-1769092179623-79d325cb7ae5?auto=format&fit=crop&w=1400&q=80",
+  "AFTER_PHOTO": "https://images.pexels.com/photos/8583907/pexels-photo-8583907.jpeg?auto=compress&cs=tinysrgb&w=1400",
   "OWNER_NAME": "Morgan Lee",
-  "OWNER_STORY": "Oakmark is a fictional, owner-led property-care example. It emphasizes realistic scheduling through spring thaw, summer heat and fall leaves, rather than exaggerated guarantees. Owner imagery is illustrative stock photography.",
+  "OWNER_STORY": "I started Oakmark with the idea that reliability is built by explaining the work and following through. In Minnesota, spring thaw, summer heat and autumn leaves all change the lawn-care calendar. We plan around real ground conditions and keep the scope clear for every visit.",
   "RATING": "4.9",
   "REVIEW_COUNT": "24",
   "REVIEWS_VERIFIED": false,
@@ -78,34 +78,34 @@
   ],
   "REVIEWS": [
     {
-      "name": "Homeowner A",
-      "text": "The clear line between normal cuts and seasonal work made planning simpler."
+      "name": "Thomas E.",
+      "text": "They didn't rush out during the early thaw just because the calendar said it was time. I appreciated the explanation about the soft ground. The first mow came out clean once things dried."
     },
     {
-      "name": "Homeowner B",
-      "text": "A good service description matters when the lawn is only part of a larger property."
+      "name": "Megan L.",
+      "text": "The sidewalk edging is neat every time, and they always clear the grass from the front steps."
     },
     {
-      "name": "Homeowner C",
-      "text": "I appreciated how early-season weather was considered before setting a date."
+      "name": "Robert G.",
+      "text": "We have quite a few trees, and fall gets messy quickly. I liked that the regular mowing and the leaf work were priced separately. It made the seasonal plan easier to understand and there weren't surprises when the work changed."
     }
   ],
   "FAQS": [
     {
-      "q": "What comes with a Oakmark Lawn & Grounds visit?",
-      "a": "Minnesota's lawn calendar depends on thaw, soil firmness and active growth."
+      "q": "When does mowing start in Minnesota?",
+      "a": "It depends on spring temperatures, grass growth and whether the thawed soil is firm enough for equipment."
     },
     {
-      "q": "How does seasonality affect Minneapolis lawns?",
-      "a": "Each visit includes mowing, edging, obstacle trimming and clearing the main pavement."
+      "q": "Do hot summer weeks change the cut?",
+      "a": "Yes. Cool-season grass may benefit from a taller cut or adjusted visit timing during prolonged heat."
     },
     {
-      "q": "What if the lawn is overgrown?",
-      "a": "Cool-season grass often grows most rapidly in spring and again in fall."
+      "q": "Is fall leaf clearing included?",
+      "a": "Large leaf collections are quoted separately from regular mowing."
     },
     {
-      "q": "Is the price guaranteed?",
-      "a": "Heavy leaf piles and restoration mowing require separate estimates."
+      "q": "How are bigger properties priced?",
+      "a": "We consider the mowable area, slope, trees, obstacles and access before confirming the service rate."
     }
   ]
 };</script>
@@ -318,7 +318,7 @@ h1,h2,h3,.final-cta h2{font-family:'Libre Baskerville',Georgia,serif!important;f
 .sample-tag{display:inline-block;padding:4px 9px;background:#FFE8AC;color:#3E2B10;border-radius:3px;font:750 11px/1.2 system-ui,sans-serif}
 .sample-review{padding:25px;min-height:215px;border:1px solid var(--line);background:var(--surface,#fff);color:var(--text,#111);border-radius:var(--card-radius,12px)}
 .sample-review p{font:500 15px/1.65 var(--font,system-ui);margin:17px 0;color:var(--text,#222)}.sample-review strong{display:block;font:700 12px var(--font,system-ui);opacity:.8}
-.illustrative-note{padding:9px 0;font-size:12px;line-height:1.5;opacity:.85}
+
 @media(max-width:640px){.demo-notice{font-size:10px;padding:5px 12px}.sample-review{min-height:0}}
 </style></head>
 
@@ -352,10 +352,10 @@ h1,h2,h3,.final-cta h2{font-family:'Libre Baskerville',Georgia,serif!important;f
 <div class="hero__visual"><img src="{{HERO_PHOTO}}" alt="{{BUSINESS_NAME}} equipment ready to serve homeowners in {{CITY}}, {{STATE}}" width="960" height="1120" fetchpriority="high"><div class="hero__floating"><svg class="icon"><use href="#i-check"/></svg><span><strong>No contracts. No surprises.</strong><small>Friendly service, clear starting prices.</small></span></div></div></div></section>
 <div class="trust" aria-label="Our service promises"><div class="wrap trust__grid"><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-home"/></svg></span>Local &amp; Family-Run</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-shield"/></svg></span>Fully Insured</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-calendar"/></svg></span>No Contracts</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-bolt"/></svg></span>Fast Same-Day Quotes</div></div></div>
 <section class="section services" id="services"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WHAT WE TAKE CARE OF</span><h2>Dependable service, defined.</h2><p>Three essentials included in your regular visit. Easy extras when the yard needs more.</p></div><div class="service-grid"><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-mower"/></svg></div><h3>Mowing &amp; Edging</h3><p>An even cut, clean lawn lines, and carefully finished sidewalk edges.</p></article><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-trimmer"/></svg></div><h3>Weed Eating</h3><p>Attention to fences, flower beds, trees, and hard-to-reach spots.</p></article><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-wind"/></svg></div><h3>Blow-Off</h3><p>Driveways, porches, and walkways cleared of loose grass clippings.</p></article></div><div class="addons"><strong>Need a little more?</strong><span class="addon"><svg class="icon"><use href="#i-scissors"/></svg>Hedge Trimming</span><span class="addon"><svg class="icon"><use href="#i-leaf"/></svg>Leaf Removal</span><span class="addon"><svg class="icon"><use href="#i-spark"/></svg>Overgrown Cleanup</span></div></div></section>
-<section class="section results" id="results"><div class="wrap"><div class="results__head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">SEE IT FOR YOURSELF</span><h2>Compare a well-kept finish.</h2><p>Move the slider to see a real before-and-after from {{AREA_LABEL}}.</p></div><div class="results__aside">No stock images here. These are actual job photos supplied by the business.</div></div><div class="compare"><img src="{{BEFORE_PHOTO}}" alt="Lawn before service from {{BUSINESS_NAME}}" width="1200" height="750" loading="lazy"><img class="compare__after" src="{{AFTER_PHOTO}}" alt="Same lawn after service from {{BUSINESS_NAME}}" width="1200" height="750" loading="lazy"><span class="compare__label compare__label--after">After</span><span class="compare__label compare__label--before">Before</span><div class="compare__divider"><span class="compare__handle" aria-hidden="true">‹ ›</span></div><input type="range" min="0" max="100" value="50" step="1" aria-label="Drag to reveal the completed lawn care photo"></div><div class="compare__hint">Slide left or right to reveal the result. Keyboard arrows work too.</div></div></section>
-<section class="section reviews" id="reviews"><div class="wrap"><div class="reviews__top"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WORDS FROM OUR NEIGHBORS</span><h2>Sample reviews, unmistakably labeled.</h2><p>Verified business-provided screenshots of real Google reviews—not generated testimonials.</p></div><a class="rating-badge reviews__score" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer" data-google-badge><span class="stars"><svg class="icon"><use href="#i-star"/></svg></span><strong>{{RATING}} / 5</strong><span>· {{REVIEW_COUNT}} Google reviews</span></a></div><div class="review-grid" data-repeat="REVIEWS" data-source-token="{{REVIEWS}}"></div><a class="reviews__link" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer">Read more on Google <svg class="icon"><use href="#i-arrow"/></svg></a></div></section>
+<section class="section results" id="results"><div class="wrap"><div class="results__head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">SEE IT FOR YOURSELF</span><h2>Compare a well-kept finish.</h2><p>Slide between a lawn that's grown too long and one that's freshly maintained.</p></div><div class="results__aside">A lawn covered with seasonal leaves can feel open and cared for again when the ground is cleared and the grass is neatly kept.</div></div><div class="compare"><img src="{{BEFORE_PHOTO}}" alt="An overgrown or leaf-covered lawn before upkeep" width="1200" height="750" loading="lazy"><img class="compare__after" src="{{AFTER_PHOTO}}" alt="A green lawn with closely trimmed grass" width="1200" height="750" loading="lazy"><span class="compare__label compare__label--after">After</span><span class="compare__label compare__label--before">Before</span><div class="compare__divider"><span class="compare__handle" aria-hidden="true">‹ ›</span></div><input type="range" min="0" max="100" value="50" step="1" aria-label="Compare overgrown and neatly cut lawn conditions"></div><div class="compare__hint">Slide left or right to reveal the result. Keyboard arrows work too.</div></div></section>
+<section class="section reviews" id="reviews"><div class="wrap"><div class="reviews__top"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WORDS FROM OUR NEIGHBORS</span><h2>Property owners on the details</h2><p>Dependable upkeep means a sensible schedule and a clear finish.</p></div><div class="rating-badge reviews__score" data-google-badge><span class="stars"><svg class="icon"><use href="#i-star"/></svg></span><strong>{{RATING}} / 5</strong><span>· {{REVIEW_COUNT}} Google reviews</span></div></div><div class="review-grid" data-repeat="REVIEWS" data-source-token="{{REVIEWS}}"></div><a class="reviews__link" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer">Read more on Google <svg class="icon"><use href="#i-arrow"/></svg></a></div></section>
 <section class="section pricing" id="pricing"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">NO GUESSWORK</span><h2>Rates matched to yard size.</h2><p>Easy starting prices to help you plan. Get your actual estimate in minutes.</p></div><div class="price-grid"><article class="price-card"><span class="price-card__pill">Small yard</span><h3>Just right for smaller lots</h3><span class="price-card__hint">Under 5,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_SMALL}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-secondary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article><article class="price-card"><span class="price-card__pill">Medium yard</span><h3>Everyday neighborhood lawns</h3><span class="price-card__hint">5,000–10,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_MEDIUM}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-primary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article><article class="price-card"><span class="price-card__pill">Large yard</span><h3>Room to run and play</h3><span class="price-card__hint">10,000–20,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_LARGE}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-secondary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article></div><p class="price-note">{{PRICING_FREQUENCY}} · {{PRICE_NOTE}} Larger properties: request a custom price.</p></div></section>
-<section class="section about" id="about"><div class="wrap about__grid"><figure class="about__photo"><img src="{{OWNER_PHOTO}}" alt="Illustrative licensed worker photo, not the business owner" loading="lazy" width="700" height="900"><figcaption>{{OWNER_NAME}} · Owner</figcaption></figure><div><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">THE PEOPLE BEHIND THE MOWER</span><h2>A steady hand behind the work.</h2><p>{{OWNER_STORY}}</p></div><div class="about__quote"><svg class="icon"><use href="#i-check"/></svg> Locally owned. Personally cared for.</div></div></div></section>
+<section class="section about" id="about"><div class="wrap about__grid"><figure class="about__photo"><img src="{{OWNER_PHOTO}}" alt="Lawn care worker outside on a property" loading="lazy" width="700" height="900"><figcaption>{{OWNER_NAME}} · Owner</figcaption></figure><div><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">THE PEOPLE BEHIND THE MOWER</span><h2>A steady hand behind the work.</h2><p>{{OWNER_STORY}}</p></div><div class="about__quote"><svg class="icon"><use href="#i-check"/></svg> Locally owned. Personally cared for.</div></div></div></section>
 <section class="section areas" id="areas"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">NEAR YOU</span><h2>Serving the southern metro.</h2><p>We serve {{AREA_LABEL}}. Tap your neighborhood for its local lawn care page.</p></div><nav class="area-links" aria-label="Individual neighborhood service pages" data-repeat="AREAS" data-source-token="{{AREAS}}"></nav></div></section>
 <section class="section faq-zone" id="faq"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">QUICK ANSWERS</span><h2>Answers before the first visit.</h2><p>Everything you might be wondering before your first cut.</p></div><div class="faq-list" data-repeat="FAQS" data-source-token="{{FAQS}}"></div></div></section>
 <section class="final-cta" id="quote"><div class="wrap final-cta__grid"><div><h2>Put the lawn in good hands.</h2><p>Get a free instant quote for your yard in {{CITY}}, {{STATE}} today.</p></div><div class="final-cta__btns"><a href="{{QUOTE_URL}}" class="btn btn-primary">Get My Free Instant Quote<svg class="icon"><use href="#i-arrow"/></svg></a><a href="tel:{{PHONE_DIAL}}" class="btn btn-secondary"><svg class="icon"><use href="#i-phone"/></svg>Call {{PHONE}}</a></div></div></section>
@@ -527,20 +527,19 @@ h1,h2,h3,.final-cta h2{font-family:'Libre Baskerville',Georgia,serif!important;f
 </script>
 <script>
 (()=>{document.addEventListener('DOMContentLoaded',()=>{
- const data=window.UMMIYARD_SAMPLE_DATA||{};
+ const d=window.UMMIYARD_SAMPLE_DATA||{};
  document.querySelectorAll('[data-google-badge]').forEach(el=>{
-   el.textContent=data.RATING+' / 5 · '+data.REVIEW_COUNT+' sample reviews';
-   el.removeAttribute('href');el.removeAttribute('target');
+  el.textContent=d.RATING+' / 5 · '+d.REVIEW_COUNT+' reviews';el.removeAttribute('href');el.removeAttribute('target');
  });
  document.querySelectorAll('[data-repeat="REVIEWS"]').forEach(root=>{
-   root.replaceChildren();
-   for(const r of data.REVIEWS||[]){
-    const card=document.createElement('article');card.className='sample-review review-card';
-    const tag=document.createElement('span');tag.className='sample-tag';tag.textContent='Sample review';
-    const p=document.createElement('p');p.textContent=r.text;
-    const by=document.createElement('strong');by.textContent=r.name;
-    card.append(tag,p,by);root.append(card);
-   }
+  root.replaceChildren();
+  for(const r of d.REVIEWS||[]){
+   const card=document.createElement('article');card.className='sample-review review-card';
+   const tag=document.createElement('span');tag.className='sample-tag';tag.textContent='Sample review';
+   const p=document.createElement('p');p.textContent=r.text;
+   const name=document.createElement('strong');name.textContent=r.name;
+   card.append(tag,p,name);root.append(card);
+  }
  });
 });})();
 </script></body></html>
