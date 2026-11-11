@@ -8,8 +8,8 @@ function extractedFacts(old){
  const hero=old.match(/<section class="hero">([\s\S]*?)<\/section>/)?.[1]||"";
  const p0=paras(segments[0]),p1=paras(segments[1]);
  const season=paras(hero)[1];
- if(!p0?.[0]||!p0?.[1]||!p1?.[0]||!season)throw Error("Could not extract 4 source facts");
- return {lawn:p0[0],focus:p0[1],season,access:p1[0]};
+ if(!p0?.[1]||!p0?.[2]||!p1?.[1]||!season)throw Error("Could not extract 4 source facts");
+ return {lawn:p0[1],focus:p0[2],season,access:p1[1]};
 }
 
 function newTownArticle(old,site,town,idx){
