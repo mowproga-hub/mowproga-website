@@ -101,3 +101,28 @@ const js=`<script>
 html=html.slice(0,start)+js+html.slice(end+9);
 return html;
 }
+
+function townRecord(a,i,region){
+const town=a[0],landmark=a[1];
+return {name:town,slug:town.toLowerCase().replace(/[^a-z0-9]+/g,"-"),landmark,lawn:a[2],season:a[3],access:a[4],focus:a[5],
+ shortFeature:`Lawn conditions around ${landmark}`,hero:`${a[2]} ${a[3]}`,titleA:`Understanding ${town} lawns and edges`,
+ seasonLabel:`Seasonal care for ${town}`,titleB:`Mowing around ${landmark} through the year`,
+ seasonExtra:`Across ${town}, the exact cutting interval works best when it follows the turf's growth rather than an arbitrary date.`,
+ climateDetail:`The ${region} climate adds seasonal pressures that a ${town} homeowner can account for by watching the soil and grass.`,
+ issueLabel:`Practical access in ${town}`,titleC:`Handling the trickier parts of a ${town} yard`,
+ detail:`${a[5]} A picture of that spot on a ${town} property helps make the service scope clear.`,
+ priceHeading:`Starting prices for ${town} lawn service`,
+ priceIntro:`For ${town} properties, the starting size bands focus on what can actually be mowed, plus the perimeter that needs trimming.`,
+ priceCondition:`For ${town}, extensive first-cut growth or access limits can alter the confirmed figure.`,
+ faqHeading:`Questions about lawn care in ${town}`,
+ quoteHeading:`Request a lawn care estimate in ${town}`,
+ quote:`Tell us which parts of your ${town} lawn are regularly maintained and which spots need additional care.`,
+ neighborHeading:`Other service areas within reach of ${town}`
+};
+}
+
+function siteRecord(h,config,raw){
+return {slug:config.slug||config.name.replaceAll("-",""),business:h.BUSINESS_NAME,city:h.CITY,state:h.STATE,phone:h.PHONE,phoneDial:h.PHONE_DIAL,email:h.EMAIL,hours:h.HOURS,
+prices:[h.PRICE_SMALL,h.PRICE_MEDIUM,h.PRICE_LARGE],photo:h.HERO_PHOTO,color:config.color,dark:config.dark,ink:config.ink,
+towns:raw.map((a,i)=>townRecord(a,i,config.region)),ownerStory:config.story,frequency:config.frequency,priceNote:config.priceNote,reviews:config.reviews,faqs:config.faqs};
+}
