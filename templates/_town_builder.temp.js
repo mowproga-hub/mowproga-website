@@ -13,17 +13,17 @@ const notes=[
  ["Narrow gates and mature landscaping affect which equipment can enter.","First-visit preparation is discussed before a recurring price is confirmed."]
 ][j];
 const faqs=[
- {q:`How do lawns near ${t.landmark} in ${name} affect the cut?`,a:`${t.lawn} ${t.focus} Those details guide how we approach the turf rather than forcing a single method everywhere.`},
- {q:`When does the growing season change service in ${name}?`,a:`${t.season} ${t.seasonExtra} We plan around these conditions rather than calendar dates alone.`},
- {q:`Which access details should a ${name} homeowner share?`,a:`${t.access} ${t.detail} Together they tell us whether normal equipment can safely cover the property.`},
- {q:`Why can a ${name} quote differ from the starting cards?`,a:`${notes[1]} The posted size bands begin at ${p[0]}, ${p[1]}, and ${p[2]}; ${t.priceCondition.toLowerCase()}.`}
+ {q:`How do lawns near ${t.landmark} in ${name} affect the cut?`,a:`${t.lawn} ${t.focus} Those ${name} details guide our cut instead of forcing the same method onto every lawn.`},
+ {q:`When does the growing season change service in ${name}?`,a:`${t.season} ${t.seasonExtra} Our ${name} schedule follows these conditions rather than a rigid calendar.`},
+ {q:`Which access details should a ${name} homeowner share?`,a:`${t.access} ${t.detail} Together these ${name} access details tell us whether standard equipment fits the job.`},
+ {q:`Why can a ${name} quote differ from the starting cards?`,a:`${notes[1]} The ${name} size bands begin at ${p[0]}, ${p[1]}, and ${p[2]}; ${t.priceCondition.toLowerCase()}.`}
 ];
 const schema={"@context":"https://schema.org","@type":"LocalBusiness","@id":`https://example.com/#${site.slug}`,name:site.business,url:"https://example.com/",telephone:site.phoneDial,email:site.email,areaServed:{"@type":"City",name,address:{"@type":"PostalAddress",addressRegion:st,addressCountry:"US"}},hasOfferCatalog:{"@type":"OfferCatalog",name:`Lawn care in ${name}`,itemListElement:[{"@type":"Offer",itemOffered:{"@type":"Service",serviceType:"Lawn mowing and edging",areaServed:{"@type":"City",name}}}]}};
 const faqSchema={"@context":"https://schema.org","@type":"FAQPage",mainEntity:faqs.map(f=>({"@type":"Question",name:f.q,acceptedAnswer:{"@type":"Answer",text:f.a}}))};
 const title=`Lawn Care in ${name}, ${st} | ${site.business}`;
 const desc=`${site.business}: ${name}, ${st} lawn mowing and edging near ${t.landmark}. ${t.shortFeature}. Prices from ${p[0]}.`;
 const rateLabels=[`Compact lawns around ${name}`,`Everyday ${name} properties`,`Larger ${name} lots`];
-const priceCards=p.map((amount,k)=>`<article class="price-card"><small>${e(rateLabels[k])}</small><h3>${["Small","Medium","Large"][k]} yard</h3><div class="amount">${e(amount)}<span>+ / visit</span></div><p>${["Below 5,000 sq ft","5,000–10,000 sq ft","10,000–20,000 sq ft"][k]} · Starting at</p><a href="#quote" class="btn primary">Get My Free Instant Quote</a></article>`).join("\n");
+const priceCards=p.map((amount,k)=>`<article class="price-card"><small>${e(rateLabels[k])}</small><h3>${["Small","Medium","Large"][k]} yard</h3><div class="amount">${e(amount)}<span>+ / visit</span></div><p>${["Below 5,000 sq ft in ${name}","5,000–10,000 sq ft in ${name}","10,000–20,000 sq ft in ${name}"][k]} · Starting at</p><a href="#quote" class="btn primary">Get My Free Instant Quote</a></article>`).join("\n");
 const nearLinks=neighbors.map(n=>`<a href="./lawn-care-${n.slug}.html" class="chip">${e(n.name)} lawn care</a>`).join("");
 return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${e(title)}</title><meta name="description" content="${e(desc)}"><meta name="robots" content="noindex,nofollow">
