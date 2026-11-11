@@ -90,3 +90,22 @@ In this revision, all 80 town files were read back from GitHub. Checks confirmed
 - [Unsplash license](https://unsplash.com/license)
 
 **Isolation rule:** Work on these files is confined to the `site-templates` branch and the `templates/` directory. There is no change to the live `mowproga.com` deployment from this template collection.
+
+
+## November 11, 2026 — 390px mobile refinement
+
+All changes in this pass were made **on `site-templates`, inside `templates/` only**. No production branch, source app, deployment, pull request or merge was changed.
+
+- Each of the **ten homepages** retains its hero, trust row, services, optional work, comparison slider, reviews, pricing, owner story, eight linked local areas, FAQ, closing quote action and contact footer.
+- At screen widths up to 640px: section gaps are approximately 35px; the three service cards use two columns; the three prices become short vertical rows (with the concluding Quote CTA retained); review cards scroll horizontally; the owner image is cropped to approximately 155px high; and the footer is reorganized into a two-column contact/navigation layout.
+- All **80 town pages** received a corresponding mobile-only CSS pass: approximately 29px section spacing, shorter hero, compact pricing rows, preserved four-FAQ disclosure section and preserved quote/call controls and nearby links.
+- On the five formerly low-contrast themes (03, 05, 06, 07 and 08), footer, town-introduction and CTA text now uses light foregrounds on specified dark surfaces. For example, `#f8fff8` on `#11291c` is approximately 15.2:1 contrast; `#f8fff8` on `#123524` is approximately 13.2:1.
+- Facebook and Instagram icons use explicit visible SVG stroke colors. With no connected social profile, the icon remains visible but its anchor is disabled rather than linking to the current page. Connected real URLs remain usable.
+- Template 09 has a zero-stroke, no-shadow heading override. Repeated “Starting at” copy was eliminated from 01, 09 and 10.
+- Template 04's owner-photo slot uses a residential-lawn mower scene rather than stadium groundskeeping sponsorship. Template 10's owner photo was changed to avoid repeating another template's image.
+- All ten before/after comparisons now use **distinct Pexels photo IDs** chosen from pages describing overgrown grass, autumn leaf cover, or gardens on the left, and well-maintained residential lawns on the right. These are **separate, illustrative images**, not authenticated photos of one transformed property. Use real matched photos from the operator for production.
+- Source validation confirmed 40 distinct homepage image URLs, 8 areas and 4 FAQs per homepage, all home-page scripts syntactically valid, one top demo label per homepage, and no repeated “Starting at” on an individual price card.
+- A Playwright browser check at 390px, using the corresponding locally available pre-revision Nightfall and Fresh Start HTML plus the compact CSS rules, yielded approximately **5,415px** and **5,558px** page heights respectively (previously approximately 9,265px and 9,185px). This is a representative layout test, **not a full rendered-height measurement of all ten updated GitHub homepages**.
+- Pexels image pages were checked for photo subject and free-use licensing. The current execution environment cannot fetch the binary CDN image URLs or render the newest GitHub branch files directly in a browser; verify the image loads and exact mobile height in the target preview before customer deployment.
+
+Relevant photo information: [Pexels License](https://www.pexels.com/license/).
