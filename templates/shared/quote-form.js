@@ -16,7 +16,7 @@
 (function () {
   "use strict";
   var section = document.getElementById("quote");
-  if (!section || section.querySelector(".uyq")) return;
+  if (section && section.querySelector(".uyq")) return;
 
   function num(v, d) {
     var n = parseFloat(String(v == null ? "" : v).replace(/[^0-9.]/g, ""));
@@ -141,6 +141,30 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
 @media(max-width:420px){#quote .uyq{padding:22px 16px}#quote .uyq .uq-tabs{grid-template-columns:repeat(2,1fr)}}\
 #quote a[href='#quote']{display:none!important}";
 
+  // ---------- brand glow ----------
+  // mowproga.com's signature look: key pieces get a thin border in the brand
+  // color plus a soft glow of the same color. Applied here to the before/after
+  // slider, the featured price card, the add-ons box, the owner photo and the
+  // quote form, using whatever brand color this template uses.
+  function applyGlow(t) {
+    var c = (t["--uq-accent"].match(/\d+(\.\d+)?/g) || [45, 122, 74]).slice(0, 3).join(",");
+    var dark = t["--uq-dark"] === "1";
+    var a1 = dark ? 0.16 : 0.22, a2 = dark ? 0.3 : 0.32;
+    var g = "0 0 28px rgba(" + c + "," + a1 + ")";
+    var g2 = "0 0 0 1px rgba(" + c + ",.18),0 8px 30px rgba(" + c + "," + a2 + ")";
+    var css =
+      ".compare,.story-photo,.about__photo{border:1.5px solid rgb(" + c + ")!important;box-shadow:" + g + "!important}" +
+      ".price-card:nth-child(2){border:2px solid rgb(" + c + ")!important;box-shadow:" + g2 + "!important}" +
+      ".addons{border:1.5px solid rgba(" + c + ",.7)!important;box-shadow:" + g + "!important}" +
+      "#quote .uyq{border:1.5px solid rgb(" + c + ")!important;box-shadow:0 0 34px rgba(" + c + "," + (a1 + 0.04) + ")!important}" +
+      "#quote .uyq .uq-price{border:1.5px solid rgb(" + c + ")!important;box-shadow:0 0 22px rgba(" + c + "," + a1 + ")!important}" +
+      "#quote .uyq .uq-tab[aria-pressed=true]{box-shadow:0 0 20px rgba(" + c + "," + (a2 - 0.05) + ")}";
+    var el = document.createElement("style");
+    el.id = "uy-brand-glow";
+    el.textContent = css;
+    document.head.appendChild(el);
+  }
+
   // ---------- pricing ----------
   function pricing(d) {
     var s = num(d.PRICE_SMALL, 65), m = num(d.PRICE_MEDIUM, 75), l = num(d.PRICE_LARGE, 85);
@@ -203,6 +227,7 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
     box.id = "instant-quote";
     var t = theme();
     Object.keys(t).forEach(function (k) { box.style.setProperty(k, t[k]); });
+    applyGlow(t);
     var host = section.querySelector(".wrap") || section;
     host.appendChild(box);
 
@@ -355,7 +380,7 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
     render();
   }
 
-  function start() { loadData().then(mount); }
+  function start() { if (!section) { applyGlow(theme()); return; } loadData().then(mount); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();
