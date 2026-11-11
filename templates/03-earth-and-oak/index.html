@@ -143,13 +143,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 .area-chip .icon{width:16px;height:16px}
 .compare{position:relative;isolation:isolate;overflow:hidden;aspect-ratio:4/3;--split:50%;border-radius:var(--media-radius,20px);background:#C9D9CD}
 .compare img{position:absolute;width:100%;height:100%;inset:0;object-fit:cover;object-position:50% 50%}
-.compare__after{clip-path:inset(0 calc(100% - var(--split)) 0 0)}
+.compare__after{clip-path:inset(0 0 0 var(--split))}
 .compare__divider{pointer-events:none;position:absolute;z-index:2;top:0;bottom:0;left:var(--split);width:2px;background:white;box-shadow:0 0 6px #17241a9c;transform:translateX(-50%)}
 .compare__handle{position:absolute;top:50%;left:50%;width:48px;height:48px;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border:3px solid white;border-radius:50%;background:var(--brand);color:var(--cta-ink,#122b1a);box-shadow:0 5px 25px #07120a55;font-weight:900;font-size:20px;white-space:nowrap}
 .compare input{position:absolute;inset:0;width:100%;height:100%;margin:0;z-index:3;opacity:0;cursor:ew-resize}
 .compare:focus-within{outline:3px solid var(--brand);outline-offset:4px}
 .compare__label{position:absolute;z-index:2;top:18px;padding:7px 12px;border-radius:6px;background:rgba(10,25,20,.82);color:white;font-size:12px;letter-spacing:.08em;font-weight:850;text-transform:uppercase;pointer-events:none}
-.compare__label--before{right:18px}.compare__label--after{left:18px}
+.compare__label--before{left:18px}.compare__label--after{right:18px}
 .compare__hint{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;line-height:1.5;margin-top:12px}
 @media(max-width:640px){.compare__label{top:12px}.compare__hint{font-size:12px;margin-top:8px}}
 .review-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
@@ -578,7 +578,7 @@ html,body{overflow-x:clip!important}
       if (!input) continue;
       const update = () => {
         compare.style.setProperty('--split', input.value + '%');
-        input.setAttribute('aria-valuetext', input.value + '% of the cleaned yard visible');
+        input.setAttribute('aria-valuetext', input.value + '% of the before photo visible');
       };
       input.addEventListener('input', update);
       update();
