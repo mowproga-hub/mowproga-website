@@ -21,7 +21,8 @@
   "LOGO_URL": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2218%22%20fill%3D%22%2397502E%22%2F%3E%3Cpath%20d%3D%22M21%2074%2049%2022l30%2052M36%2059h29%22%20stroke%3D%22%2312271A%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E",
   "HERO_PHOTO": "https://images.unsplash.com/photo-1777539638731-162153332dc5?auto=format&fit=crop&w=1200&q=80",
   "OWNER_PHOTO": "https://images.unsplash.com/photo-1779636489748-c66b48a94c39?auto=format&fit=crop&w=1200&q=80",
-  "RECENT_WORK_PHOTO": "https://images.pexels.com/photos/8186510/pexels-photo-8186510.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "BEFORE_PHOTO": "../shared/fall-leaf-cleanup-before.jpg",
+  "AFTER_PHOTO": "../shared/fall-leaf-cleanup-after.jpg",
   "OWNER_NAME": "Drew Collins",
   "OWNER_STORY": "I built Glassleaf around a simple idea: you should know what the visit covers before anyone starts a mower. We make the scope easy to understand, pay attention to the turf and its hardscape borders, and finish with clean walks and clear communication.",
   "RATING": "4.9",
@@ -140,13 +141,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 .area-links{display:flex;flex-wrap:wrap;gap:12px}
 .area-chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:11px 15px;border-radius:100px;font-size:14px;font-weight:700}
 .area-chip .icon{width:16px;height:16px}
-.recent-work{margin:0;min-width:0}
-.recent-work img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:var(--media-radius,20px);background:#C9D9CD}
-.recent-work__caption{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;margin-top:12px;font-size:13px;line-height:1.5}
-.recent-work__caption strong{font-weight:800;color:var(--text)}
-.recent-work__caption strong span{font-weight:500;opacity:.75}
-.recent-work__caption>span{color:var(--muted)}
-@media(max-width:640px){.recent-work img{aspect-ratio:4/3}.recent-work__caption{flex-direction:column;align-items:flex-start;gap:3px}}
+.compare{position:relative;isolation:isolate;overflow:hidden;aspect-ratio:4/3;--split:50%;border-radius:var(--media-radius,20px);background:#C9D9CD}
+.compare img{position:absolute;width:100%;height:100%;inset:0;object-fit:cover;object-position:50% 50%}
+.compare__after{clip-path:inset(0 calc(100% - var(--split)) 0 0)}
+.compare__divider{pointer-events:none;position:absolute;z-index:2;top:0;bottom:0;left:var(--split);width:2px;background:white;box-shadow:0 0 6px #17241a9c;transform:translateX(-50%)}
+.compare__handle{position:absolute;top:50%;left:50%;width:48px;height:48px;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border:3px solid white;border-radius:50%;background:var(--brand);color:var(--cta-ink,#122b1a);box-shadow:0 5px 25px #07120a55;font-weight:900;font-size:20px;white-space:nowrap}
+.compare input{position:absolute;inset:0;width:100%;height:100%;margin:0;z-index:3;opacity:0;cursor:ew-resize}
+.compare:focus-within{outline:3px solid var(--brand);outline-offset:4px}
+.compare__label{position:absolute;z-index:2;top:18px;padding:7px 12px;border-radius:6px;background:rgba(10,25,20,.82);color:white;font-size:12px;letter-spacing:.08em;font-weight:850;text-transform:uppercase;pointer-events:none}
+.compare__label--before{right:18px}.compare__label--after{left:18px}
+.compare__hint{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;line-height:1.5;margin-top:12px}
+@media(max-width:640px){.compare__label{top:12px}.compare__hint{font-size:12px;margin-top:8px}}
 .review-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
 .review-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:var(--card-radius,18px)}
 .review-card img{display:block;width:100%;height:250px;object-fit:contain;object-position:center;background:#FFF}
@@ -463,7 +468,7 @@ html,body{overflow-x:clip!important}
 <div class="hero__visual"><img src="{{HERO_PHOTO}}" alt="{{BUSINESS_NAME}} equipment ready to serve homeowners in {{CITY}}, {{STATE}}" width="960" height="1120" fetchpriority="high"><div class="hero__floating"><svg class="icon"><use href="#i-check"/></svg><span><strong>No contracts. No surprises.</strong><small>Friendly service, clear starting prices.</small></span></div></div></div></section>
 <div class="trust" aria-label="Our service promises"><div class="wrap trust__grid"><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-home"/></svg></span>Local &amp; Family-Run</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-shield"/></svg></span>Fully Insured</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-calendar"/></svg></span>No Contracts</div><div class="trust__item"><span class="trust__icon"><svg class="icon"><use href="#i-bolt"/></svg></span>Fast Same-Day Quotes</div></div></div>
 <section class="section services" id="services"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WHAT WE TAKE CARE OF</span><h2>No confusion. Just lawn care.</h2><p>Three essentials included in your regular visit. Easy extras when the yard needs more.</p></div><div class="service-grid"><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-mower"/></svg></div><h3>Mowing &amp; Edging</h3><p>An even cut, clean lawn lines, and carefully finished sidewalk edges.</p></article><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-trimmer"/></svg></div><h3>Weed Eating</h3><p>Attention to fences, flower beds, trees, and hard-to-reach spots.</p></article><article class="service-card"><div class="service-card__icon"><svg class="icon"><use href="#i-wind"/></svg></div><h3>Blow-Off</h3><p>Driveways, porches, and walkways cleared of loose grass clippings.</p></article></div><div class="addons"><strong>Need a little more?</strong><span class="addon"><svg class="icon"><use href="#i-scissors"/></svg>Hedge Trimming</span><span class="addon"><svg class="icon"><use href="#i-leaf"/></svg>Leaf Removal</span><span class="addon"><svg class="icon"><use href="#i-spark"/></svg>Overgrown Cleanup</span></div></div></section>
-<section class="section results" id="results"><div class="wrap"><div class="results__head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">SEE IT FOR YOURSELF</span><h2>See the work in the details.</h2><p>Explore a neatly maintained lawn in this sample photo layout.</p></div><div class="results__aside">Demo photo only. Replace it with a real completed job from your own business.</div></div><figure class="recent-work"><img src="{{RECENT_WORK_PHOTO}}" alt="Sample photo of a neatly maintained residential lawn" loading="lazy" decoding="async" width="1200" height="750"><figcaption class="recent-work__caption"><strong>Recent work <span>· Sample photo</span></strong><span>Your own before-and-after photos go here</span></figcaption></figure></div></section>
+<section class="section results" id="results"><div class="wrap"><div class="results__head"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">SEE IT FOR YOURSELF</span><h2>See the work in the details.</h2><p>Drag the slider to compare the same yard before and after a fall leaf cleanup.</p></div><div class="results__aside">Sample photos of the same yard, from the same angle, before and after a fall cleanup.</div></div><div class="compare"><img src="{{BEFORE_PHOTO}}" alt="Fall leaf cleanup — before" loading="lazy" decoding="async" width="1400" height="1050"><img class="compare__after" src="{{AFTER_PHOTO}}" alt="Fall leaf cleanup — after" loading="lazy" decoding="async" width="1400" height="1050"><span class="compare__label compare__label--after">After</span><span class="compare__label compare__label--before">Before</span><div class="compare__divider"><span class="compare__handle" aria-hidden="true">‹ ›</span></div><input type="range" min="0" max="100" value="50" step="1" aria-label="Compare the same yard before and after fall leaf cleanup"></div><p class="compare__hint"><span class="sample-tag">Sample</span><span>Fall leaf cleanup — before / after. Drag the circle or use the arrow keys.</span></p></div></section>
 <section class="section reviews" id="reviews"><div class="wrap"><div class="reviews__top"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">WORDS FROM OUR NEIGHBORS</span><h2>A clear result, in their words</h2><p>Good communication is just as useful as a tidy border.</p></div><div class="rating-badge reviews__score" data-google-badge><span class="stars"><svg class="icon"><use href="#i-star"/></svg></span><strong>{{RATING}} / 5</strong><span>· {{REVIEW_COUNT}} Google reviews</span></div></div><div class="review-grid" data-repeat="REVIEWS" data-source-token="{{REVIEWS}}"></div><a class="reviews__link" href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer">Read more on Google <svg class="icon"><use href="#i-arrow"/></svg></a></div></section>
 <section class="section pricing" id="pricing"><div class="wrap"><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">NO GUESSWORK</span><h2>A clear starting number.</h2><p>Easy starting prices to help you plan. Get your actual estimate in minutes.</p></div><div class="price-grid"><article class="price-card"><span class="price-card__pill">Small yard</span><h3>Just right for smaller lots</h3><span class="price-card__hint">Under 5,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_SMALL}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-secondary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article><article class="price-card"><span class="price-card__pill">Medium yard</span><h3>Everyday neighborhood lawns</h3><span class="price-card__hint">5,000–10,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_MEDIUM}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-primary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article><article class="price-card"><span class="price-card__pill">Large yard</span><h3>Room to run and play</h3><span class="price-card__hint">10,000–20,000 sq ft</span><div class="price-card__hint">Starting at</div><div class="price-card__amount">{{PRICE_LARGE}}<span>+ / visit</span></div><a href="{{QUOTE_URL}}" class="btn btn-secondary">Check My Price<svg class="icon"><use href="#i-arrow"/></svg></a></article></div><p class="price-note">{{PRICING_FREQUENCY}} · {{PRICE_NOTE}} Larger properties: request a custom price.</p></div></section>
 <section class="section about" id="about"><div class="wrap about__grid"><figure class="about__photo"><img src="{{OWNER_PHOTO}}" alt="Lawn care worker outside on a property" loading="lazy" width="700" height="900"><figcaption>{{OWNER_NAME}} · Owner</figcaption></figure><div><div class="section-heading"><span class="eyebrow" style="color:var(--brand)">THE PEOPLE BEHIND THE MOWER</span><h2>The people and the process.</h2><p>{{OWNER_STORY}}</p></div><div class="about__quote"><svg class="icon"><use href="#i-check"/></svg> Locally owned. Personally cared for.</div></div></div></section>
@@ -488,6 +493,7 @@ html,body{overflow-x:clip!important}
   }
   function safeLink(s) {
     const x = fill(s || '').trim();
+    if (/^\.\.\/shared\/fall-leaf-cleanup-(before|after)\.jpg$/.test(x)) return x;
     return /^(https?:\/\/|\/|#|tel:|mailto:|data:image\/svg\+xml,|\.\/)/i.test(x) ? x : '';
   }
   function icon(name) {
@@ -571,6 +577,18 @@ html,body{overflow-x:clip!important}
       }
     }
   }
+  function initCompare() {
+    for (const compare of document.querySelectorAll('.compare')) {
+      const input = compare.querySelector('input[type="range"]');
+      if (!input) continue;
+      const update = () => {
+        compare.style.setProperty('--split', input.value + '%');
+        input.setAttribute('aria-valuetext', input.value + '% of the cleaned yard visible');
+      };
+      input.addEventListener('input', update);
+      update();
+    }
+  }
   function initMenu() {
     const btn = document.querySelector('[data-menu-button]');
     const nav = document.querySelector('[data-mobile-nav]');
@@ -628,7 +646,7 @@ html,body{overflow-x:clip!important}
   }
   document.addEventListener('DOMContentLoaded', () => {
     renderAreas(); renderReviews(); renderFAQ(); replaceTokens();
-    initMenu(); setStructuredData(); initRating(); initSocial();
+    initCompare(); initMenu(); setStructuredData(); initRating(); initSocial();
     document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
     document.querySelectorAll('svg.icon').forEach(svg => { svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false'); });
   });
