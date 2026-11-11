@@ -62,3 +62,29 @@ ${articleSections}
  if((visible.match(/Demo site — sample business/g)||[]).length!==1)throw Error("notice count incorrect "+name);
  return page;
 }
+
+function prepareTown(site,old,brief,idx,design){
+ const area=site.AREAS[idx];
+ if(!area||!brief||brief.headings?.length!==7||brief.qa?.length!==4)throw Error("Missing complete town copy at index "+idx);
+ const slug=area.url.match(/lawn-care-([a-z0-9-]+)\.html/)?.[1];
+ if(!slug)throw Error("Missing town slug");
+ const landmarkRaw=old.match(/<section class="hero">[\s\S]*?<span class="eyebrow">([\s\S]*?)<\/span>/)?.[1]||"";
+ const landmark=stripHTML(landmarkRaw).replace(new RegExp("\\s+·\\s+"+area.name+"$","i"),"");
+ const [h1,h2,h3,priceTitle,faqTitle,ctaTitle,linksTitle]=brief.headings;
+ const [brand,dark,ink,accent,font]=design;
+ return {
+  name:area.name,slug,landmark,brand,dark,ink,accent,font,
+  meta:brief.meta,deck:brief.deck,lead:brief.lead,seasonNote:brief.seasonNote,
+  siteNote:brief.siteNote,priceIntro:brief.priceIntro,priceNote:brief.priceNote,
+  ctaText:brief.ctaText,qa:brief.qa,
+  h1,h2,h3,priceTitle,faqTitle,ctaTitle,linksTitle,
+  k1:brief.kickers?.[0]||h1,k2:brief.kickers?.[1]||h2,k3:brief.kickers?.[2]||h3,
+  pk:brief.pk||"Service estimate",fk:brief.fk||"Local questions",ck:brief.ck||"Planning a visit",
+  order:brief.order||([[0,1,2],[1,2,0],[2,0,1],[0,2,1]][idx%4])
+ };
+}
+function siteFromHTML(html){
+const match=html.match(/window\.UMMIYARD_SAMPLE_DATA = (\{[\s\S]*?\});<\/script>/);
+if(!match)throw Error("Could not parse sample data");
+return JSON.parse(match[1]);
+}
