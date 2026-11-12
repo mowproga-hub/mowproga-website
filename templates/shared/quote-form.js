@@ -134,6 +134,11 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
 :is(#quote,#uyq-modal) .uyq .uq-consent input{width:19px;height:19px;margin-top:1px;flex-shrink:0;accent-color:var(--uq-accent)}\
 :is(#quote,#uyq-modal) .uyq .uq-go{width:100%;margin-top:16px;border:0;border-radius:var(--uq-btn-radius);background:var(--uq-accent);color:var(--uq-accent-ink)!important;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--uq-font)}\
 :is(#quote,#uyq-modal) .uyq .uq-go[disabled]{opacity:.5;cursor:default}\
+:is(#quote,#uyq-modal) .uyq .uq-steps{display:flex;gap:6px;margin:0 0 18px}\
+:is(#quote,#uyq-modal) .uyq .uq-steps i{flex:1;height:4px;border-radius:99px;background:var(--uq-line)}\
+:is(#quote,#uyq-modal) .uyq .uq-steps i.on{background:var(--uq-accent)}\
+:is(#quote,#uyq-modal) .uyq .uq-back{border:0;background:none;padding:0 0 10px;font-size:13.5px;font-weight:700;cursor:pointer;color:var(--uq-muted)!important}\
+:is(#quote,#uyq-modal) .uyq [hidden]{display:none!important}\
 :is(#quote,#uyq-modal) .uyq .uq-err{font-size:12.5px;color:#d9534f!important;margin-top:8px}\
 :is(#quote,#uyq-modal) .uyq .uq-priv{font-size:12px;color:var(--uq-muted)!important;text-align:center;margin:10px 0 0}\
 :is(#quote,#uyq-modal) .uyq .uq-done{text-align:center;padding:18px 0}:is(#quote,#uyq-modal) .uyq .uq-done .uq-check{width:52px;height:52px;border-radius:50%;margin:0 auto 12px;background:var(--uq-accent);color:var(--uq-accent-ink)!important;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}\
@@ -142,6 +147,7 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
 \
 #uyq-modal{position:fixed;inset:0;z-index:9999;background:rgba(5,8,6,.72);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}\
 #uyq-modal .uyq{position:relative;margin:24px auto;width:100%;max-width:460px}\
+#uyq-modal .uq-steps{margin-right:40px!important;margin-top:6px!important}\
 #uyq-modal .uq-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:transparent;color:var(--uq-text);font-size:24px;line-height:1;cursor:pointer;opacity:.7}\
 body.uyq-lock{overflow:hidden}\
 .price-card.uyq-clickable{cursor:pointer;transition:transform .15s ease}\
@@ -284,7 +290,7 @@ body.uyq-lock{overflow:hidden}\
     var d = D;
     var P = pricing(d);
     var biz = d.BUSINESS_NAME || "our team";
-    var st = { svc: "mowing", address: "", freq: "Biweekly", size: "medium", crack: false, over: "none", edge: false, heavyTrees: false, hedge: "h1", tall: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, brush: "b1", brushHaul: false, name: "", phone: "", textOk: false, done: false, err: "" };
+    var st = { svc: "mowing", address: "", freq: "Biweekly", size: "medium", crack: false, over: "none", edge: false, heavyTrees: false, hedge: "h1", tall: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, brush: "b1", brushHaul: false, name: "", phone: "", textOk: false, done: false, err: "", step: 1 };
     Object.keys(preset || {}).forEach(function (k) { st[k] = preset[k]; });
 
     var box = document.createElement("div");
@@ -329,6 +335,8 @@ body.uyq-lock{overflow:hidden}\
         return;
       }
       var h = [];
+      h.push('<div class="uq-steps" aria-label="Step ' + st.step + ' of 2"><i class="on"></i><i' + (st.step === 2 ? ' class="on"' : "") + "></i></div>");
+      if (st.step === 1) {
       h.push("<h3>Get your instant quote</h3>");
       h.push('<p class="uq-sub">' + (c.isHedge ? "Enter your address and how many shrubs need trimming." : c.isBrush ? "Enter your address and how big the overgrown area is." : "Enter your address and pick your yard size to see your price.") + "</p>");
       h.push('<div class="uq-tabs" role="group" aria-label="Service">' + SERVICES.map(function (s) {
@@ -379,6 +387,14 @@ body.uyq-lock{overflow:hidden}\
         if (c.brush.price !== null) h.push(opt('data-t="brushHaul"', st.brushHaul, "Haul away debris", "Cut brush loaded up and removed (default is piled on-site)", "+" + money(P.brushHaul), true));
       }
 
+        var ok1 = !!st.address.trim();
+        h.push('<button type="button" class="uq-go" data-next' + (ok1 ? "" : " disabled") + ">Continue →</button>");
+        h.push('<p class="uq-priv" data-hint' + (ok1 ? " hidden" : "") + ">Enter your property address to continue</p>");
+      } else {
+      h.push('<button type="button" class="uq-back" data-back>← Back</button>');
+      h.push("<h3>Almost done</h3>");
+      h.push('<p class="uq-sub">Here\'s your estimate for this property.</p>');
+
       // live price
       if (c.needsCustom) {
         h.push('<div class="uq-price"><small>' + (c.isHedge ? "Your hedges" : "Your property") + '</small><strong style="font-size:22px">Custom quote needed</strong><span>We\'ll look at your property and follow up with pricing</span></div>');
@@ -394,10 +410,11 @@ body.uyq-lock{overflow:hidden}\
       h.push('<label class="uq-l" for="uq-name">Your name</label><input class="uq-in" id="uq-name" data-f="name" autocomplete="name" placeholder="Full name" value="' + esc(st.name) + '">');
       h.push('<label class="uq-l" for="uq-phone">Phone number</label><input class="uq-in" id="uq-phone" data-f="phone" type="tel" autocomplete="tel" placeholder="(555) 000-0000" value="' + esc(st.phone) + '">');
       h.push('<label class="uq-consent"><input type="checkbox" data-f="textOk"' + (st.textOk ? " checked" : "") + "><span>I agree to get texts from " + esc(biz) + " about my quote and service. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span></label>");
-      var ready = st.address.trim() && st.name.trim() && st.phone.trim();
-      h.push('<button type="button" class="uq-go" data-go' + (ready ? "" : " disabled") + ">Get My Quote →</button>");
+      var ready = st.name.trim() && st.phone.trim();
+      h.push('<button type="button" class="uq-go" data-go' + (ready ? "" : " disabled") + ">Request This Quote →</button>");
       if (st.err) h.push('<div class="uq-err">' + esc(st.err) + "</div>");
       h.push('<p class="uq-priv">🔒 Your information is only used to provide your quote.</p>');
+      }
       box.innerHTML = X + h.join("");
     }
 
@@ -420,12 +437,23 @@ body.uyq-lock{overflow:hidden}\
       if (!f) return;
       st[f] = e.target.type === "checkbox" ? e.target.checked : e.target.value;
       var go = box.querySelector("[data-go]");
-      if (go) go.disabled = !(st.address.trim() && st.name.trim() && st.phone.trim());
+      if (go) go.disabled = !(st.name.trim() && st.phone.trim());
+      var next = box.querySelector("[data-next]"), hint = box.querySelector("[data-hint]");
+      if (next) next.disabled = !st.address.trim();
+      if (hint) hint.hidden = !!st.address.trim();
     });
     box.addEventListener("click", function (e) {
       var b = e.target.closest("button");
       if (!b || !box.contains(b) || b.classList.contains("uq-x")) return;
       if (b.hasAttribute("data-go")) return submit();
+      if (b.hasAttribute("data-next") || b.hasAttribute("data-back")) {
+        st.step = b.hasAttribute("data-next") ? 2 : 1;
+        render();
+        var top = box.getBoundingClientRect().top;
+        if (top < 0 || top > window.innerHeight * 0.5) box.scrollIntoView({ block: "start" });
+        if (st.step === 2) { var nm = box.querySelector("#uq-name"); if (nm) nm.focus({ preventScroll: true }); }
+        return;
+      }
       var a;
       if ((a = b.getAttribute("data-svc"))) st.svc = a;
       else if ((a = b.getAttribute("data-freq"))) { st.freq = a; if (a === "Monthly" && st.over === "mild") st.over = "none"; }
