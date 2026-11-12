@@ -153,7 +153,7 @@ body.uyq-lock{overflow:hidden}\
 .price-card.uyq-clickable{cursor:pointer;transition:transform .15s ease}\
 .price-card.uyq-clickable:hover{transform:translateY(-2px)}\
 .price-card.uyq-clickable:focus-visible{outline:2px solid currentColor;outline-offset:3px}\
-#quote a[href='#quote']{display:none!important}";
+";
 
   // ---------- brand glow ----------
   // mowproga.com's signature look: key pieces get a thin border in the brand
@@ -236,11 +236,9 @@ body.uyq-lock{overflow:hidden}\
     document.head.appendChild(styleEl);
     THEME = theme();
     applyGlow(THEME);
-    if (section) {
-      var inline = makeForm(section.querySelector(".wrap") || section, {}, false);
-      inline.id = "instant-quote";
-    }
+    footerTheme(THEME);
     wirePriceCards();
+    wireQuoteLinks();
   }
 
   // Clicking a price card opens the quote form in a pop-up with that yard
@@ -261,6 +259,39 @@ body.uyq-lock{overflow:hidden}\
       card.addEventListener("click", go);
       card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(e); } });
     });
+  }
+
+  // Every "get a quote" button/link on the page opens the pop-up instead of
+  // jumping somewhere. The form never sits open on the page.
+  function wireQuoteLinks() {
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest("a, button");
+      if (!a || a.closest("#uyq-modal")) return;
+      var href = a.getAttribute("href") || "";
+      if (/^(tel|mailto|sms):/i.test(href)) return;
+      var isQuote = a.hasAttribute("data-quote-open") || /#quote$/.test(href) || /\bquote\b/i.test(a.textContent || "");
+      if (!isQuote) return;
+      e.preventDefault();
+      openModal({});
+    }, true);
+  }
+
+  // Colors for the shared end-of-page block (site-end.css): a dark footer
+  // tinted with the brand color, and a button color that stays readable on it.
+  function footerTheme(t) {
+    var root = document.documentElement;
+    Object.keys(t).forEach(function (k) { root.style.setProperty(k, t[k]); });
+    var acc = (t["--uq-accent"].match(/\d+(\.\d+)?/g) || [45, 122, 74]).slice(0, 3).map(Number);
+    var mix = function (c1, c2, w) { return c1.map(function (v, i) { return v * w + c2[i] * (1 - w); }); };
+    var bg = t["--uq-dark"] === "1" ? (t["--uq-bg"].match(/\d+(\.\d+)?/g) || [13, 21, 16]).slice(0, 3).map(Number) : mix(acc, [10, 13, 11], 0.22);
+    // Dark brand colors get brightened a little so the button stands out on
+    // the dark footer; the text on it is whichever of white/near-black reads better.
+    var btn = lum(acc) < 0.12 ? mix(acc, [255, 255, 255], 0.75) : acc;
+    var L = lum(btn), cw = 1.05 / (L + 0.05), cd = (L + 0.05) / (lum([11, 20, 13]) + 0.05);
+    var ink = cd > cw ? [11, 20, 13] : [255, 255, 255];
+    root.style.setProperty("--uqf-bg", css(bg));
+    root.style.setProperty("--uqf-btn", css(btn));
+    root.style.setProperty("--uqf-btn-ink", css(ink));
   }
 
   function openModal(preset) {
