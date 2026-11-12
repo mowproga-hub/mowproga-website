@@ -184,7 +184,7 @@ const HOME_FAQ = [
   },
   {
     "q": "Do you do fall leaf cleanup?",
-    "a": "Yes. Fall cleanup includes leaf removal, bed cleanout, and debris removal, with leaf removal starting at $127 for small yards. See our Fall Cleanup page for details and pricing."
+    "a": "Yes. Fall cleanup includes leaf removal, bed cleanout, and debris removal, with leaf removal starting at $100 for small yards. See our Fall Cleanup page for details and pricing."
   },
   {
     "q": "Is Mow Pro insured?",
@@ -258,7 +258,7 @@ const FALL_CLEANUP_FAQ_JSONLD = {
       "name": "How much does fall yard cleanup cost in Douglasville, GA?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $127, medium at $187, large at $287, and extra-large or acreage properties get a custom quote. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person.",
+        "text": "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $100, medium at $150, large at $200, and extra-large or acreage properties get a custom quote. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person.",
       },
     },
     {
@@ -341,8 +341,8 @@ const LEAF_REMOVAL_JSONLD = {
   offers: {
     "@type": "Offer",
     priceCurrency: "USD",
-    priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" },
-    description: "Leaf removal starts at $127 for small yards ($187 medium, $287 large). Leaves piled on-site at no charge, or bagged and hauled away for $5-8 per bag.",
+    priceSpecification: { "@type": "PriceSpecification", minPrice: 100, priceCurrency: "USD" },
+    description: "Leaf removal starts at $100 for small yards ($150 medium, $200 large). Leaves piled on-site at no charge, or bagged and hauled away for $5-8 per bag.",
   },
   provider: { "@id": "https://mowproga.com/#business" },
 };
@@ -457,8 +457,8 @@ function neighborhoodJsonLd(n) {
       name: `Lawn care and leaf removal in ${n.name}`,
       itemListElement: [
         { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 65, priceCurrency: "USD" }, itemOffered: { "@type": "Service", name: "Biweekly Lawn Mowing & Edging" } },
-        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" }, url: "https://mowproga.com/leaf-removal", itemOffered: { "@type": "Service", name: "Leaf Removal", serviceType: "Leaf Removal" } },
-        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 127, priceCurrency: "USD" }, url: "https://mowproga.com/fall-cleanup", itemOffered: { "@type": "Service", name: "Fall Yard Cleanup", serviceType: "Fall Cleanup" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 100, priceCurrency: "USD" }, url: "https://mowproga.com/leaf-removal", itemOffered: { "@type": "Service", name: "Leaf Removal", serviceType: "Leaf Removal" } },
+        { "@type": "Offer", priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 100, priceCurrency: "USD" }, url: "https://mowproga.com/fall-cleanup", itemOffered: { "@type": "Service", name: "Fall Yard Cleanup", serviceType: "Fall Cleanup" } },
       ],
     },
     provider: { "@id": "https://mowproga.com/#business" },
@@ -647,7 +647,7 @@ const SIZE_OPTIONS = [
 // Leaf removal starting prices by the same size tiers as mowing. Shown as a
 // "+" starting price since actual cost depends heavily on tree coverage and
 // volume.
-const LEAF_PRICES = { small: 127, medium: 187, large: 287, xl: null };
+const LEAF_PRICES = { small: 100, medium: 150, large: 200, xl: null };
 
 // Hedge trimming: priced by shrub count (easier for customers than hedge
 // length), with a $100 minimum. Shrubs 6-10 ft tall add a per-shrub ladder
@@ -1394,7 +1394,7 @@ SERVICES & PRICING:
 - Sidewalk & driveway crack weed spraying: $25+
 - Brush & overgrowth (anything a regular cut doesn't cover: areas outside the mowed lawn, growth over a foot tall, or woody underbrush like vines, briars, privet, and saplings): overgrown fence line or ditch (up to ~150 ft) $75+, small brushy area (about 10x50 ft) $150+, medium brushy area (about 20x100 ft) $300+, large area or wooded lot (or trees over 3 inches thick) custom quote. Hauling the cut brush away is +$75+; default is piled on-site. A regular cut already includes weed eating around everything inside the mowed lawn.
 - Hedge & shrub trimming ($100 minimum per visit): 1-6 shrubs $100+, 7-12 shrubs $200+, 13-25 shrubs $350+. Shrubs 6-10 ft tall add $40 each (ladder work). Anything over 10 ft tall, 25+ shrubs or long hedge rows, or badly overgrown shrubs needs a custom quote in person. Includes clean shaping and blowing off beds and walkways, with clippings piled on-site; hauling clippings away is +$40. Mowing clients get 10% off hedge trimming added to a regular visit.
-- Leaf removal (separate service from mowing): Small yard $127+, Medium yard $187+, Large yard $287+, Extra large: custom quote. Each price covers up to 2 hours of work, then $55/hour. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once we see the property. Heavy tree coverage needs a custom quote in person.
+- Leaf removal (separate service from mowing): Small yard $100+, Medium yard $150+, Large yard $200+, Extra large: custom quote. Each price covers up to 2 hours of work, then $55/hour. Default is blowing leaves off the lawn, beds, and hard surfaces into a pile at the wood line or a spot the customer chooses; bagging and hauling them away is $5-8 per bag depending on actual volume, confirmed once we see the property. Heavy tree coverage needs a custom quote in person.
 - Fall Cleanup (seasonal bundle, see the /fall-cleanup page): leaf removal plus a final fall mow & edge and flower bed/border cleanout, with driveways and walkways blown off clean. Priced the same as leaf removal above by yard size — mention this as the go-to fall service when someone asks about leaves, fall cleanup, or getting the yard ready for winter.
 - No contracts, cancel anytime
 - Service area: Douglasville and surrounding Douglas County, GA, including Villa Rica, Lithia Springs, and Powder Springs
@@ -1757,7 +1757,7 @@ function AboutPage({ content, navigate, setShowQuote, showQuote }) {
 const SERVICE_AREAS = ["Douglasville", "Villa Rica", "Lithia Springs", "Powder Springs"];
 
 const FALL_FAQ = [
-  { q: "How much does fall yard cleanup cost in Douglasville, GA?", a: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $127, medium at $187, large at $287, and extra-large or acreage properties get a custom quote. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person." },
+  { q: "How much does fall yard cleanup cost in Douglasville, GA?", a: "Fall cleanup is priced by yard size, same as leaf removal: small yards start at $100, medium at $150, large at $200, and extra-large or acreage properties get a custom quote. Each price covers up to 2 hours of work, then $55/hour. We confirm the exact price once we see the property in person." },
   { q: "Do you bag and haul away the leaves, or leave them on the property?", a: "By default, leaves are blown off the lawn, beds, and hard surfaces and piled at the wood line or a spot you choose, at no extra charge. If you'd rather have them bagged and hauled off the property completely, that's an optional add-on at $5–8 per bag, confirmed once we see the volume." },
   { q: "When should I schedule fall cleanup in Douglasville?", a: "Most yards need it once leaves start dropping heavily, typically October through December in the Douglasville area. There's no contract, so you can book a one-time cleanup whenever your yard needs it." },
   { q: "Does fall cleanup include flower bed and border cleanout?", a: "Yes — a fall cleanup covers leaf removal from the lawn and beds, a final mow and edge, and clearing debris out of flower beds and borders, with driveways and walkways blown off clean." },
@@ -2351,7 +2351,7 @@ function QuoteLandingPage({ content }) {
                 <div className="mp-fhero-pillrow"><span className="mp-pill mp-pill-fall"><Leaf size={13} /> LEAF CLEANUP</span></div>
                 <h1>Leaf Cleanup in Douglasville, GA</h1>
                 <p className="mp-hero-services">Lawn • Beds • Driveways • Walkways</p>
-                <p className="mp-hero-sub">Small yards from $127. Leaves blown into the woods or a pile where you want them, or bagged at the curb. Pick your yard size below for your price.</p>
+                <p className="mp-hero-sub">Small yards from $100. Leaves blown into the woods or a pile where you want them, or bagged at the curb. Pick your yard size below for your price.</p>
                 <div className="mp-fhero-btns">
                   <a href="#leaf-form" onClick={(e) => { e.preventDefault(); document.getElementById("leaf-form")?.scrollIntoView({ behavior: "smooth" }); }} className="mp-btn mp-btn-lg"><FileText size={19} /> Get My Leaf Cleanup Price <ArrowRight size={18} /></a>
                   <a href={`tel:${content.phone}`} onClick={() => trackEvent("call_click", { location: "quote_page_leaf_hero" })} className="mp-btn-outline mp-btn-lg"><Phone size={18} /> Call {phoneDisplay}</a>
