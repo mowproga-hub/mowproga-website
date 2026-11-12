@@ -100,45 +100,53 @@
 
   // ---------- styles ----------
   var STYLE = "\
-#quote .uyq{--uq-line:color-mix(in srgb,var(--uq-text) 16%,transparent);--uq-muted:color-mix(in srgb,var(--uq-text) 66%,transparent);--uq-soft:color-mix(in srgb,var(--uq-accent) 13%,var(--uq-bg));\
+:is(#quote,#uyq-modal) .uyq{--uq-line:color-mix(in srgb,var(--uq-text) 16%,transparent);--uq-muted:color-mix(in srgb,var(--uq-text) 66%,transparent);--uq-soft:color-mix(in srgb,var(--uq-accent) 13%,var(--uq-bg));\
 max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!important;font-family:var(--uq-font);border:1px solid var(--uq-line);border-radius:var(--uq-radius);padding:26px 22px;box-shadow:0 18px 50px rgba(0,0,0,.18);text-align:left}\
-#quote .uyq *{box-sizing:border-box}\
-#quote .uyq p,#quote .uyq b,#quote .uyq small,#quote .uyq span,#quote .uyq label,#quote .uyq strong{color:inherit!important;font-family:inherit;letter-spacing:normal;text-transform:none;opacity:1!important;text-shadow:none}\
-#quote .uyq h3{opacity:1!important;text-shadow:none}\
-#quote .uyq h3{font-family:var(--uq-head);font-weight:var(--uq-head-weight);text-transform:var(--uq-head-transform);font-size:24px;line-height:1.15;margin:0 0 4px;color:var(--uq-text)!important;letter-spacing:-.01em}\
-#quote .uyq .uq-sub{font-size:14px;color:var(--uq-muted)!important;margin:0 0 18px}\
-#quote .uyq .uq-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}\
-#quote .uyq button{font-family:inherit}\
-#quote .uyq .uq-tab,#quote .uyq .uq-pill{border:1.5px solid var(--uq-line);background:transparent;color:var(--uq-text)!important;border-radius:var(--uq-btn-radius);padding:11px 4px;font-size:14px;font-weight:700;cursor:pointer}\
-#quote .uyq .uq-tab[aria-pressed=true]{background:var(--uq-accent);border-color:var(--uq-accent);color:var(--uq-accent-ink)!important}\
-#quote .uyq .uq-pills{display:flex;gap:6px}#quote .uyq .uq-pill{flex:1;padding:9px 2px;font-size:12.5px}\
-#quote .uyq .uq-pill[aria-pressed=true]{border-color:var(--uq-accent);background:var(--uq-soft)}\
-#quote .uyq label.uq-l{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--uq-muted)!important;margin:14px 0 6px}\
-#quote .uyq input.uq-in{width:100%;padding:12px 13px;border:1px solid var(--uq-line);background:color-mix(in srgb,var(--uq-text) 4%,var(--uq-bg));color:var(--uq-text)!important;font-size:15px;font-family:inherit}\
-#quote .uyq input.uq-in{border-radius:12px}\
-#quote .uyq input.uq-in:focus{outline:2px solid var(--uq-accent);outline-offset:1px}\
-#quote .uyq .uq-note{font-size:12px;color:var(--uq-muted)!important;margin-top:6px;line-height:1.45}\
-#quote .uyq .uq-opt{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1.5px solid var(--uq-line);border-radius:12px;padding:11px 14px;margin-top:8px;cursor:pointer;background:transparent;width:100%;color:var(--uq-text)!important;text-align:left;font-size:inherit}\
-#quote .uyq .uq-opt[aria-pressed=true]{border-color:var(--uq-accent);background:var(--uq-soft)}\
-#quote .uyq .uq-opt b{display:block;font-size:14px}#quote .uyq .uq-opt small{display:block;font-size:12px;color:var(--uq-muted)!important;margin-top:1px}\
-#quote .uyq .uq-opt .uq-p{font-weight:800;font-size:14px;color:var(--uq-price)!important;white-space:nowrap}\
-#quote .uyq .uq-chk{display:flex;align-items:center;gap:10px}\
-#quote .uyq .uq-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--uq-muted);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1}\
-#quote .uyq .uq-opt[aria-pressed=true] .uq-box{background:var(--uq-accent);border-color:var(--uq-accent);color:var(--uq-accent-ink)!important}\
-#quote .uyq .uq-info{font-size:12.5px;line-height:1.5;color:var(--uq-muted)!important;background:var(--uq-soft);border-radius:12px;padding:10px 12px;margin-top:12px}\
-#quote .uyq .uq-price{margin-top:18px;border-radius:14px;padding:16px;text-align:center;background:var(--uq-soft);border:1px solid color-mix(in srgb,var(--uq-accent) 35%,transparent)}\
-#quote .uyq .uq-price small{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--uq-muted)!important}\
-#quote .uyq .uq-price strong{display:block;font-family:var(--uq-head);font-size:34px;line-height:1.15;color:var(--uq-price)!important}\
-#quote .uyq .uq-price span{display:block;font-size:12.5px;color:var(--uq-muted)!important;margin-top:2px}\
-#quote .uyq .uq-consent{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:var(--uq-muted)!important;margin-top:14px;cursor:pointer}\
-#quote .uyq .uq-consent input{width:19px;height:19px;margin-top:1px;flex-shrink:0;accent-color:var(--uq-accent)}\
-#quote .uyq .uq-go{width:100%;margin-top:16px;border:0;border-radius:var(--uq-btn-radius);background:var(--uq-accent);color:var(--uq-accent-ink)!important;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--uq-font)}\
-#quote .uyq .uq-go[disabled]{opacity:.5;cursor:default}\
-#quote .uyq .uq-err{font-size:12.5px;color:#d9534f!important;margin-top:8px}\
-#quote .uyq .uq-priv{font-size:12px;color:var(--uq-muted)!important;text-align:center;margin:10px 0 0}\
-#quote .uyq .uq-done{text-align:center;padding:18px 0}#quote .uyq .uq-done .uq-check{width:52px;height:52px;border-radius:50%;margin:0 auto 12px;background:var(--uq-accent);color:var(--uq-accent-ink)!important;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}\
-#quote .uyq .uq-demo{display:inline-block;margin-top:10px;font-size:11.5px;font-weight:800;background:#FCE9A8;color:#5a4300!important;border-radius:6px;padding:3px 8px}\
-@media(max-width:420px){#quote .uyq{padding:22px 16px}#quote .uyq .uq-tabs{grid-template-columns:repeat(2,1fr)}}\
+:is(#quote,#uyq-modal) .uyq *{box-sizing:border-box}\
+:is(#quote,#uyq-modal) .uyq p,:is(#quote,#uyq-modal) .uyq b,:is(#quote,#uyq-modal) .uyq small,:is(#quote,#uyq-modal) .uyq span,:is(#quote,#uyq-modal) .uyq label,:is(#quote,#uyq-modal) .uyq strong{color:inherit!important;font-family:inherit;letter-spacing:normal;text-transform:none;opacity:1!important;text-shadow:none}\
+:is(#quote,#uyq-modal) .uyq h3{opacity:1!important;text-shadow:none}\
+:is(#quote,#uyq-modal) .uyq h3{font-family:var(--uq-head);font-weight:var(--uq-head-weight);text-transform:var(--uq-head-transform);font-size:24px;line-height:1.15;margin:0 0 4px;color:var(--uq-text)!important;letter-spacing:-.01em}\
+:is(#quote,#uyq-modal) .uyq .uq-sub{font-size:14px;color:var(--uq-muted)!important;margin:0 0 18px}\
+:is(#quote,#uyq-modal) .uyq .uq-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}\
+:is(#quote,#uyq-modal) .uyq button{font-family:inherit}\
+:is(#quote,#uyq-modal) .uyq .uq-tab,:is(#quote,#uyq-modal) .uyq .uq-pill{border:1.5px solid var(--uq-line);background:transparent;color:var(--uq-text)!important;border-radius:var(--uq-btn-radius);padding:11px 4px;font-size:14px;font-weight:700;cursor:pointer}\
+:is(#quote,#uyq-modal) .uyq .uq-tab[aria-pressed=true]{background:var(--uq-accent);border-color:var(--uq-accent);color:var(--uq-accent-ink)!important}\
+:is(#quote,#uyq-modal) .uyq .uq-pills{display:flex;gap:6px}:is(#quote,#uyq-modal) .uyq .uq-pill{flex:1;padding:9px 2px;font-size:12.5px}\
+:is(#quote,#uyq-modal) .uyq .uq-pill[aria-pressed=true]{border-color:var(--uq-accent);background:var(--uq-soft)}\
+:is(#quote,#uyq-modal) .uyq label.uq-l{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--uq-muted)!important;margin:14px 0 6px}\
+:is(#quote,#uyq-modal) .uyq input.uq-in{width:100%;padding:12px 13px;border:1px solid var(--uq-line);background:color-mix(in srgb,var(--uq-text) 4%,var(--uq-bg));color:var(--uq-text)!important;font-size:15px;font-family:inherit}\
+:is(#quote,#uyq-modal) .uyq input.uq-in{border-radius:12px}\
+:is(#quote,#uyq-modal) .uyq input.uq-in:focus{outline:2px solid var(--uq-accent);outline-offset:1px}\
+:is(#quote,#uyq-modal) .uyq .uq-note{font-size:12px;color:var(--uq-muted)!important;margin-top:6px;line-height:1.45}\
+:is(#quote,#uyq-modal) .uyq .uq-opt{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1.5px solid var(--uq-line);border-radius:12px;padding:11px 14px;margin-top:8px;cursor:pointer;background:transparent;width:100%;color:var(--uq-text)!important;text-align:left;font-size:inherit}\
+:is(#quote,#uyq-modal) .uyq .uq-opt[aria-pressed=true]{border-color:var(--uq-accent);background:var(--uq-soft)}\
+:is(#quote,#uyq-modal) .uyq .uq-opt b{display:block;font-size:14px}:is(#quote,#uyq-modal) .uyq .uq-opt small{display:block;font-size:12px;color:var(--uq-muted)!important;margin-top:1px}\
+:is(#quote,#uyq-modal) .uyq .uq-opt .uq-p{font-weight:800;font-size:14px;color:var(--uq-price)!important;white-space:nowrap}\
+:is(#quote,#uyq-modal) .uyq .uq-chk{display:flex;align-items:center;gap:10px}\
+:is(#quote,#uyq-modal) .uyq .uq-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--uq-muted);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1}\
+:is(#quote,#uyq-modal) .uyq .uq-opt[aria-pressed=true] .uq-box{background:var(--uq-accent);border-color:var(--uq-accent);color:var(--uq-accent-ink)!important}\
+:is(#quote,#uyq-modal) .uyq .uq-info{font-size:12.5px;line-height:1.5;color:var(--uq-muted)!important;background:var(--uq-soft);border-radius:12px;padding:10px 12px;margin-top:12px}\
+:is(#quote,#uyq-modal) .uyq .uq-price{margin-top:18px;border-radius:14px;padding:16px;text-align:center;background:var(--uq-soft);border:1px solid color-mix(in srgb,var(--uq-accent) 35%,transparent)}\
+:is(#quote,#uyq-modal) .uyq .uq-price small{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--uq-muted)!important}\
+:is(#quote,#uyq-modal) .uyq .uq-price strong{display:block;font-family:var(--uq-head);font-size:34px;line-height:1.15;color:var(--uq-price)!important}\
+:is(#quote,#uyq-modal) .uyq .uq-price span{display:block;font-size:12.5px;color:var(--uq-muted)!important;margin-top:2px}\
+:is(#quote,#uyq-modal) .uyq .uq-consent{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:var(--uq-muted)!important;margin-top:14px;cursor:pointer}\
+:is(#quote,#uyq-modal) .uyq .uq-consent input{width:19px;height:19px;margin-top:1px;flex-shrink:0;accent-color:var(--uq-accent)}\
+:is(#quote,#uyq-modal) .uyq .uq-go{width:100%;margin-top:16px;border:0;border-radius:var(--uq-btn-radius);background:var(--uq-accent);color:var(--uq-accent-ink)!important;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--uq-font)}\
+:is(#quote,#uyq-modal) .uyq .uq-go[disabled]{opacity:.5;cursor:default}\
+:is(#quote,#uyq-modal) .uyq .uq-err{font-size:12.5px;color:#d9534f!important;margin-top:8px}\
+:is(#quote,#uyq-modal) .uyq .uq-priv{font-size:12px;color:var(--uq-muted)!important;text-align:center;margin:10px 0 0}\
+:is(#quote,#uyq-modal) .uyq .uq-done{text-align:center;padding:18px 0}:is(#quote,#uyq-modal) .uyq .uq-done .uq-check{width:52px;height:52px;border-radius:50%;margin:0 auto 12px;background:var(--uq-accent);color:var(--uq-accent-ink)!important;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}\
+:is(#quote,#uyq-modal) .uyq .uq-demo{display:inline-block;margin-top:10px;font-size:11.5px;font-weight:800;background:#FCE9A8;color:#5a4300!important;border-radius:6px;padding:3px 8px}\
+@media(max-width:420px){:is(#quote,#uyq-modal) .uyq{padding:22px 16px}:is(#quote,#uyq-modal) .uyq .uq-tabs{grid-template-columns:repeat(2,1fr)}}\
+\
+#uyq-modal{position:fixed;inset:0;z-index:9999;background:rgba(5,8,6,.72);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}\
+#uyq-modal .uyq{position:relative;margin:24px auto;width:100%;max-width:460px}\
+#uyq-modal .uq-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:transparent;color:var(--uq-text);font-size:24px;line-height:1;cursor:pointer;opacity:.7}\
+body.uyq-lock{overflow:hidden}\
+.price-card.uyq-clickable{cursor:pointer;transition:transform .15s ease}\
+.price-card.uyq-clickable:hover{transform:translateY(-2px)}\
+.price-card.uyq-clickable:focus-visible{outline:2px solid currentColor;outline-offset:3px}\
 #quote a[href='#quote']{display:none!important}";
 
   // ---------- brand glow ----------
@@ -156,9 +164,9 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
       ".compare,.story-photo,.about__photo{border:1.5px solid rgb(" + c + ")!important;box-shadow:" + g + "!important}" +
       ".price-card:nth-child(2){border:2px solid rgb(" + c + ")!important;box-shadow:" + g2 + "!important}" +
       ".addons{border:1.5px solid rgba(" + c + ",.7)!important;box-shadow:" + g + "!important}" +
-      "#quote .uyq{border:1.5px solid rgb(" + c + ")!important;box-shadow:0 0 34px rgba(" + c + "," + (a1 + 0.04) + ")!important}" +
-      "#quote .uyq .uq-price{border:1.5px solid rgb(" + c + ")!important;box-shadow:0 0 22px rgba(" + c + "," + a1 + ")!important}" +
-      "#quote .uyq .uq-tab[aria-pressed=true]{box-shadow:0 0 20px rgba(" + c + "," + (a2 - 0.05) + ")}";
+      ":is(#quote,#uyq-modal) .uyq{border:1.5px solid rgb(" + c + ")!important;box-shadow:0 0 34px rgba(" + c + "," + (a1 + 0.04) + ")!important}" +
+      ":is(#quote,#uyq-modal) .uyq .uq-price{border:1.5px solid rgb(" + c + ")!important;box-shadow:0 0 22px rgba(" + c + "," + a1 + ")!important}" +
+      ":is(#quote,#uyq-modal) .uyq .uq-tab[aria-pressed=true]{box-shadow:0 0 20px rgba(" + c + "," + (a2 - 0.05) + ")}";
     var el = document.createElement("style");
     el.id = "uy-brand-glow";
     el.textContent = css;
@@ -213,22 +221,75 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
   function esc(t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function money(n) { return "$" + n + "+"; }
 
-  function mount(d) {
-    var P = pricing(d);
-    var biz = d.BUSINESS_NAME || "our team";
-    var st = { svc: "mowing", address: "", freq: "Biweekly", size: "medium", crack: false, over: "none", edge: false, heavyTrees: false, hedge: "h1", tall: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, brush: "b1", brushHaul: false, name: "", phone: "", textOk: false, done: false, err: "" };
+  var D = {}, THEME = null;
 
+  function mount(d) {
+    D = d;
     var styleEl = document.createElement("style");
     styleEl.textContent = STYLE;
     document.head.appendChild(styleEl);
+    THEME = theme();
+    applyGlow(THEME);
+    if (section) {
+      var inline = makeForm(section.querySelector(".wrap") || section, {}, false);
+      inline.id = "instant-quote";
+    }
+    wirePriceCards();
+  }
+
+  // Clicking a price card opens the quote form in a pop-up with that yard
+  // size already picked, same as mowproga.com.
+  function wirePriceCards() {
+    var cards = [].slice.call(document.querySelectorAll(".price-card"));
+    var sizes = ["small", "medium", "large", "xl"];
+    cards.forEach(function (card, i) {
+      var size = sizes[Math.min(i, 3)];
+      card.classList.add("uyq-clickable");
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Get a quote for a " + size + " yard");
+      var go = function (e) {
+        if (e.target.closest("a")) e.preventDefault();
+        openModal({ svc: "mowing", size: size });
+      };
+      card.addEventListener("click", go);
+      card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(e); } });
+    });
+  }
+
+  function openModal(preset) {
+    closeModal();
+    var ov = document.createElement("div");
+    ov.id = "uyq-modal";
+    ov.setAttribute("role", "dialog");
+    ov.setAttribute("aria-modal", "true");
+    ov.setAttribute("aria-label", "Get your instant quote");
+    document.body.appendChild(ov);
+    document.body.classList.add("uyq-lock");
+    var box = makeForm(ov, preset, true);
+    ov.addEventListener("click", function (e) { if (e.target === ov || e.target.closest(".uq-x")) closeModal(); });
+    document.addEventListener("keydown", escClose);
+    var first = box.querySelector("#uq-addr");
+    if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 50);
+  }
+  function escClose(e) { if (e.key === "Escape") closeModal(); }
+  function closeModal() {
+    var ov = document.getElementById("uyq-modal");
+    if (ov) ov.remove();
+    document.body.classList.remove("uyq-lock");
+    document.removeEventListener("keydown", escClose);
+  }
+
+  function makeForm(host, preset, inModal) {
+    var d = D;
+    var P = pricing(d);
+    var biz = d.BUSINESS_NAME || "our team";
+    var st = { svc: "mowing", address: "", freq: "Biweekly", size: "medium", crack: false, over: "none", edge: false, heavyTrees: false, hedge: "h1", tall: 0, hedgeOver10: false, hedgeOvergrown: false, hedgeHaul: false, brush: "b1", brushHaul: false, name: "", phone: "", textOk: false, done: false, err: "" };
+    Object.keys(preset || {}).forEach(function (k) { st[k] = preset[k]; });
 
     var box = document.createElement("div");
     box.className = "uyq";
-    box.id = "instant-quote";
-    var t = theme();
-    Object.keys(t).forEach(function (k) { box.style.setProperty(k, t[k]); });
-    applyGlow(t);
-    var host = section.querySelector(".wrap") || section;
+    Object.keys(THEME).forEach(function (k) { box.style.setProperty(k, THEME[k]); });
     host.appendChild(box);
 
     function calc() {
@@ -260,8 +321,9 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
 
     function render() {
       var c = calc();
+      var X = inModal ? '<button type="button" class="uq-x" aria-label="Close">×</button>' : "";
       if (st.done) {
-        box.innerHTML = '<div class="uq-done"><div class="uq-check">✓</div><h3>Quote request sent!</h3><p class="uq-sub" style="margin:6px 0 0">' +
+        box.innerHTML = X + '<div class="uq-done"><div class="uq-check">✓</div><h3>Quote request sent!</h3><p class="uq-sub" style="margin:6px 0 0">' +
           esc(biz) + " will text or call you shortly" + (c.needsCustom ? " with custom pricing for your property." : " to confirm your " + money(c.price) + " estimate.") + "</p>" +
           (isDemo() ? '<span class="uq-demo">Sample site · this demo form doesn’t send anything</span>' : "") + "</div>";
         return;
@@ -336,7 +398,7 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
       h.push('<button type="button" class="uq-go" data-go' + (ready ? "" : " disabled") + ">Get My Quote →</button>");
       if (st.err) h.push('<div class="uq-err">' + esc(st.err) + "</div>");
       h.push('<p class="uq-priv">🔒 Your information is only used to provide your quote.</p>');
-      box.innerHTML = h.join("");
+      box.innerHTML = X + h.join("");
     }
 
     function isDemo() { return d.DEMO_MODE !== false || !d.QUOTE_ENDPOINT; }
@@ -362,7 +424,7 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
     });
     box.addEventListener("click", function (e) {
       var b = e.target.closest("button");
-      if (!b || !box.contains(b)) return;
+      if (!b || !box.contains(b) || b.classList.contains("uq-x")) return;
       if (b.hasAttribute("data-go")) return submit();
       var a;
       if ((a = b.getAttribute("data-svc"))) st.svc = a;
@@ -378,9 +440,10 @@ max-width:560px;margin:34px auto 0;background:var(--uq-bg);color:var(--uq-text)!
     });
 
     render();
+    return box;
   }
 
-  function start() { if (!section) { applyGlow(theme()); return; } loadData().then(mount); }
+  function start() { loadData().then(mount); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();
