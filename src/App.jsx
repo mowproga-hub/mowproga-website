@@ -2365,8 +2365,10 @@ function QuoteLandingPage({ content }) {
             <section className="mp-qleaf-sec">
               <div className="mp-eyebrow">REAL RESULTS</div>
               <h2 className="mp-h2">See the Difference</h2>
-              <p className="mp-qleaf-lead">A real Mow Pro leaf job, before and after. Douglasville, GA.</p>
-              <BeforeAfterSlider before="/images/before-leaf-driveway.webp" after="/images/after-leaf-driveway.webp" aspect="4/5" />
+              <p className="mp-qleaf-lead">Real Mow Pro leaf jobs, before and after. Douglasville, GA. Drag the circle to compare.</p>
+              <BeforeAfterSlider before="/images/before-leaf-curb.webp" after="/images/after-leaf-curb.webp" aspect="4/3" />
+              <div style={{ height: 18 }} />
+              <BeforeAfterSlider before="/images/before-leaf-corner.webp" after="/images/after-leaf-corner.webp" aspect="4/3" />
             </section>
 
             <section className="mp-qleaf-sec" id="leaf-form">
