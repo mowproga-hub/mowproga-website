@@ -40,7 +40,7 @@
   "PRICING_FREQUENCY": "Recurring lawn care, priced per scheduled visit",
   "PRICE_NOTE": "Rates are starting points for routine maintenance. Steep areas, first-visit growth and extensive trimming are evaluated separately.",
   "SERVICES_LINE": "Lawn Mowing · Edging · Detail Trimming · Cleanup",
-  "PROMISE": "Thoughtful mowing and clean finishing work, planned around your property and the Colorado growing season.",
+  "PROMISE": "A clean-cut, sharp-edged yard after every visit, so your weekends stay yours. Locally owned, fully insured, and no contracts.",
   "AREA_LABEL": "Lakewood, Littleton, Arvada and nearby CO communities",
   "AREAS": [
     {
@@ -107,8 +107,9 @@
       "q": "Will the quoted price include cleanup?",
       "a": "Regular edging and pavement blow-off are included; unusually tall growth or large seasonal debris can require a separate scope."
     }
-  ]
-};</script>
+  ],
+  "HEADLINE_LEAD": "Premium"
+};;</script>
 <style>
 
 *,*::before,*::after{box-sizing:border-box}
@@ -385,6 +386,7 @@ html,body{overflow-x:clip!important}
 .final-cta .btn-secondary *{color:#f8fff8!important}
 @media(max-width:640px){.footer__social a{min-width:44px!important;min-height:44px!important}}
 </style><link rel="stylesheet" href="../shared/site-end.css">
+<style id="hero-micro">.hero__micro{margin:12px 0 0;font-size:14px;opacity:.85}.badge-stars{color:#F5B82E;letter-spacing:1px;margin-right:4px}</style>
 </head>
 
 <body class="design-nightfall"><div class="demo-notice" role="note">Demo site — sample business</div>
@@ -420,10 +422,10 @@ html,body{overflow-x:clip!important}
 <section class="hero" aria-labelledby="main-heading"><img class="hero__photo" src="{{HERO_PHOTO}}" alt="{{BUSINESS_NAME}} lawn care equipment and crew in {{CITY}}, {{STATE}}" width="1402" height="713" fetchpriority="high">
  <div class="wrap hero__inner"><div class="hero__copy">
   <div class="hero__eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>{{BUSINESS_NAME}}</div>
-  <h1 id="main-heading">Lawn Care in {{CITY}}, {{STATE}}</h1>
+  <h1 id="main-heading">{{HEADLINE_LEAD}} Lawn Care in {{CITY}}, {{STATE}}</h1>
   <p class="hero__services">{{SERVICES_LINE}}</p>
   <p class="hero__promise">{{PROMISE}}</p>
-  <div class="hero__actions"><a class="btn btn-primary" href="{{QUOTE_URL}}">Get My Free Instant Quote<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-secondary" href="tel:{{PHONE_DIAL}}"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>Call {{PHONE}}</a></div>
+  <div class="hero__actions"><a class="btn btn-primary" href="{{QUOTE_URL}}">Get My Free Instant Quote<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-secondary" href="tel:{{PHONE_DIAL}}"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>Call {{PHONE}}</a></div><p class="hero__micro">See your price in 60 seconds. No contracts.</p>
   <div class="hero__rating"><a href="{{GOOGLE_REVIEWS_URL}}" target="_blank" rel="noopener noreferrer" class="rating-badge" data-google-badge><strong>{{RATING}}</strong><span class="stars" aria-label="{{RATING}} out of 5 stars"><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg></span><span>{{REVIEW_COUNT}} Google reviews</span></a></div>
  </div></div><div class="hero__side-caption" aria-hidden="true">YOUR YARD. TAKEN CARE OF.</div>
 </section>
@@ -656,7 +658,7 @@ html,body{overflow-x:clip!important}
 (()=>{document.addEventListener('DOMContentLoaded',()=>{
  const d=window.UMMIYARD_SAMPLE_DATA||{};
  document.querySelectorAll('[data-google-badge]').forEach(el=>{
-   el.textContent=d.RATING+' / 5 · '+d.REVIEW_COUNT+' reviews';
+   el.innerHTML='<span class="badge-stars" aria-hidden="true">★★★★★</span><strong>'+d.RATING+'</strong> / 5 · '+d.REVIEW_COUNT+' reviews';
    el.removeAttribute('href');el.removeAttribute('target');
  });
  document.querySelectorAll('[data-repeat="REVIEWS"]').forEach(root=>{
