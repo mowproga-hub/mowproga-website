@@ -1,0 +1,54 @@
+/* End-of-page block shared by all templates, modeled on mowproga.com:
+   a glowing "Ready for a yard..." call-to-action card, then a footer with a
+   contact card, services, areas, company links, rating and socials.
+   Colors come from --uq-* variables that quote-form.js reads off each
+   template (brand color, fonts, rounding); the fallbacks below are only
+   used for the split second before that script runs. */
+.uyf{--a:var(--uqf-btn,#2D7A4A);--ai:var(--uqf-btn-ink,#fff);--bg:var(--uqf-bg,#0d1510);--tx:#F3F5F0;--mu:rgba(243,245,240,.68);--ln:rgba(243,245,240,.12);
+  background:var(--bg);color:var(--tx);font-family:var(--uq-font,inherit);padding:48px 0 120px;text-align:left}
+.uyf *{box-sizing:border-box}
+.uyf a{color:inherit;text-decoration:none}
+.uyf__wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.uyf h2,.uyf h3{font-family:var(--uq-head,inherit);text-transform:var(--uq-head-transform,none);color:var(--tx);margin:0}
+.uyf__cta{border:2px solid var(--a);border-radius:var(--uq-radius,22px);padding:30px 24px;margin-bottom:46px;
+  background:radial-gradient(120% 120% at 15% 0%,color-mix(in srgb,var(--a) 34%,var(--bg)) 0%,color-mix(in srgb,var(--a) 12%,var(--bg)) 70%);
+  box-shadow:0 0 34px color-mix(in srgb,var(--a) 30%,transparent)}
+.uyf__cta-head{display:flex;gap:18px;align-items:flex-start}
+.uyf__cta-icon{flex-shrink:0;width:52px;height:52px;color:var(--a)}
+.uyf__cta h2{font-size:clamp(28px,6.4vw,42px);line-height:1.08;font-weight:var(--uq-head-weight,800);letter-spacing:-.02em}
+.uyf__cta p{margin:12px 0 0;font-size:17px;line-height:1.45;color:var(--tx);opacity:.88}
+.uyf__btns{display:grid;gap:14px;margin-top:26px}
+@media(min-width:760px){.uyf__btns{grid-template-columns:1fr 1fr;max-width:720px}}
+.uyf__btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;padding:14px 20px;border-radius:var(--uq-btn-radius,12px);font-weight:800;font-size:17px;cursor:pointer;border:1.5px solid transparent;font-family:var(--uq-font,inherit)}
+.uyf__btn--primary{background:var(--a);color:var(--ai)!important;box-shadow:0 0 22px color-mix(in srgb,var(--a) 35%,transparent)}
+.uyf__btn--ghost{background:color-mix(in srgb,var(--bg) 70%,transparent);border-color:color-mix(in srgb,var(--tx) 70%,transparent);color:var(--tx)!important}
+.uyf__btn svg{width:20px;height:20px;flex-shrink:0}
+.uyf__grid{display:grid;gap:34px}
+@media(min-width:900px){.uyf__grid{grid-template-columns:1.2fr 1fr 1fr}}
+.uyf__brand{display:flex;align-items:center;gap:14px}
+.uyf__brand img{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#fff}
+.uyf__brand strong{display:block;font-family:var(--uq-head,inherit);font-size:26px;line-height:1.1}
+.uyf__brand small{display:block;font-size:14px;color:var(--mu);margin-top:3px}
+.uyf__tag{font-size:16px;line-height:1.55;color:var(--mu);margin:18px 0 0}
+.uyf__card{margin-top:22px;border:1px solid var(--ln);border-radius:var(--uq-radius,18px);padding:22px 20px;background:color-mix(in srgb,var(--tx) 4%,transparent)}
+.uyf__legal{font-size:14px;color:var(--mu);margin:0 0 8px}
+.uyf__row{display:flex;align-items:center;gap:12px;font-size:16px;margin-top:10px;color:var(--mu)}
+.uyf__row svg{width:20px;height:20px;color:var(--a);flex-shrink:0}
+.uyf__row--big{font-family:var(--uq-head,inherit);font-size:21px;font-weight:800;color:var(--tx);margin-top:4px}
+.uyf__card .uyf__btn{width:100%;margin-top:20px;min-height:52px}
+.uyf__cols{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.uyf .uyf__title{font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--a);margin:0 0 14px;font-family:var(--uq-font,inherit)}
+.uyf__list a{display:block;font-size:16.5px;padding:7px 0;color:var(--tx)}
+.uyf__list a:hover{color:var(--a)}
+.uyf__company{margin-top:28px}
+.uyf__inline{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:16.5px}
+.uyf__inline span{color:var(--mu)}
+.uyf__stars{margin-top:26px;font-size:15px;color:var(--mu)}
+.uyf__stars b{display:block;color:#F5B82E;font-size:22px;letter-spacing:3px;margin-bottom:4px}
+.uyf__social{display:flex;gap:12px;margin-top:18px}
+.uyf__social a{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.uyf__social a svg{width:22px;height:22px}
+.uyf__fb{background:#1877F2;color:#fff!important}
+.uyf__ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%);color:#fff!important}
+.uyf__g{background:#fff;color:#4285F4!important}
+.uyf__copy{border-top:1px solid var(--ln);margin-top:36px;padding-top:18px;font-size:13.5px;color:var(--mu)}
