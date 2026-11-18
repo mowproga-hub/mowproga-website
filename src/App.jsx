@@ -2889,6 +2889,7 @@ function SiteShell({ content, navigate, showQuote, setShowQuote, active, quoteTy
                   </a>
                   <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" aria-label="Mow Pro reviews on Google" className="mp-soc mp-soc-g">G</a>
                   <a href="https://nextdoor.com/page/mow-pro-lawn-care" target="_blank" rel="noopener noreferrer" aria-label="Mow Pro on Nextdoor" className="mp-soc mp-soc-nd">n</a>
+                  <a href="https://www.bing.com/search?q=Mow+Pro+Lawn+Care+LLC&filters=local_ypid:%22YN786A3A5072A75C08%22" target="_blank" rel="noopener noreferrer" aria-label="Mow Pro on Bing" className="mp-soc mp-soc-bing">b</a>
                 </div>
               </div>
               <MemberBadges />
@@ -3133,6 +3134,7 @@ const HOME_CSS = `
 .mp-soc-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 .mp-foot-col a.mp-soc-g{background:#fff;color:#4285F4;font:700 19px Arial,sans-serif}
 .mp-foot-col a.mp-soc-nd{background:#8ED500;color:#fff;font:700 21px Arial,sans-serif;padding-bottom:3px}
+.mp-foot-col a.mp-soc-bing{background:#008373;color:#fff;font:700 21px Arial,sans-serif;padding-bottom:3px}
 .mp-badges-wrap{flex-basis:100%;margin-top:6px}
 .mp-badges-h{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#93A08D;font-weight:700;margin:0 0 8px}
 .mp-badges{display:flex;gap:10px}
